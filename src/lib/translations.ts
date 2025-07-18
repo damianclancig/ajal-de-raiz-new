@@ -1,0 +1,217 @@
+
+export const translations = {
+  // Header
+  'Ajal': { en: 'Ajal', es: 'Ajal', pt: 'Ajal' },
+  'de_Raiz': { en: 'de Raiz', es: 'de Raiz', pt: 'de Raiz' },
+  'Home': { en: 'Home', es: 'Inicio', pt: 'Início' },
+  'Products': { en: 'Products', es: 'Productos', pt: 'Produtos' },
+  'Services': { en: 'Services', es: 'Servicios', pt: 'Serviços' },
+  'Admin': { en: 'Admin', es: 'Admin', pt: 'Admin' },
+  'Mobile_Menu': { en: 'Mobile Menu', es: 'Menú Móvil', pt: 'Menu Móvel' },
+
+  // Hero Banner
+  'Seasonal_Plants_Artisanal_Touch': {
+    en: 'Seasonal Plants, Artisanal Touch',
+    es: 'Plantas de Temporada, Toque Artesanal',
+    pt: 'Plantas da Estação, Toque Artesanal'
+  },
+  'Discover_curated_collection_plants_gardening_supplies': {
+    en: 'Discover our curated collection of beautiful plants and gardening supplies. Bring nature into your home.',
+    es: 'Descubre nuestra colección curada de hermosas plantas y suministros de jardinería. Lleva la naturaleza a tu hogar.',
+    pt: 'Descubra nossa coleção curada de belas plantas e suprimentos de jardinagem. Traga a natureza para sua casa.'
+  },
+  'Shop_Now': { en: 'Shop Now', es: 'Comprar Ahora', pt: 'Compre Agora' },
+  'Everything_For_Your_Garden': { en: 'Everything For Your Garden', es: 'Todo Para Tu Jardín', pt: 'Tudo Para o Seu Jardim' },
+  'Find_best_tools_supplies': { en: 'Find the best tools and supplies to make your garden thrive.', es: 'Encuentra las mejores herramientas y suministros para que tu jardín prospere.', pt: 'Encontre as melhores ferramentas e suprimentos para fazer seu jardim prosperar.' },
+  'Expert_Plant_Care_Services': { en: 'Expert Plant Care Services', es: 'Servicios Expertos de Cuidado de Plantas', pt: 'Serviços Especializados de Cuidados com Plantas' },
+  'Let_us_help_you': { en: 'Let us help you keep your green friends happy and healthy.', es: 'Déjanos ayudarte a mantener a tus amigos verdes felices y saludables.', pt: 'Deixe-nos ajudar a manter seus amigos verdes felizes e saudáveis.' },
+  
+  // Featured Products
+  'Featured_Products': { en: 'Featured Products', es: 'Productos Destacados', pt: 'Produtos em Destaque' },
+  'Hand_picked_for_your_home_and_garden': {
+    en: 'Hand-picked for your home and garden',
+    es: 'Seleccionados a mano para tu hogar y jardín',
+    pt: 'Selecionados a dedo para sua casa e jardim'
+  },
+  'View_All_Products': { en: 'View All Products', es: 'Ver Todos los Productos', pt: 'Ver Todos os Produtos' },
+  'View_Details': { en: 'View Details', es: 'Ver Detalles', pt: 'Ver Detalhes' },
+
+  // Services
+  'Our_Services': { en: 'Our Services', es: 'Nuestros Servicios', pt: 'Nossos Serviços' },
+  'Expert_care_for_your_green_space': {
+    en: 'Expert care for your green space',
+    es: 'Cuidado experto para tu espacio verde',
+    pt: 'Cuidado especializado para seu espaço verde'
+  },
+  'Plant_Maintenance': { en: 'Plant Maintenance', es: 'Mantenimiento de Plantas', pt: 'Manutenção de Plantas' },
+  'We_offer_regular_maintenance_services': {
+    en: 'We offer regular maintenance services to keep your plants healthy and vibrant. Pruning, watering, and pest control included.',
+    es: 'Ofrecemos servicios de mantenimiento regular para mantener tus plantas saludables y vibrantes. Incluye poda, riego y control de plagas.',
+    pt: 'Oferecemos serviços de manutenção regular para manter suas plantas saudáveis e vibrantes. Poda, rega e controle de plagas incluídos.'
+  },
+  'Garden_Setup': { en: 'Garden Setup', es: 'Diseño de Jardines', pt: 'Montagem de Jardins' },
+  'Dreaming_of_a_new_garden': {
+    en: 'Dreaming of a new garden? Our experts can help design and set up the perfect garden for your space, from balconies to backyards.',
+    es: '¿Sueñas con un nuevo jardín? Nuestros expertos pueden ayudarte a diseñar y crear el jardín perfecto para tu espacio, desde balcones hasta patios.',
+    pt: 'Sonhando com um novo jardim? Nossos especialistas podem ajudar a projetar e montar o jardim perfeito para seu espaço, de varandas a quintais.'
+  },
+  'Contact_Us': { en: 'Contact Us', es: 'Contáctanos', pt: 'Fale Conosco' },
+  
+  // Footer
+  'A_green_touch_for_modern_living': {
+    en: 'A green touch for modern living.',
+    es: 'Un toque verde para la vida moderna.',
+    pt: 'Um toque verde para a vida moderna.'
+  },
+  'All_rights_reserved': { en: 'All rights reserved.', es: 'Todos los derechos reservados.', pt: 'Todos os direitos reservados.' },
+  'Have_questions': {
+    en: "Have questions? We're here to help.",
+    es: "¿Tienes preguntas? Estamos aquí para ayudarte.",
+    pt: "Tem perguntas? Estamos aqui para ajudar."
+  },
+  'Lets_Talk': { en: "Let's talk?", es: "¿Hablamos?", pt: "Vamos conversar?" },
+  'Web_design_and_development_by': { en: 'Web design and development by', es: 'Diseño y desarrollo web por', pt: 'Design e desenvolvimento web por' },
+  
+  // Products Page
+  'Our_Collection': { en: 'Our Collection', es: 'Nuestra Colección', pt: 'Nossa Coleção' },
+  'Browse_our_wide_selection_of_plants_and_supplies': {
+    en: 'Browse our wide selection of plants and supplies',
+    es: 'Explora nuestra amplia selección de plantas y suministros',
+    pt: 'Navegue pela nossa vasta seleção de plantas e suprimentos'
+  },
+  'Search_products': { en: 'Search products...', es: 'Buscar productos...', pt: 'Pesquisar produtos...' },
+  'Filter_by_category': { en: 'Filter by category', es: 'Filtrar por categoría', pt: 'Filtrar por categoria' },
+  'All': { en: 'All', es: 'Todos', pt: 'Todos' },
+  'Indoor': { en: 'Indoor', es: 'Interior', pt: 'Interior' },
+  'Outdoor': { en: 'Outdoor', es: 'Exterior', pt: 'Exterior' },
+  'Supplies': { en: 'Supplies', es: 'Suministros', pt: 'Suministros' },
+  'Sort_by': { en: 'Sort by', es: 'Ordenar por', pt: 'Ordenar por' },
+  'Price_Low_to_High': { en: 'Price: Low to High', es: 'Precio: Menor a Mayor', pt: 'Preço: Menor para Maior' },
+  'Price_High_to_Low': { en: 'Price: High to Low', es: 'Precio: Mayor a Menor', pt: 'Preço: Maior para Menor' },
+  'Name_A_Z': { en: 'Name: A-Z', es: 'Nombre: A-Z', pt: 'Nome: A-Z' },
+  'Name_Z_A': { en: 'Name: Z-A', es: 'Nombre: Z-A', pt: 'Nome: Z-A' },
+  
+  // Login / Auth Flow
+  'Welcome_Back': { en: 'Welcome Back', es: 'Bienvenido de Nuevo', pt: 'Bem-vindo de Volta' },
+  'Enter_your_credentials_to_log_in': {
+    en: 'Enter your credentials to log in to your account',
+    es: 'Ingresa tus credenciales para acceder a tu cuenta',
+    pt: 'Digite suas credenciais para fazer login em sua conta'
+  },
+  'Email': { en: 'Email', es: 'Correo Electrónico', pt: 'E-mail' },
+  'Password': { en: 'Password', es: 'Contraseña', pt: 'Senha' },
+  'Confirm_Password': { en: 'Confirm Password', es: 'Confirmar Contraseña', pt: 'Confirmar Senha' },
+  'Login': { en: 'Login', es: 'Iniciar Sesión', pt: 'Entrar' },
+  'Logout': { en: 'Logout', es: 'Cerrar Sesión', pt: 'Sair' },
+  'Placeholder_Email': { en: 'you@example.com', es: 'tu@ejemplo.com', pt: 'voce@exemplo.com' },
+  'Logging_In': { en: 'Logging in...', es: 'Iniciando sesión...', pt: 'Entrando...' },
+  'Login_Error_Title': { en: 'Login Failed', es: 'Error de Inicio de Sesión', pt: 'Falha no Login' },
+  'Login_Error_Description': { en: 'Invalid email or password. Please try again.', es: 'Correo o contraseña inválidos. Por favor, inténtalo de nuevo.', pt: 'E-mail ou senha inválidos. Por favor, tente novamente.' },
+  'Forgot_Password': { en: 'Forgot Password?', es: '¿Olvidaste tu contraseña?', pt: 'Esqueceu a senha?' },
+  'Create_Account': { en: 'Create an account', es: 'Crear una cuenta', pt: 'Criar uma conta' },
+  'Register': { en: 'Register', es: 'Registrarse', pt: 'Registrar' },
+  'Full_Name': { en: 'Full Name', es: 'Nombre Completo', pt: 'Nome Completo' },
+  'Create_your_account': { en: 'Create your account', es: 'Crea tu cuenta', pt: 'Crie sua conta' },
+  'Enter_your_details_to_get_started': { en: 'Enter your details below to get started', es: 'Ingresa tus datos a continuación para comenzar', pt: 'Insira seus detalhes abaixo para começar' },
+  'Already_have_an_account': { en: 'Already have an account?', es: '¿Ya tienes una cuenta?', pt: 'Já tem uma conta?' },
+  'Reset_your_password': { en: 'Reset your password', es: 'Restablece tu contraseña', pt: 'Redefina sua senha' },
+  'Enter_your_email_to_reset': { en: 'Enter your email address and we will send you a link to reset your password.', es: 'Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.', pt: 'Digite seu e-mail e enviaremos um link para redefinir sua senha.' },
+  'Send_Reset_Link': { en: 'Send Reset Link', es: 'Enviar Enlace', pt: 'Enviar Link' },
+  'Back_to_Login': { en: 'Back to Login', es: 'Volver a Iniciar Sesión', pt: 'Voltar para o Login' },
+  'Set_a_new_password': { en: 'Set a new password', es: 'Establece una nueva contraseña', pt: 'Defina uma nova senha' },
+  'Your_new_password_must_be_different': { en: 'Your new password must be different from previously used passwords.', es: 'Tu nueva contraseña debe ser diferente de las contraseñas utilizadas anteriormente.', pt: 'Sua nova senha deve ser diferente das senhas usadas anteriormente.' },
+  'Save_New_Password': { en: 'Save New Password', es: 'Guardar Nueva Contraseña', pt: 'Salvar Nova Senha' },
+  'Register_Success_Title': { en: 'Registration Successful', es: 'Registro Exitoso', pt: 'Registro bem-sucedido' },
+  'Register_Success_Desc': { en: 'Your account has been created. You can now log in.', es: 'Tu cuenta ha sido creada. Ahora puedes iniciar sesión.', pt: 'Sua conta foi criada. Agora você pode fazer login.' },
+  'Register_Error_Title': { en: 'Registration Failed', es: 'Error en el Registro', pt: 'Falha no Registro' },
+  'Reset_Success_Title': { en: 'Reset Link Sent', es: 'Enlace Enviado', pt: 'Link Enviado' },
+  'Reset_Success_Desc': { en: 'If an account exists, a reset link has been sent to your email.', es: 'Si existe una cuenta, se ha enviado un enlace de restablecimiento a tu correo.', pt: 'Se existir uma conta, um link de redefinição foi enviado para o seu e-mail.' },
+  'Reset_Error_Title': { en: 'Error', es: 'Error', pt: 'Erro' },
+  'New_Password_Success_Title': { en: 'Password Updated', es: 'Contraseña Actualizada', pt: 'Senha Atualizada' },
+  'New_Password_Success_Desc': { en: 'Your password has been updated successfully. You can now log in.', es: 'Tu contraseña ha sido actualizada. Ya puedes iniciar sesión.', pt: 'Sua senha foi atualizada. Você já pode fazer login.' },
+  
+  // Admin Page
+  'Admin_Panel': { en: 'Admin Panel', es: 'Panel de Administración', pt: 'Painel Administrativo' },
+  'Manage_your_products_and_store_data': {
+    en: 'Manage your products and other store data.',
+    es: 'Gestiona tus productos y otros datos de la tienda.',
+    pt: 'Gerencie seus produtos e outros dados da loja.'
+  },
+  'Product_Management': { en: 'Product Management', es: 'Gestión de Productos', pt: 'Gerenciamento de Produtos' },
+  'User_Management': { en: 'User Management', es: 'Gestión de Usuarios', pt: 'Gerenciamento de Usuários' },
+  'Manage_your_users': { en: 'Manage your users and their permissions.', es: 'Gestiona tus usuarios y sus permisos.', pt: 'Gerencie seus usuários e suas permissões.' },
+  'Add_New_Product': { en: 'Add New Product', es: 'Añadir Nuevo Producto', pt: 'Adicionar Novo Produto' },
+  'Name': { en: 'Name', es: 'Nombre', pt: 'Nome' },
+  'Product_Name': { en: 'Product Name', es: 'Nombre del Producto', pt: 'Nome do Produto' },
+  'Category': { en: 'Category', es: 'Categoría', pt: 'Categoria' },
+  'Price': { en: 'Price', es: 'Precio', pt: 'Preço' },
+  'Actions': { en: 'Actions', es: 'Acciones', pt: 'Ações' },
+  'Edit': { en: 'Edit', es: 'Editar', pt: 'Editar' },
+  'Delete': { en: 'Delete', es: 'Eliminar', pt: 'Excluir' },
+  'Deactivate': { en: 'Deactivate', es: 'Desactivar', pt: 'Desativar' },
+  'Create_Product': { en: 'Create Product', es: 'Crear Producto', pt: 'Criar Produto' },
+  'Update_Product': { en: 'Update Product', es: 'Actualizar Producto', pt: 'Atualizar Produto' },
+  'Update_User': { en: 'Update User', es: 'Actualizar Usuario', pt: 'Atualizar Usuário' },
+  'Product_Description': { en: 'Product Description', es: 'Descripción del Producto', pt: 'Descrição do Produto' },
+  'Image_URL': { en: 'Image URL', es: 'URL de la Imagen', pt: 'URL da Imagem' },
+  'Cancel': { en: 'Cancel', es: 'Cancelar', pt: 'Cancelar' },
+  'Save': { en: 'Save', es: 'Guardar', pt: 'Salvar' },
+  'Are_you_sure': { en: 'Are you sure?', es: '¿Estás seguro?', pt: 'Você tem certeza?' },
+  'This_action_cannot_be_undone': {
+    en: 'This action cannot be undone. This will permanently delete the item.',
+    es: 'Esta acción no se puede deshacer. Esto eliminará permanentemente el elemento.',
+    pt: 'Esta ação não pode ser desfeita. Isso excluirá permanentemente o item.'
+  },
+   'This_action_cannot_be_undone_inactive': {
+    en: 'This action will set the product as inactive and it will not be visible in the public store.',
+    es: 'Esta acción marcará el producto como inactivo y no será visible en la tienda pública.',
+    pt: 'Esta ação definirá o produto como inativo e ele não será visível na loja pública.'
+  },
+  'Name_EN': { en: 'Name (EN)', es: 'Nombre (EN)', pt: 'Nome (EN)' },
+  'Desc_EN': { en: 'Desc (EN)', es: 'Desc (EN)', pt: 'Desc (EN)' },
+  'Cat_EN': { en: 'Category (EN)', es: 'Categoría (EN)', pt: 'Categoria (EN)' },
+  'User': { en: 'User', es: 'Usuario', pt: 'Usuário' },
+  'Users': { en: 'Users', es: 'Usuarios', pt: 'Usuários' },
+  'Dashboard': { en: 'Dashboard', es: 'Dashboard', pt: 'Dashboard' },
+  'Image': { en: 'Image', es: 'Imagen', pt: 'Imagem' },
+  'Brand': { en: 'Brand', es: 'Marca', pt: 'Marca' },
+  'Description': { en: 'Description', es: 'Descripción', pt: 'Descrição' },
+  'Featured': { en: 'Featured', es: 'Destacado', pt: 'Destaque' },
+  'Yes': { en: 'Yes', es: 'Sí', pt: 'Sim' },
+  'No': { en: 'No', es: 'No', pt: 'Não' },
+  'State': { en: 'State', es: 'Estado', pt: 'Estado' },
+  'activo': { en: 'Active', es: 'Activo', pt: 'Ativo' },
+  'inactivo': { en: 'Inactive', es: 'Inactivo', pt: 'Inativo' },
+  'vendido': { en: 'Sold', es: 'Vendido', pt: 'Vendido' },
+  'Select_a_state': { en: 'Select a state', es: 'Selecciona un estado', pt: 'Selecione um estado' },
+
+  // Toast Notifications
+  'Product_Deactivated_Title': { en: 'Product Deactivated', es: 'Producto Desactivado', pt: 'Produto Desativado' },
+  'Product_Deactivated_Desc': { en: 'The product has been set to inactive.', es: 'El producto ha sido marcado como inativo.', pt: 'O produto foi marcado como inativo.' },
+  'Error_Title': { en: 'Error', es: 'Error', pt: 'Erro' },
+  'Product_Updated_Title': { en: 'Product Updated', es: 'Producto Actualizado', pt: 'Produto Atualizado' },
+  'Product_Created_Title': { en: 'Product Created', es: 'Producto Creado', pt: 'Produto Criado' },
+  'Product_Saved_Desc': { en: 'The product has been saved successfully.', es: 'El producto se ha guardado correctamente.', pt: 'O produto foi salvo com sucesso.' },
+  'Image_upload_success_title': { en: 'Image Uploaded', es: 'Imagen Subida', pt: 'Imagem Carregada' },
+  'Image_upload_success_desc': { en: 'The image has been uploaded successfully.', es: 'La imagen se ha subido correctamente.', pt: 'A imagem foi carregada com sucesso.' },
+  'Upload_an_Image': { en: 'Upload an Image', es: 'Subir una Imagen', pt: 'Carregar uma Imagem' },
+  'User_Updated_Title': { en: 'User Updated', es: 'Usuario Actualizado', pt: 'Usuário Atualizado' },
+  'User_Saved_Desc': { en: 'The user has been saved successfully.', es: 'El usuario se ha guardado correctamente.', pt: 'O usuário foi salvo com sucesso.' },
+
+  // Slides / Novedades
+  'Slides': { en: 'Slides', es: 'Novedades', pt: 'Novidades' },
+  'Slide_Management': { en: 'Slide Management', es: 'Gestión de Novedades', pt: 'Gerenciamento de Novidades' },
+  'Manage_your_slides': { en: 'Manage your promotional slides for the homepage carousel.', es: 'Gestiona los slides promocionales del carrusel de inicio.', pt: 'Gerencie seus slides promocionais para o carrossel da página inicial.' },
+  'Add_New_Slide': { en: 'Add New Slide', es: 'Añadir Nueva Novedad', pt: 'Adicionar Novidade' },
+  'Headline': { en: 'Headline', es: 'Título', pt: 'Título' },
+  'Subtext': { en: 'Subtext', es: 'Subtítulo', pt: 'Subtítulo' },
+  'Create_Slide': { en: 'Create Slide', es: 'Crear Novedad', pt: 'Criar Novidade' },
+  'Update_Slide': { en: 'Update Slide', es: 'Actualizar Novedad', pt: 'Atualizar Novidade' },
+  'habilitado': { en: 'Enabled', es: 'Habilitado', pt: 'Habilitado' },
+  'deshabilitado': { en: 'Disabled', es: 'Deshabilitado', pt: 'Desabilitado' },
+  'Slide_Deleted_Title': { en: 'Slide Deleted', es: 'Novedad Eliminada', pt: 'Novidade Excluída' },
+  'Slide_Deleted_Desc': { en: 'The slide has been deleted successfully.', es: 'La novedad ha sido eliminada correctamente.', pt: 'A novidade foi excluída com sucesso.' },
+  'Slide_Updated_Title': { en: 'Slide Updated', es: 'Novedad Actualizada', pt: 'Novidade Atualizada' },
+  'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Novidade Criada' },
+  'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' }
+};

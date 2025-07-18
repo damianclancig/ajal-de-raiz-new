@@ -1,0 +1,399 @@
+
+'use server';
+
+import { revalidatePath } from 'next/cache';
+import clientPromise from '@/lib/mongodb';
+import { Product, ProductState, User, HeroSlide, SlideState } from './types';
+import { ObjectId } from 'mongodb';
+import { redirect } from 'next/navigation';
+import { hash } from 'bcryptjs';
+import { getDb } from './product-service';
+
+const productFromDoc = (doc: any): Product => {
+  return {
+    id: doc._id.toString(),
+    name: doc.name,
+    slug: doc.slug,
+    category: doc.category,
+    image: doc.image,
+    price: doc.price,
+    brand: doc.brand,
+    rating: doc.rating,
+    numReviews: doc.numReviews,
+    countInStock: doc.countInStock,
+    description: doc.description,
+    isFeatured: doc.isFeatured || false,
+    state: doc.state || 'inactivo',
+    dataAiHint: doc.dataAiHint || 'product image',
+    createdAt: doc.createdAt?.toString(),
+    updatedAt: doc.updatedAt?.toString(),
+  };
+};
+
+type ActionResponse = {
+  success: boolean;
+  message: string;
+  product?: Product | null;
+  user?: User | null;
+  slide?: HeroSlide | null;
+};
+
+// Helper function to create a URL-friendly slug
+const createSlug = (name: string) => {
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+};
+
+export async function createProduct(formData: FormData): Promise<ActionResponse> {
+  try {
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+    
+    const name = formData.get('name') as string;
+    const price = parseFloat(formData.get('price') as string);
+    
+    if (!name || isNaN(price)) {
+      return { success: false, message: "Name and Price are required." };
+    }
+
+    const newProductData = {
+      name: name,
+      slug: createSlug(name),
+      description: formData.get('description') as string || '',
+      category: formData.get('category') as string || 'Uncategorized',
+      price: price,
+      image: formData.get('image') as string || '',
+      brand: formData.get('brand') as string || 'Ajal',
+      isFeatured: formData.get('isFeatured') === 'on',
+      state: 'activo' as ProductState,
+      rating: 0,
+      numReviews: 0,
+      countInStock: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const result = await productsCollection.insertOne(newProductData);
+    
+    if (!result.insertedId) {
+      throw new Error('Failed to create product.');
+    }
+
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to create product: ${message}` };
+  }
+
+  revalidatePath('/admin');
+  revalidatePath('/products');
+  revalidatePath('/');
+  redirect('/admin');
+}
+
+export async function updateProduct(productId: string, formData: FormData): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(productId)) {
+        return { success: false, message: 'Invalid product ID.' };
+    }
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+    
+    const name = formData.get('name') as string;
+    const price = parseFloat(formData.get('price') as string);
+    const state = formData.get('state') as ProductState;
+
+
+    if (!name || isNaN(price)) {
+        return { success: false, message: "Name and Price are required." };
+    }
+    if (!['activo', 'inactivo', 'vendido'].includes(state)) {
+      return { success: false, message: 'Invalid state value.' };
+    }
+
+    const updateData = {
+      name: name,
+      slug: createSlug(name),
+      description: formData.get('description') as string,
+      category: formData.get('category') as string,
+      price: price,
+      image: formData.get('image') as string,
+      brand: formData.get('brand') as string,
+      isFeatured: formData.get('isFeatured') === 'on',
+      state: state,
+      updatedAt: new Date(),
+    };
+
+    const result = await productsCollection.updateOne(
+      { _id: new ObjectId(productId) },
+      { $set: updateData }
+    );
+
+    if (result.matchedCount === 0) {
+      return { success: false, message: 'Product not found.' };
+    }
+
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to update product: ${message}` };
+  }
+  
+  revalidatePath('/admin');
+  revalidatePath(`/admin/products/${productId}/edit`);
+  revalidatePath('/products');
+  revalidatePath('/');
+  redirect('/admin');
+}
+
+export async function deleteProduct(productId: string): Promise<ActionResponse> {
+  try {
+     if (!ObjectId.isValid(productId)) {
+        return { success: false, message: 'Invalid product ID.' };
+    }
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+    
+    const result = await productsCollection.updateOne(
+      { _id: new ObjectId(productId) },
+      { $set: { state: 'inactivo' as ProductState, updatedAt: new Date() } }
+    );
+
+    if (result.matchedCount === 0) {
+      return { success: false, message: 'Product not found.' };
+    }
+    
+    const updatedProduct = await productsCollection.findOne({_id: new ObjectId(productId)});
+
+    revalidatePath('/admin');
+    revalidatePath('/products');
+    revalidatePath('/');
+    
+    return { success: true, message: 'Product set to inactive.', product: productFromDoc(updatedProduct) };
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to delete product: ${message}` };
+  }
+}
+
+export async function registerUser(formData: FormData): Promise<ActionResponse> {
+  try {
+    const db = await getDb();
+    const usersCollection = db.collection('users');
+
+    const name = formData.get('name') as string;
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+
+    if (!name || !email || !password) {
+      return { success: false, message: 'Name, email, and password are required.' };
+    }
+    
+    const existingUser = await usersCollection.findOne({ email });
+    if (existingUser) {
+      return { success: false, message: 'User with this email already exists.' };
+    }
+
+    const hashedPassword = await hash(password, 10);
+
+    const newUser = {
+      name,
+      email,
+      password: hashedPassword,
+      isAdmin: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    await usersCollection.insertOne(newUser);
+    
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to register user: ${message}` };
+  }
+
+  redirect('/login');
+}
+
+
+export async function updateUser(userId: string, formData: FormData): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(userId)) {
+      return { success: false, message: 'Invalid user ID.' };
+    }
+    const db = await getDb();
+    const usersCollection = db.collection('users');
+
+    const name = formData.get('name') as string;
+    if (!name) {
+      return { success: false, message: 'Name is required.' };
+    }
+
+    const updateData = {
+      name: name,
+      isAdmin: formData.get('isAdmin') === 'on',
+      updatedAt: new Date(),
+    };
+
+    const result = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: updateData }
+    );
+
+    if (result.matchedCount === 0) {
+      return { success: false, message: 'User not found.' };
+    }
+    
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to update user: ${message}` };
+  }
+
+  revalidatePath('/admin/users');
+  revalidatePath(`/admin/users/${userId}/edit`);
+  redirect('/admin/users');
+}
+
+
+// SLIDE ACTIONS
+
+export async function createSlide(formData: FormData): Promise<ActionResponse> {
+  try {
+    const db = await getDb();
+    const slidesCollection = db.collection('heroSlides');
+
+    const headline = formData.get('headline') as string;
+    const subtext = formData.get('subtext') as string;
+    const image = formData.get('image') as string;
+    const state = formData.get('state') as SlideState;
+
+    if (!headline || !image) {
+      return { success: false, message: 'Headline and Image are required.' };
+    }
+     if (!['habilitado', 'deshabilitado'].includes(state)) {
+      return { success: false, message: 'Invalid state value.' };
+    }
+
+    const newSlideData = {
+      headline,
+      subtext,
+      image,
+      state,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    const result = await slidesCollection.insertOne(newSlideData);
+    if (!result.insertedId) {
+      throw new Error('Failed to create slide.');
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to create slide: ${message}` };
+  }
+
+  revalidatePath('/admin/slides');
+  revalidatePath('/');
+  redirect('/admin/slides');
+}
+
+export async function updateSlide(slideId: string, formData: FormData): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(slideId)) {
+      return { success: false, message: 'Invalid slide ID.' };
+    }
+    const db = await getDb();
+    const slidesCollection = db.collection('heroSlides');
+
+    const headline = formData.get('headline') as string;
+    const subtext = formData.get('subtext') as string;
+    const image = formData.get('image') as string;
+    const state = formData.get('state') as SlideState;
+
+    if (!headline || !image) {
+      return { success: false, message: 'Headline and Image are required.' };
+    }
+    if (!['habilitado', 'deshabilitado'].includes(state)) {
+      return { success: false, message: 'Invalid state value.' };
+    }
+
+    const updateData = {
+      headline,
+      subtext,
+      image,
+      state,
+      updatedAt: new Date(),
+    };
+
+    const result = await slidesCollection.updateOne(
+      { _id: new ObjectId(slideId) },
+      { $set: updateData }
+    );
+
+    if (result.matchedCount === 0) {
+      return { success: false, message: 'Slide not found.' };
+    }
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to update slide: ${message}` };
+  }
+
+  revalidatePath('/admin/slides');
+  revalidatePath(`/admin/slides/${slideId}/edit`);
+  revalidatePath('/');
+  redirect('/admin/slides');
+}
+
+export async function deleteSlide(slideId: string): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(slideId)) {
+      return { success: false, message: 'Invalid slide ID.' };
+    }
+    const db = await getDb();
+    const slidesCollection = db.collection('heroSlides');
+
+    const result = await slidesCollection.deleteOne({ _id: new ObjectId(slideId) });
+
+    if (result.deletedCount === 0) {
+      return { success: false, message: 'Slide not found.' };
+    }
+
+    revalidatePath('/admin/slides');
+    revalidatePath('/');
+    
+    return { success: true, message: 'Slide deleted successfully.' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to delete slide: ${message}` };
+  }
+}
+
+// NOTE: Password reset functionality is not fully implemented as it requires sending emails.
+// This is a placeholder for the UI and basic logic.
+export async function requestPasswordReset(formData: FormData): Promise<ActionResponse> {
+  const email = formData.get('email') as string;
+  // In a real app, you would:
+  // 1. Check if a user with this email exists.
+  // 2. Generate a unique, secure, and expiring token.
+  // 3. Store the token hash in the database, associated with the user.
+  // 4. Send an email to the user with a link to /reset-password?token=...
+  console.log(`Password reset requested for ${email}. Email sending is not implemented.`);
+  return { success: true, message: 'If an account with this email exists, a password reset link has been sent.' };
+}
+
+export async function resetPassword(formData: FormData): Promise<ActionResponse> {
+    const password = formData.get('password') as string;
+    const token = formData.get('token') as string;
+    // In a real app, you would:
+    // 1. Validate the token (check if it exists, is not expired, and matches the user).
+    // 2. Hash the new password.
+    // 3. Update the user's password in the database.
+    // 4. Invalidate the reset token.
+    console.log(`Password reset for token ${token} with new password.`);
+    return { success: true, message: 'Password has been reset successfully.' };
+}
