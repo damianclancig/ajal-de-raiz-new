@@ -1,12 +1,10 @@
-
 "use client"
 
 import type { Product } from '@/lib/types';
 import { useLanguage } from '@/hooks/use-language';
 import Image from 'next/image';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart } from 'lucide-react';
 import Link from 'next/link';
 
 interface ProductCardProps {
@@ -17,7 +15,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { language, t } = useLanguage();
 
   const formatPrice = (price: number) => {
-    // 'es' will default to 'es-ES' which uses €, let's use a specific locale for USD format
     const locale = language === 'es' ? 'es-AR' : language;
     return new Intl.NumberFormat(locale, {
       style: 'decimal',
@@ -26,11 +23,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     }).format(price);
   };
 
-  // Cloudinary can convert images on the fly.
-  // We replace .heic with .png to ensure browser compatibility.
-  // If no image is provided, we use a placeholder.
-  const imageUrl = product.image
-    ? product.image.replace(/\.heic$/i, '.png')
+  const imageUrl = product.images && product.images.length > 0
+    ? product.images[0].replace(/\.heic$/i, '.png')
     : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
 
   return (

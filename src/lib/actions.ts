@@ -1,4 +1,3 @@
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -6,11 +5,10 @@ import clientPromise from '@/lib/mongodb';
 import { Product, ProductState, User, HeroSlide, SlideState } from './types';
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
-import { hash, compare } from 'bcryptjs';
+import { hash } from 'bcryptjs';
 import { getDb } from './product-service';
 import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
-import { signIn } from '@/auth';
 
 const productFromDoc = (doc: any): Product => {
   return {
@@ -18,7 +16,7 @@ const productFromDoc = (doc: any): Product => {
     name: doc.name,
     slug: doc.slug,
     category: doc.category,
-    image: doc.image,
+    images: doc.images || [],
     price: doc.price,
     brand: doc.brand,
     rating: doc.rating,
@@ -50,6 +48,16 @@ const createSlug = (name: string) => {
         .replace(/-+/g, '-');
 };
 
+const getImagesFromFormData = (formData: FormData): string[] => {
+    const images: string[] = [];
+    formData.forEach((value, key) => {
+        if (key.startsWith('images[')) {
+            images.push(value as string);
+        }
+    });
+    return images;
+};
+
 export async function createProduct(formData: FormData): Promise<ActionResponse> {
   try {
     const db = await getDb();
@@ -57,6 +65,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
     
     const name = formData.get('name') as string;
     const price = parseFloat(formData.get('price') as string);
+    const images = getImagesFromFormData(formData);
     
     if (!name || isNaN(price)) {
       return { success: false, message: "Name and Price are required." };
@@ -68,7 +77,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
       description: formData.get('description') as string || '',
       category: formData.get('category') as string || 'Uncategorized',
       price: price,
-      image: formData.get('image') as string || '',
+      images: images,
       brand: formData.get('brand') as string || 'Ajal',
       isFeatured: formData.get('isFeatured') === 'on',
       state: 'activo' as ProductState,
@@ -108,6 +117,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
     const name = formData.get('name') as string;
     const price = parseFloat(formData.get('price') as string);
     const state = formData.get('state') as ProductState;
+    const images = getImagesFromFormData(formData);
 
 
     if (!name || isNaN(price)) {
@@ -123,7 +133,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       description: formData.get('description') as string,
       category: formData.get('category') as string,
       price: price,
-      image: formData.get('image') as string,
+      images: images,
       brand: formData.get('brand') as string,
       isFeatured: formData.get('isFeatured') === 'on',
       state: state,
@@ -496,5 +506,3 @@ export async function handleContactForm(formData: FormData): Promise<ActionRespo
     return { success: false, message: `Failed to send contact email: ${message}` };
   }
 }
-
-    

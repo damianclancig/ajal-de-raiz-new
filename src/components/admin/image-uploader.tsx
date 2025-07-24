@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState } from 'react';
@@ -8,13 +7,15 @@ import { useToast } from '@/hooks/use-toast';
 import { X, UploadCloud, Image as ImageIcon, Loader2 } from 'lucide-react';
 import NextImage from 'next/image';
 
-interface ImageUploaderProps {
+const MAX_IMAGES = 5;
+
+interface MultiImageUploaderProps {
   name: string;
-  defaultValue?: string;
+  defaultValues?: string[];
 }
 
-export default function ImageUploader({ name, defaultValue = '' }: ImageUploaderProps) {
-  const [imageUrl, setImageUrl] = useState(defaultValue);
+export default function MultiImageUploader({ name, defaultValues = [] }: MultiImageUploaderProps) {
+  const [imageUrls, setImageUrls] = useState<string[]>(defaultValues);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -22,17 +23,26 @@ export default function ImageUploader({ name, defaultValue = '' }: ImageUploader
     const file = e.target.files?.[0];
     if (!file) return;
 
+    if (imageUrls.length >= MAX_IMAGES) {
+      toast({
+        variant: 'destructive',
+        title: "Límite alcanzado",
+        description: `No puedes subir más de ${MAX_IMAGES} imágenes.`,
+      });
+      return;
+    }
+
     setLoading(true);
-    const toastId = toast({
+    toast({
       title: "Subiendo imagen...",
       description: "Por favor espera.",
-    }).id;
+    });
 
     try {
       const resSign = await fetch('/api/sign-cloudinary-params', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}), // No need to send params for this simple signature
+        body: JSON.stringify({}),
       });
 
       if (!resSign.ok) {
@@ -62,7 +72,7 @@ export default function ImageUploader({ name, defaultValue = '' }: ImageUploader
       
       const data = await res.json();
       
-      setImageUrl(data.secure_url);
+      setImageUrls(prev => [...prev, data.secure_url]);
 
       toast({
         title: "Imagen subida",
@@ -77,67 +87,69 @@ export default function ImageUploader({ name, defaultValue = '' }: ImageUploader
         });
     } finally {
         setLoading(false);
-        // Reset file input to allow re-uploading the same file
         e.target.value = '';
     }
   };
 
-  const handleRemoveImage = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    setImageUrl('');
+  const handleRemoveImage = (urlToRemove: string) => {
+    setImageUrls(prev => prev.filter(url => url !== urlToRemove));
   };
 
   return (
-    <div className="space-y-2">
-      <Input
-        id={name}
-        name={name}
-        type="hidden"
-        value={imageUrl}
-        readOnly
-      />
+    <div className="space-y-4">
+      {imageUrls.map((url, index) => (
+        <input key={index} type="hidden" name={`${name}[${index}]`} value={url} />
+      ))}
       
-      <div className="w-full h-48 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-muted-foreground relative">
-        {imageUrl ? (
-          <>
+      <div className="grid grid-cols-3 gap-4">
+        {imageUrls.map((url, index) => (
+          <div key={index} className="relative aspect-square w-full rounded-md overflow-hidden">
             <NextImage
-              src={imageUrl.replace(/\.heic$/i, '.png')}
-              alt="Vista previa del producto"
+              src={url.replace(/\.heic$/i, '.png')}
+              alt={`Vista previa ${index + 1}`}
               fill
               style={{ objectFit: 'cover' }}
               className="rounded-md"
             />
-            <div className="absolute top-2 right-2 z-10">
+            <div className="absolute top-1 right-1 z-10">
               <Button
                 type="button"
                 variant="destructive"
                 size="icon"
-                onClick={handleRemoveImage}
-                className="h-7 w-7"
+                onClick={() => handleRemoveImage(url)}
+                className="h-6 w-6"
                 disabled={loading}
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Eliminar imagen</span>
               </Button>
             </div>
-          </>
-        ) : (
-           <div className="text-center">
+            {index === 0 && (
+              <div className="absolute bottom-0 w-full bg-black/50 text-white text-xs text-center p-1">
+                Principal
+              </div>
+            )}
+          </div>
+        ))}
+        {imageUrls.length < MAX_IMAGES && (
+          <div className="relative aspect-square w-full border-2 border-dashed rounded-md flex flex-col items-center justify-center text-muted-foreground">
             {loading ? (
-                <div className="flex flex-col items-center gap-2">
-                    <Loader2 className="h-12 w-12 animate-spin" />
-                    <p>Subiendo...</p>
+                <div className="flex flex-col items-center gap-2 text-center">
+                    <Loader2 className="h-8 w-8 animate-spin" />
+                    <p className="text-sm">Subiendo...</p>
                 </div>
             ) : (
-                <>
-                    <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <div className="text-center">
+                    <ImageIcon className="mx-auto h-10 w-10 text-gray-400" />
                     <label htmlFor="file-upload" className="mt-2 cursor-pointer flex items-center gap-2 text-sm text-primary hover:text-primary/80 font-semibold">
                        <UploadCloud className="h-4 w-4" />
-                       <span>Subir una Imagen</span>
+                       <span>Añadir</span>
                     </label>
                     <Input id="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/*" disabled={loading} />
-                    <p className="text-xs text-muted-foreground mt-1">PNG, JPG, GIF hasta 10MB</p>
-                </>
+                    <p className="text-xs text-muted-foreground mt-1">
+                        {imageUrls.length} / {MAX_IMAGES}
+                    </p>
+                </div>
             )}
           </div>
         )}

@@ -1,7 +1,6 @@
-
 "use client";
 
-import React, { useTransition, useState, useEffect } from 'react';
+import React, { useTransition, useState } from 'react';
 import type { Product } from '@/lib/types';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
@@ -12,7 +11,7 @@ import { Loader2, Trash2, AlertTriangle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import ImageUploader from './image-uploader';
+import MultiImageUploader from './image-uploader';
 import { createProduct, updateProduct, physicallyDeleteProduct } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -142,8 +141,8 @@ export default function ProductForm({ product }: ProductFormProps) {
                   </div>
               </div>
               <div className="space-y-4">
-                  <Label htmlFor="image">{t('Image')}</Label>
-                  <ImageUploader name="image" defaultValue={product?.image || ''} />
+                  <Label htmlFor="images">{t('Image')}</Label>
+                  <MultiImageUploader name="images" defaultValues={product?.images || []} />
               </div>
             </div>
           

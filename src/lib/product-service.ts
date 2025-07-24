@@ -1,4 +1,3 @@
-
 import clientPromise from '@/lib/mongodb';
 import type { Product } from './types';
 import { ObjectId } from 'mongodb';
@@ -17,7 +16,7 @@ const productFromDoc = (doc: any): Product | null => {
     name: doc.name,
     slug: doc.slug,
     category: doc.category,
-    image: doc.image,
+    images: doc.images || [],
     price: doc.price,
     brand: doc.brand,
     rating: doc.rating,

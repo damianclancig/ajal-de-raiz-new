@@ -1,3 +1,5 @@
+'use server';
+
 import type { ObjectId } from 'mongodb';
 
 export type ProductState = 'activo' | 'inactivo' | 'vendido';
@@ -8,7 +10,7 @@ export interface Product {
   name: string;
   slug: string;
   category: string;
-  image: string;
+  images: string[];
   price: number;
   brand: string;
   rating: number;
