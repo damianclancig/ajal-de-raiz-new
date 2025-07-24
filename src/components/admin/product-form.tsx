@@ -47,7 +47,7 @@ export default function ProductForm({ product }: ProductFormProps) {
   
   return (
     <form action={handleSubmit}>
-      <Card>
+      <Card className="overflow-hidden">
         <CardHeader>
           <CardTitle>{product ? t('Update_Product') : t('Create_Product')}</CardTitle>
         </CardHeader>

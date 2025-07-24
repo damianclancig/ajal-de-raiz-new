@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   // If no image is provided, we use a placeholder.
   const imageUrl = product.image
     ? product.image.replace(/\.heic$/i, '.png')
-    : 'https://placehold.co/600x600.png';
+    : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">

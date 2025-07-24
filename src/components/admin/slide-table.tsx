@@ -71,7 +71,7 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
             {slides.map(slide => {
                 const imageUrl = slide.image
                   ? slide.image.replace(/\.heic$/i, '.png')
-                  : 'https://placehold.co/600x400.png';
+                  : 'https://placehold.co/600x400/a1a1a1/000000/jpg?text=No+Image';
 
                 return (
                   <TableRow key={slide.id}>

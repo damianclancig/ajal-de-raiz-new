@@ -29,6 +29,8 @@ export interface User {
   email: string;
   password?: string;
   isAdmin: boolean;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
   createdAt?: string;
   updatedAt?: string;
 }

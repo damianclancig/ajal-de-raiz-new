@@ -38,7 +38,11 @@ export default function LoginPage() {
   const handleSignIn = async (formData: FormData) => {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    await signIn('credentials', { email, password, redirectTo: '/' });
+    await signIn('credentials', { 
+        email, 
+        password, 
+        redirectTo: '/' 
+    });
   }
 
   return (

@@ -41,7 +41,7 @@ export default async function ProductDetailPage({ params }: { params: { slug: st
 
   const imageUrl = product.image
     ? product.image.replace(/\.heic$/i, '.png')
-    : 'https://placehold.co/800x800.png';
+    : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
 
   return (
     <div className="container py-8 md:py-12">

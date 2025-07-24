@@ -6,8 +6,11 @@ import clientPromise from '@/lib/mongodb';
 import { Product, ProductState, User, HeroSlide, SlideState } from './types';
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
-import { hash } from 'bcryptjs';
+import { hash, compare } from 'bcryptjs';
 import { getDb } from './product-service';
+import crypto from 'crypto';
+import { sendPasswordResetEmail } from './email-service';
+import { signIn } from '@/auth';
 
 const productFromDoc = (doc: any): Product => {
   return {
@@ -373,27 +376,80 @@ export async function deleteSlide(slideId: string): Promise<ActionResponse> {
   }
 }
 
-// NOTE: Password reset functionality is not fully implemented as it requires sending emails.
-// This is a placeholder for the UI and basic logic.
 export async function requestPasswordReset(formData: FormData): Promise<ActionResponse> {
   const email = formData.get('email') as string;
-  // In a real app, you would:
-  // 1. Check if a user with this email exists.
-  // 2. Generate a unique, secure, and expiring token.
-  // 3. Store the token hash in the database, associated with the user.
-  // 4. Send an email to the user with a link to /reset-password?token=...
-  console.log(`Password reset requested for ${email}. Email sending is not implemented.`);
-  return { success: true, message: 'If an account with this email exists, a password reset link has been sent.' };
+  try {
+    const db = await getDb();
+    const usersCollection = db.collection('users');
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      // Don't reveal if user exists or not
+      return { success: true, message: 'If an account with this email exists, a password reset link has been sent.' };
+    }
+
+    // Generate a secure token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Set expiry for 1 hour
+    const passwordResetExpires = new Date(Date.now() + 3600000); 
+
+    await usersCollection.updateOne(
+      { _id: user._id },
+      { $set: { passwordResetToken, passwordResetExpires } }
+    );
+    
+    const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
+    
+    await sendPasswordResetEmail(user.email, user.name, resetUrl);
+    
+    return { success: true, message: 'If an account with this email exists, a password reset link has been sent.' };
+
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    // Pass the detailed error message for the toast
+    return { success: false, message };
+  }
 }
 
 export async function resetPassword(formData: FormData): Promise<ActionResponse> {
     const password = formData.get('password') as string;
     const token = formData.get('token') as string;
-    // In a real app, you would:
-    // 1. Validate the token (check if it exists, is not expired, and matches the user).
-    // 2. Hash the new password.
-    // 3. Update the user's password in the database.
-    // 4. Invalidate the reset token.
-    console.log(`Password reset for token ${token} with new password.`);
-    return { success: true, message: 'Password has been reset successfully.' };
+
+    if (!password || !token) {
+      return { success: false, message: 'Password and token are required.' };
+    }
+
+    try {
+      const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+      const db = await getDb();
+      const usersCollection = db.collection('users');
+
+      const user = await usersCollection.findOne({
+        passwordResetToken: hashedToken,
+        passwordResetExpires: { $gt: new Date() },
+      });
+
+      if (!user) {
+        return { success: false, message: 'Invalid or expired password reset token.' };
+      }
+
+      const hashedPassword = await hash(password, 10);
+
+      await usersCollection.updateOne(
+        { _id: user._id },
+        {
+          $set: { password: hashedPassword },
+          $unset: { passwordResetToken: "", passwordResetExpires: "" },
+        }
+      );
+      
+      return { success: true, message: 'Password has been reset successfully.' };
+
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+      return { success: false, message };
+    }
 }
