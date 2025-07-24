@@ -1,28 +1,47 @@
 
 'use server';
 
-export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string): Promise<void> {
-    const apiKey = process.env.MAILEROO_API_KEY;
-    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
+import { toast } from '@/hooks/use-toast';
 
-    if (!apiKey || !fromEmail) {
-        console.error('Maileroo API key or From Email is not configured.');
-        throw new Error('Email service is not configured.');
+async function sendEmail(formData: FormData): Promise<void> {
+  const apiKey = process.env.MAILEROO_API_KEY;
+
+  if (!apiKey) {
+    console.error('Maileroo API key is not configured.');
+    throw new Error('Email service is not configured.');
+  }
+
+  try {
+    const response = await fetch('https://smtp.maileroo.com/send', {
+      method: 'POST',
+      headers: {
+        'X-API-Key': apiKey,
+      },
+      body: formData,
+    });
+    
+    if (!response.ok) {
+        const errorBody = await response.json().catch(() => ({ message: 'Failed to parse error response' }));
+        const errorMessage = `Error ${response.status} ${response.statusText}: ${errorBody.message || 'Failed to send email'}`;
+        console.error('Maileroo API Error:', errorMessage);
+        throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
+}
+
+export async function sendPasswordResetEmail(to: string, name: string, resetUrl: string): Promise<void> {
+    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
+    if (!fromEmail) {
+        console.error('Maileroo From Email is not configured.');
+        throw new Error('Email service is not properly configured.');
     }
 
     const subject = 'Restablece tu contraseña de Ajal de Raiz';
     
-    const plainBody = `
-        Hola ${name},
-        
-        Para restablecer tu contraseña, usa el siguiente enlace:
-        ${resetUrl}
-        
-        Si no solicitaste esto, ignora este correo.
-        
-        El equipo de Ajal de Raiz
-    `;
-
+    const plainBody = `Hola ${name},\n\nPara restablecer tu contraseña, usa el siguiente enlace:\n${resetUrl}\n\nSi no solicitaste esto, ignora este correo.\n\nEl equipo de Ajal de Raiz`;
     const htmlBody = `
         <div style="font-family: Arial, sans-serif; line-height: 1.6;">
             <div style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
@@ -44,33 +63,44 @@ export async function sendPasswordResetEmail(to: string, name: string, resetUrl:
     `;
 
     const formData = new FormData();
-    formData.append('from', fromEmail);
+    formData.append('from', `Ajal de Raiz <${fromEmail}>`);
     formData.append('to', to);
     formData.append('subject', subject);
     formData.append('plain', plainBody);
     formData.append('html', htmlBody);
 
-    try {
-        const response = await fetch('https://smtp.maileroo.com/send', {
-            method: 'POST',
-            headers: {
-                'X-API-Key': apiKey,
-            },
-            body: formData,
-        });
+    await sendEmail(formData);
+    console.log('Password reset email sent successfully to:', to);
+}
 
-        if (!response.ok) {
-            const errorBody = await response.json();
-            const errorMessage = `Error ${response.status}: ${errorBody.message || 'Failed to send email'}`;
-            console.error('Maileroo API Error:', errorMessage);
-            throw new Error(errorMessage);
-        }
+export async function sendContactRequestEmail(userEmail: string): Promise<void> {
+    const toEmail = process.env.MAILEROO_TO_CONTACT;
+    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
 
-        console.log('Password reset email sent successfully to:', to);
-
-    } catch (error) {
-        console.error('Error sending password reset email:', error);
-        // Re-throw the error so the action can catch the detailed message
-        throw error;
+    if (!toEmail || !fromEmail) {
+        console.error('Maileroo From Email is not configured for receiving contacts.');
+        throw new Error('Contact email receiver is not configured.');
     }
+
+    const subject = `Nueva solicitud de contacto de: ${userEmail}`;
+    const plainBody = `El usuario con el correo electrónico ${userEmail} ha solicitado que te pongas en contacto.`;
+    const htmlBody = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2>Nueva Solicitud de Contacto</h2>
+            <p>Has recibido una nueva solicitud de contacto a través del formulario del footer de tu web.</p>
+            <p><strong>Email del usuario:</strong> <a href="mailto:${userEmail}">${userEmail}</a></p>
+            <p>Por favor, ponte en contacto con esta persona a la brevedad.</p>
+        </div>
+    `;
+
+    const formData = new FormData();
+    // Use a valid, verified sender email address.
+    formData.append('from', `Ajal de Raiz <${fromEmail}>`);
+    formData.append('to', toEmail);
+    formData.append('subject', subject);
+    formData.append('plain', plainBody);
+    formData.append('html', htmlBody);
+
+    await sendEmail(formData);
+    console.log('Contact request email sent successfully for:', userEmail);
 }

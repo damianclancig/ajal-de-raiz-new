@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 import { hash, compare } from 'bcryptjs';
 import { getDb } from './product-service';
 import crypto from 'crypto';
-import { sendPasswordResetEmail } from './email-service';
+import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
 import { signIn } from '@/auth';
 
 const productFromDoc = (doc: any): Product => {
@@ -94,7 +94,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
   revalidatePath('/admin');
   revalidatePath('/products');
   revalidatePath('/');
-  redirect('/admin');
+  redirect('/admin/products');
 }
 
 export async function updateProduct(productId: string, formData: FormData): Promise<ActionResponse> {
@@ -149,7 +149,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
   revalidatePath(`/admin/products/${productId}/edit`);
   revalidatePath('/products');
   revalidatePath('/');
-  redirect('/admin');
+  redirect('/admin/products');
 }
 
 export async function deleteProduct(productId: string): Promise<ActionResponse> {
@@ -182,6 +182,33 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
     return { success: false, message: `Failed to delete product: ${message}` };
   }
 }
+
+export async function physicallyDeleteProduct(productId: string): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(productId)) {
+      return { success: false, message: 'Invalid product ID.' };
+    }
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+    
+    const result = await productsCollection.deleteOne({ _id: new ObjectId(productId) });
+
+    if (result.deletedCount === 0) {
+      return { success: false, message: 'Product not found or already deleted.' };
+    }
+
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to physically delete product: ${message}` };
+  }
+
+  revalidatePath('/admin/products');
+  revalidatePath('/products');
+  revalidatePath('/');
+  redirect('/admin/products');
+}
+
 
 export async function registerUser(formData: FormData): Promise<ActionResponse> {
   try {
@@ -407,8 +434,8 @@ export async function requestPasswordReset(formData: FormData): Promise<ActionRe
     return { success: true, message: 'If an account with this email exists, a password reset link has been sent.' };
 
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
-    // Pass the detailed error message for the toast
+    const message = error instanceof Error ? `Failed to send email: ${error.message}` : 'An unknown error occurred while sending email.';
+    console.error(message);
     return { success: false, message };
   }
 }
@@ -453,3 +480,21 @@ export async function resetPassword(formData: FormData): Promise<ActionResponse>
       return { success: false, message };
     }
 }
+
+export async function handleContactForm(formData: FormData): Promise<ActionResponse> {
+  const email = formData.get('email') as string;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email || !emailRegex.test(email)) {
+    return { success: false, message: 'Por favor, ingresa un correo electrónico válido.' };
+  }
+  
+  try {
+    await sendContactRequestEmail(email);
+    return { success: true, message: 'Email sent successfully!' };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to send contact email: ${message}` };
+  }
+}
+
+    

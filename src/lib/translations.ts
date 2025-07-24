@@ -148,6 +148,7 @@ export const translations = {
   'Actions': { en: 'Actions', es: 'Acciones', pt: 'Ações' },
   'Edit': { en: 'Edit', es: 'Editar', pt: 'Editar' },
   'Delete': { en: 'Delete', es: 'Eliminar', pt: 'Excluir' },
+  'Delete_Permanently': { en: 'Delete Permanently', es: 'Eliminar Permanentemente', pt: 'Excluir Permanentemente' },
   'Deactivate': { en: 'Deactivate', es: 'Desactivar', pt: 'Desativar' },
   'Create_Product': { en: 'Create Product', es: 'Crear Producto', pt: 'Criar Produto' },
   'Update_Product': { en: 'Update Product', es: 'Actualizar Producto', pt: 'Atualizar Produto' },
@@ -167,6 +168,11 @@ export const translations = {
     es: 'Esta acción marcará el producto como inactivo y no será visible en la tienda pública.',
     pt: 'Esta ação definirá o produto como inativo e ele não será visível na loja pública.'
   },
+  'This_action_cannot_be_undone_permanently': {
+    en: 'This action is irreversible and will permanently delete the product from the database.',
+    es: 'Esta acción es irreversible y eliminará permanentemente el producto de la base de datos.',
+    pt: 'Esta ação é irreversível e excluirá permanentemente o produto do banco de dados.'
+  },
   'Name_EN': { en: 'Name (EN)', es: 'Nombre (EN)', pt: 'Nome (EN)' },
   'Desc_EN': { en: 'Desc (EN)', es: 'Desc (EN)', pt: 'Desc (EN)' },
   'Cat_EN': { en: 'Category (EN)', es: 'Categoría (EN)', pt: 'Categoria (EN)' },
@@ -184,10 +190,17 @@ export const translations = {
   'inactivo': { en: 'Inactive', es: 'Inactivo', pt: 'Inativo' },
   'vendido': { en: 'Sold', es: 'Vendido', pt: 'Vendido' },
   'Select_a_state': { en: 'Select a state', es: 'Selecciona un estado', pt: 'Selecione um estado' },
+  'Danger_Zone': { en: 'Danger Zone', es: 'Zona de Peligro', pt: 'Zona de Perigo' },
+  'Delete_Product_Permanently': { en: 'Delete Product Permanently', es: 'Eliminar Producto Permanentemente', pt: 'Excluir Produto Permanentemente' },
+  'Delete_Permanently_Warning': { en: 'Once you delete this product, there is no going back. Please be certain.', es: 'Una vez que elimines este producto, no hay vuelta atrás. Por favor, asegúrate.', pt: 'Depois de excluir este produto, não há como voltar atrás. Por favor, tenha certeza.' },
+  'Type_DELETE_to_confirm': { en: 'To confirm, type "{word}" in the box below.', es: 'Para confirmar, escribe "{word}" en el campo de abajo.', pt: 'Para confirmar, digite "{word}" na caixa abaixo.' },
+
 
   // Toast Notifications
   'Product_Deactivated_Title': { en: 'Product Deactivated', es: 'Producto Desactivado', pt: 'Produto Desativado' },
   'Product_Deactivated_Desc': { en: 'The product has been set to inactive.', es: 'El producto ha sido marcado como inativo.', pt: 'O produto foi marcado como inativo.' },
+  'Product_Deleted_Permanently_Title': { en: 'Product Deleted', es: 'Producto Eliminado', pt: 'Produto Excluído' },
+  'Product_Deleted_Permanently_Desc': { en: 'The product has been permanently deleted.', es: 'El producto ha sido eliminado permanentemente.', pt: 'O produto foi excluído permanentemente.' },
   'Error_Title': { en: 'Error', es: 'Error', pt: 'Erro' },
   'Product_Updated_Title': { en: 'Product Updated', es: 'Producto Actualizado', pt: 'Produto Atualizado' },
   'Product_Created_Title': { en: 'Product Created', es: 'Producto Creado', pt: 'Produto Criado' },
@@ -215,3 +228,5 @@ export const translations = {
   'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Novidade Criada' },
   'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' }
 };
+
+    

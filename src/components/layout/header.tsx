@@ -12,10 +12,12 @@ import { Menu } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { UserNav } from "./user-nav";
 import HeaderNavLinks from "./header-nav-links";
+import { useState } from "react";
 
 export default function Header() {
   const { t } = useLanguage();
   const { data: session } = useSession();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -24,7 +26,7 @@ export default function Header() {
           <Link href="/" className="flex items-center space-x-2">
             <Logo size={56} />
             <span className="font-headline text-2xl font-bold">
-              {t("Ajal")} <span className="font-light text-muted-foreground">{t("de_Raiz")}</span>
+              {t("Ajal")} {t("de_Raiz")}
             </span>
           </Link>
         </div>
@@ -49,9 +51,9 @@ export default function Header() {
             )}
 
             <div className="md:hidden">
-              <Sheet>
+              <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon">
+                  <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(true)}>
                     <Menu className="h-6 w-6" />
                   </Button>
                 </SheetTrigger>
@@ -60,14 +62,14 @@ export default function Header() {
                     <SheetTitle className="sr-only">{t('Mobile_Menu')}</SheetTitle>
                   </SheetHeader>
                   <div className="p-4">
-                  <Link href="/" className="flex items-center space-x-2 mb-8">
+                  <Link href="/" className="flex items-center space-x-2 mb-8" onClick={() => setIsMobileMenuOpen(false)}>
                       <Logo size={48} />
                       <span className="font-headline text-2xl font-bold">
-                        {t("Ajal")} <span className="font-light text-muted-foreground">{t("de_Raiz")}</span>
+                        {t("Ajal")} {t("de_Raiz")}
                       </span>
                     </Link>
                     <nav className="flex flex-col gap-4">
-                      <HeaderNavLinks />
+                      <HeaderNavLinks onLinkClick={() => setIsMobileMenuOpen(false)}/>
                     </nav>
                   </div>
                 </SheetContent>

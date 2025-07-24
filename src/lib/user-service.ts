@@ -14,7 +14,6 @@ const userFromDoc = (doc: any): User | null => {
   }
   return {
     id: doc._id.toString(),
-    _id: doc._id,
     name: doc.name,
     email: doc.email,
     isAdmin: doc.isAdmin || false,
@@ -27,7 +26,7 @@ export const getAllUsers = async (): Promise<User[]> => {
   try {
     const db = await getDb();
     const usersCollection = db.collection('users');
-    const users = await usersCollection.find({}).sort({ createdAt: -1 }).toArray();
+    const users = await usersCollection.find({}).sort({ name: 1 }).toArray();
     return users.map(doc => userFromDoc(doc)).filter(u => u !== null) as User[];
   } catch (error) {
     console.error('Failed to get all users:', error);

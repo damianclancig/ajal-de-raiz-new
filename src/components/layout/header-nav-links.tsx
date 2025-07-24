@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
+const NavLink = ({ href, children, onLinkClick }: { href: string; children: React.ReactNode, onLinkClick?: () => void }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -18,12 +18,16 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
       "justify-start text-base transition-colors hover:text-primary",
       isActive ? "font-bold text-primary" : "text-muted-foreground",
     )}>
-      <Link href={href}>{children}</Link>
+      <Link href={href} onClick={onLinkClick}>{children}</Link>
     </Button>
   );
 };
 
-export default function HeaderNavLinks() {
+interface HeaderNavLinksProps {
+    onLinkClick?: () => void;
+}
+
+export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
   const { t } = useLanguage();
   const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -49,7 +53,7 @@ export default function HeaderNavLinks() {
   return (
     <>
       {navLinks.map((link) => (
-        <NavLink key={link.href} href={link.href}>
+        <NavLink key={link.href} href={link.href} onLinkClick={onLinkClick}>
           {link.label}
         </NavLink>
       ))}
