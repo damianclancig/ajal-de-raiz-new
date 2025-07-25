@@ -1,18 +1,35 @@
 
 'use client';
 
+import { useTransition } from 'react';
 import { useCart } from '@/contexts/cart-context';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, Wallet } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { useToast } from '@/hooks/use-toast';
+import { createOrder } from '@/lib/actions';
+import { NO_IMAGE_URL } from '@/lib/utils';
 
 export default function CartClient() {
   const { cart, loading, updateQuantity, removeFromCart, clearCart } = useCart();
   const { t, language } = useLanguage();
+  const [isPending, startTransition] = useTransition();
+  const { toast } = useToast();
   
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -21,6 +38,24 @@ export default function CartClient() {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(price);
+  };
+
+  const handleCreateOrder = () => {
+    startTransition(async () => {
+      const result = await createOrder();
+      if(result.success) {
+        toast({
+          title: t('Order_Success_Title'),
+          description: t('Order_Success_Desc'),
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: t('Error_Title'),
+          description: result.message || t('Order_Error_Desc'),
+        });
+      }
+    });
   };
   
   if (loading) {
@@ -61,13 +96,11 @@ export default function CartClient() {
                 <CardContent className="p-0">
                     <div className="divide-y">
                     {cart.items.map(item => {
-                        const imageUrl = item.image 
-                            ? item.image.replace(/\.heic$/i, '.png')
-                            : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
+                        const imageUrl = (item.image || NO_IMAGE_URL).replace(/\.heic$/i, '.png');
 
                         return (
-                            <div key={item.productId} className="flex flex-col md:flex-row md:items-center p-4 gap-4">
-                                <div className="flex items-center gap-4 flex-grow">
+                            <div key={item.productId} className="flex flex-col md:flex-row items-start md:items-center p-4 gap-4">
+                                <div className="flex items-center gap-4 flex-grow w-full">
                                     <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-md overflow-hidden flex-shrink-0">
                                         <Image
                                             src={imageUrl}
@@ -84,7 +117,7 @@ export default function CartClient() {
                                         <p className="text-sm text-muted-foreground">${formatPrice(item.price)}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center justify-between gap-4 w-full md:w-auto">
+                                <div className="flex items-center justify-between gap-4 w-full md:w-auto mt-4 md:mt-0">
                                     <div className="flex items-center gap-2">
                                         <Input
                                             type="number"
@@ -126,7 +159,35 @@ export default function CartClient() {
                 <span>{t('Total')}</span>
                 <span>${formatPrice(cart.totalPrice)}</span>
               </div>
-              <Button size="lg" className="w-full mt-4">{t('Proceed_to_Checkout')}</Button>
+               <AlertDialog>
+                <AlertDialogTrigger asChild>
+                    <Button size="lg" className="w-full mt-4">{t('Proceed_to_Checkout')}</Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>{t('Payment_Method')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Por favor, selecciona tu método de pago. Por el momento solo aceptamos efectivo.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <Button 
+                        variant="outline" 
+                        className="w-full justify-start"
+                        onClick={handleCreateOrder}
+                        disabled={isPending}
+                    >
+                       {isPending ? (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        ) : (
+                          <Wallet className="mr-2 h-4 w-4" />
+                        )}
+                       {t('Pay_in_Cash')}
+                    </Button>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+               </AlertDialog>
             </CardContent>
           </Card>
         </div>

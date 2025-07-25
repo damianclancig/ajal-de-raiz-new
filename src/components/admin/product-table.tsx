@@ -81,9 +81,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
           </TableHeader>
           <TableBody>
             {products.map(product => {
-                const imageUrl = product.images && product.images.length > 0
-                  ? product.images[0].replace(/\.heic$/i, '.png')
-                  : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
+                const imageUrl = product.images[0].replace(/\.heic$/i, '.png');
 
                 return (
                   <TableRow key={product.id}>

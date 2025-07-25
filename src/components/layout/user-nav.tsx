@@ -14,9 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
-import { LogOut, User as UserIcon, Loader2 } from "lucide-react";
+import { LogOut, User as UserIcon, Loader2, ShoppingBag } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useState } from "react";
+import Link from "next/link";
 
 export function UserNav({ session }: { session: Session }) {
   const { user } = session;
@@ -62,7 +63,12 @@ export function UserNav({ session }: { session: Session }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {/* Add other menu items here if needed */}
+           <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/orders">
+                <ShoppingBag className="mr-2 h-4 w-4" />
+                <span>{t('My_Orders')}</span>
+              </Link>
+           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut} disabled={isLoggingOut} className="cursor-pointer">

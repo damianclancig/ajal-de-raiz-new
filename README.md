@@ -21,12 +21,13 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Catálogo de Productos**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo.
 - **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
 - **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes, descripción, precio y disponibilidad de stock.
-- **Carrito de Compras Funcional**: Un sistema de carrito de compras robusto y completamente funcional para usuarios autenticados.
+- **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
-  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos con una interfaz clara y responsiva.
-  - **Resumen de Compra**: Muestra precios unitarios, subtotales y el costo total del pedido de forma clara.
+  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
+  - **Proceso de Pedido Simplificado**: Completa tu compra seleccionando "Pagar en Efectivo" como método de pago.
+  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes, visualizando los productos, el monto total y el estado actual de cada pedido (Pendiente, Confirmado, Enviado, etc.).
 - **Autenticación Segura**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
-- **Diseño 100% Adaptable**: Experiencia de usuario optimizada y corregida para una visualización perfecta en dispositivos móviles, tablets y de escritorio.
+- **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
 
@@ -34,10 +35,13 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock.
-- **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary a través de un componente dedicado.
-- **Eliminación Segura**: Sistema de doble confirmación para la eliminación física de productos, requiriendo la escritura de una palabra clave para evitar borrados accidentales.
+- **Gestión de Órdenes**:
+  - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada.
+  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, y montos.
+  - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente" a "Confirmado") para mantener informado al cliente.
 - **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna o revoca roles de administrador.
-- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones y novedades.
+- **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary.
+- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
 
 ## Stack Tecnológico
 

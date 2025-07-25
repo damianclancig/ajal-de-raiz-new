@@ -79,3 +79,28 @@ export interface PopulatedCart {
   items: PopulatedCartItem[];
   totalPrice: number;
 }
+
+export type OrderStatus = 'Pendiente' | 'Confirmado' | 'Enviado' | 'Entregado' | 'Cancelado';
+export type PaymentMethod = 'Efectivo' | 'Transferencia Bancaria' | 'MercadoPago';
+
+export interface OrderItem {
+    productId: string;
+    name: string;
+    slug: string;
+    quantity: number;
+    price: number;
+    image: string;
+}
+
+export interface Order {
+    id: string;
+    _id?: ObjectId;
+    userId: string;
+    user?: User;
+    items: OrderItem[];
+    totalPrice: number;
+    paymentMethod: PaymentMethod;
+    status: OrderStatus;
+    createdAt: string;
+    updatedAt: string;
+}

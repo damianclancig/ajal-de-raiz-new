@@ -1,6 +1,7 @@
 import clientPromise from '@/lib/mongodb';
 import type { Product } from './types';
 import { ObjectId } from 'mongodb';
+import { NO_IMAGE_URL } from './utils';
 
 export const getDb = async () => {
   const client = await clientPromise;
@@ -11,12 +12,14 @@ const productFromDoc = (doc: any): Product | null => {
   if (!doc) {
     return null;
   }
+  const images = doc.images && doc.images.length > 0 ? doc.images : [NO_IMAGE_URL];
+
   return {
     id: doc._id.toString(),
     name: doc.name,
     slug: doc.slug,
     category: doc.category,
-    images: doc.images || [],
+    images: images,
     price: doc.price,
     brand: doc.brand,
     rating: doc.rating,

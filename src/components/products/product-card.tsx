@@ -1,3 +1,4 @@
+
 "use client"
 
 import type { Product } from '@/lib/types';
@@ -23,9 +24,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     }).format(price);
   };
 
-  const imageUrl = product.images && product.images.length > 0
-    ? product.images[0].replace(/\.heic$/i, '.png')
-    : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
+  const imageUrl = product.images[0].replace(/\.heic$/i, '.png');
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">

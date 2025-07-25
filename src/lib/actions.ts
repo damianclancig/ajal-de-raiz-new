@@ -3,7 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import clientPromise from '@/lib/mongodb';
-import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem } from './types';
+import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem, Order, OrderItem, OrderStatus } from './types';
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
 import { hash } from 'bcryptjs';
@@ -11,6 +11,7 @@ import { getDb, getProductById } from './product-service';
 import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
 import { auth } from '@/auth';
+import { getOrderById } from './order-service';
 
 const productFromDoc = (doc: any): Product => {
   return {
@@ -40,6 +41,7 @@ type ActionResponse = {
   user?: User | null;
   slide?: HeroSlide | null;
   cart?: PopulatedCart | null;
+  order?: Order | null;
 };
 
 // Helper function to create a URL-friendly slug
@@ -676,4 +678,103 @@ export async function removeFromCart(productId: string): Promise<ActionResponse>
         const message = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, message: `Failed to remove item: ${message}` };
     }
+}
+
+
+// ORDER ACTIONS
+
+export async function createOrder(): Promise<ActionResponse> {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, message: "User not authenticated." };
+    }
+
+    const db = await getDb();
+    const cartsCollection = db.collection<Cart>('carts');
+    const productsCollection = db.collection('products');
+    const ordersCollection = db.collection('orders');
+
+    const userId = new ObjectId(session.user.id);
+    const cart = await getPopulatedCart(session.user.id);
+    
+    if (!cart || cart.items.length === 0) {
+        return { success: false, message: "El carrito está vacío." };
+    }
+    
+    try {
+        const orderItems: OrderItem[] = cart.items.map(item => ({
+            productId: item.productId,
+            name: item.name,
+            slug: item.slug,
+            quantity: item.quantity,
+            price: item.price,
+            image: item.image,
+        }));
+
+        const newOrder = {
+            userId: userId,
+            items: orderItems,
+            totalPrice: cart.totalPrice,
+            paymentMethod: 'Efectivo',
+            status: 'Pendiente',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        };
+
+        const result = await ordersCollection.insertOne(newOrder);
+
+        // Decrease stock
+        for (const item of cart.items) {
+            await productsCollection.updateOne(
+                { _id: new ObjectId(item.productId) },
+                { $inc: { countInStock: -item.quantity } }
+            );
+        }
+
+        // Clear cart
+        await cartsCollection.deleteOne({ userId });
+
+        revalidatePath('/cart');
+        revalidatePath('/orders');
+
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, message: `Failed to create order: ${message}` };
+    }
+    
+    redirect('/orders');
+}
+
+export async function updateOrderStatus(orderId: string, formData: FormData): Promise<ActionResponse> {
+    const session = await auth();
+    if (!session?.user?.isAdmin) {
+        return { success: false, message: "User not authorized." };
+    }
+    
+    const status = formData.get('status') as OrderStatus;
+    if (!['Pendiente', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'].includes(status)) {
+        return { success: false, message: "Invalid status." };
+    }
+
+    try {
+        const db = await getDb();
+        const ordersCollection = db.collection('orders');
+
+        const result = await ordersCollection.updateOne(
+            { _id: new ObjectId(orderId) },
+            { $set: { status: status, updatedAt: new Date() } }
+        );
+        
+        if (result.matchedCount === 0) {
+            return { success: false, message: "Order not found." };
+        }
+        
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, message: `Failed to update order status: ${message}` };
+    }
+
+    revalidatePath(`/admin/orders`);
+    revalidatePath(`/admin/orders/${orderId}`);
+    redirect(`/admin/orders`);
 }

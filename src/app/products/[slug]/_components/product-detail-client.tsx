@@ -16,7 +16,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function ProductDetailClient({ product }: { product: Product }) {
-  const [selectedImage, setSelectedImage] = useState<string>(product.images?.[0] || 'https://placehold.co/600x600.png');
+  const [selectedImage, setSelectedImage] = useState<string>(product.images[0]);
   const [quantity, setQuantity] = useState(1);
   const { t, language } = useLanguage();
   const { addToCart } = useCart();

@@ -138,6 +138,11 @@ export const translations = {
     es: 'Gestiona tus productos y otros datos de la tienda.',
     pt: 'Gerencie seus produtos e outros dados da loja.'
   },
+  'Manage_your_orders_and_store_data': {
+    en: 'Manage your customer orders and review their details.',
+    es: 'Gestiona los pedidos de tus clientes y revisa sus detalles.',
+    pt: 'Gerencie os pedidos dos seus clientes e analise os detalhes.'
+  },
   'Product_Management': { en: 'Product Management', es: 'Gestión de Productos', pt: 'Gerenciamento de Produtos' },
   'User_Management': { en: 'User Management', es: 'Gestión de Usuarios', pt: 'Gerenciamento de Usuários' },
   'Manage_your_users': { en: 'Manage your users and their permissions.', es: 'Gestiona tus usuarios y sus permisos.', pt: 'Gerencie seus usuários e suas permissões.' },
@@ -249,5 +254,28 @@ export const translations = {
   'Order_Summary': { en: 'Order Summary', es: 'Resumen del Pedido', pt: 'Resumo do Pedido' },
   'Subtotal': { en: 'Subtotal', es: 'Subtotal', pt: 'Subtotal' },
   'Total': { en: 'Total', es: 'Total', pt: 'Total' },
-  'Proceed_to_Checkout': { en: 'Proceed to Checkout', es: 'Proceder al Pago', pt: 'Finalizar Compra' }
+  'Proceed_to_Checkout': { en: 'Proceed to Checkout', es: 'Proceder al Pago', pt: 'Finalizar Compra' },
+  'Pay_in_Cash': { en: 'Pay in Cash', es: 'Pagar en Efectivo', pt: 'Pagar em Dinheiro' },
+  'Confirm_Order': { en: 'Confirm Order', es: 'Confirmar Pedido', pt: 'Confirmar Pedido' },
+  'Order_Success_Title': { en: 'Order Placed!', es: '¡Pedido Realizado!', pt: 'Pedido Realizado!' },
+  'Order_Success_Desc': { en: 'Your order has been placed successfully. You can view it in "My Orders".', es: 'Tu pedido ha sido realizado con éxito. Puedes verlo en "Mis Pedidos".', pt: 'Seu pedido foi realizado com sucesso. Você pode visualizá-lo em "Meus Pedidos".' },
+  'Order_Error_Desc': { en: 'There was an error placing your order. Please try again.', es: 'Hubo un error al realizar tu pedido. Por favor, inténtalo de nuevo.', pt: 'Houve um erro ao fazer seu pedido. Por favor, tente novamente.' },
+  
+  // Orders
+  'My_Orders': { en: 'My Orders', es: 'Mis Pedidos', pt: 'Meus Pedidos' },
+  'Orders_Admin': { en: 'Orders', es: 'Órdenes', pt: 'Pedidos' },
+  'You_have_no_orders_yet': { en: 'You have no orders yet.', es: 'Aún no tienes pedidos.', pt: 'Você ainda não tem pedidos.' },
+  'Browse_our_products_and_start_shopping': { en: 'Browse our products and start shopping!', es: '¡Explora nuestros productos y empieza a comprar!', pt: 'Navegue pelos nossos produtos e comece a comprar!' },
+  'Order_Date': { en: 'Order Date', es: 'Fecha del Pedido', pt: 'Data do Pedido' },
+  'Order_ID': { en: 'Order ID', es: 'ID del Pedido', pt: 'ID do Pedido' },
+  'Order_Total': { en: 'Total', es: 'Total', pt: 'Total' },
+  'Order_Status': { en: 'Status', es: 'Estado', pt: 'Status' },
+  'Pendiente': { en: 'Pending', es: 'Pendiente', pt: 'Pendente' },
+  'Confirmado': { en: 'Confirmed', es: 'Confirmado', pt: 'Confirmado' },
+  'Enviado': { en: 'Shipped', es: 'Enviado', pt: 'Enviado' },
+  'Entregado': { en: 'Delivered', es: 'Entregado', pt: 'Entregue' },
+  'Cancelado': { en: 'Cancelled', es: 'Cancelado', pt: 'Cancelado' },
+  'Payment_Method': { en: 'Payment Method', es: 'Método de Pago', pt: 'Método de Pagamento' },
+  'Efectivo': { en: 'Cash', es: 'Efectivo', pt: 'Dinheiro' }
+  
 };
