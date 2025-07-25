@@ -31,8 +31,10 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
   const { t } = useLanguage();
   const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
     if (status === "authenticated" && session?.user?.isAdmin) {
       setIsAdmin(true);
     } else {
@@ -46,7 +48,7 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
     { href: "/products", label: t("Products") },
   ];
 
-  if (isAdmin) {
+  if (isClient && isAdmin) {
     navLinks.push({ href: "/admin", label: t("Admin") });
   }
 

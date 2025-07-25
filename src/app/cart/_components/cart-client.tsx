@@ -36,7 +36,7 @@ export default function CartClient() {
       <div className="container py-12 text-center flex flex-col items-center">
         <div className="relative w-48 h-48 mb-6">
             <Image
-                src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1715124262/jy2jyjqs1hj03is7xhln.png"
+                src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1753451875/Empty_Cart_i9oydd.png"
                 alt="Empty shopping cart"
                 layout="fill"
                 objectFit="contain"
@@ -66,38 +66,44 @@ export default function CartClient() {
                             : 'https://placehold.co/600x600/a1a1a1/000000/jpg?text=No+Image';
 
                         return (
-                            <div key={item.productId} className="flex items-center p-4 gap-4">
-                                <div className="relative h-24 w-24 rounded-md overflow-hidden flex-shrink-0">
-                                    <Image
-                                        src={imageUrl}
-                                        alt={item.name}
-                                        fill
-                                        className="object-cover"
-                                        sizes="100px"
-                                    />
+                            <div key={item.productId} className="flex flex-col md:flex-row md:items-center p-4 gap-4">
+                                <div className="flex items-center gap-4 flex-grow">
+                                    <div className="relative h-20 w-20 md:h-24 md:w-24 rounded-md overflow-hidden flex-shrink-0">
+                                        <Image
+                                            src={imageUrl}
+                                            alt={item.name}
+                                            fill
+                                            className="object-cover"
+                                            sizes="(max-width: 768px) 80px, 96px"
+                                        />
+                                    </div>
+                                    <div className="flex-grow">
+                                        <Link href={`/products/${item.slug}`}>
+                                            <h3 className="font-semibold hover:text-primary">{item.name}</h3>
+                                        </Link>
+                                        <p className="text-sm text-muted-foreground">${formatPrice(item.price)}</p>
+                                    </div>
                                 </div>
-                                <div className="flex-grow">
-                                    <Link href={`/products/${item.slug}`}>
-                                        <h3 className="font-semibold hover:text-primary">{item.name}</h3>
-                                    </Link>
-                                    <p className="text-sm text-muted-foreground">${formatPrice(item.price)}</p>
+                                <div className="flex items-center justify-between gap-4 w-full md:w-auto">
+                                    <div className="flex items-center gap-2">
+                                        <Input
+                                            type="number"
+                                            min="1"
+                                            max={item.countInStock}
+                                            value={item.quantity}
+                                            onChange={(e) => updateQuantity(item.productId, parseInt(e.target.value))}
+                                            className="w-20 text-center"
+                                            aria-label={`Quantity for ${item.name}`}
+                                        />
+                                    </div>
+                                    <div className="text-right font-medium w-24">
+                                        ${formatPrice(item.price * item.quantity)}
+                                    </div>
+                                     <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.productId)}>
+                                        <Trash2 className="h-4 w-4 text-destructive" />
+                                        <span className="sr-only">Remove {item.name}</span>
+                                    </Button>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Input
-                                        type="number"
-                                        min="1"
-                                        max={item.countInStock}
-                                        value={item.quantity}
-                                        onChange={(e) => updateQuantity(item.productId, parseInt(e.target.value))}
-                                        className="w-20 text-center"
-                                    />
-                                </div>
-                                <div className="text-right font-medium w-24">
-                                    ${formatPrice(item.price * item.quantity)}
-                                </div>
-                                 <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.productId)}>
-                                    <Trash2 className="h-4 w-4 text-destructive" />
-                                </Button>
                             </div>
                         )
                     })}

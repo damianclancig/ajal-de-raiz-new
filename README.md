@@ -12,31 +12,31 @@
 
 **Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, usuarios y contenido del sitio.
 
-La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro.
+La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
 ## Funcionalidades
 
 ### Para Usuarios
 
-- **Catálogo de Productos**: Explora una amplia gama de plantas y suministros.
-- **Búsqueda y Filtrado**: Encuentra productos fácilmente usando la búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
+- **Catálogo de Productos**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo.
+- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
 - **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes, descripción, precio y disponibilidad de stock.
-- **Carrito de Compras**: Sistema de carrito de compras completo para usuarios autenticados.
+- **Carrito de Compras Funcional**: Un sistema de carrito de compras robusto y completamente funcional para usuarios autenticados.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
-  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Resumen de Compra**: Muestra precios unitarios, subtotales y el costo total del pedido.
-- **Autenticación**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
-- **Diseño Adaptable**: Experiencia de usuario optimizada para dispositivos móviles y de escritorio.
+  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos con una interfaz clara y responsiva.
+  - **Resumen de Compra**: Muestra precios unitarios, subtotales y el costo total del pedido de forma clara.
+- **Autenticación Segura**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
+- **Diseño 100% Adaptable**: Experiencia de usuario optimizada y corregida para una visualización perfecta en dispositivos móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
 
 ### Para Administradores
 
-- **Panel de Administración Seguro**: Acceso restringido solo para usuarios administradores.
+- **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock.
 - **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary a través de un componente dedicado.
 - **Eliminación Segura**: Sistema de doble confirmación para la eliminación física de productos, requiriendo la escritura de una palabra clave para evitar borrados accidentales.
-- **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna roles de administrador.
+- **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna o revoca roles de administrador.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones y novedades.
 
 ## Stack Tecnológico
@@ -96,7 +96,7 @@ MONGODB_URI="tu_string_de_conexion_a_mongodb"
 # NextAuth
 # Genera un secreto con: openssl rand -base64 32
 AUTH_SECRET="tu_secreto_para_nextauth"
-NEXTAUTH_URL=""
+NEXTAUTH_URL="http://localhost:9002"
 
 # Cloudinary - Para la carga de imágenes
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary

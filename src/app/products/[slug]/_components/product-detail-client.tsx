@@ -55,8 +55,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const isSoldOut = product.countInStock <= 0;
 
   return (
-    <div className="container py-8 md:py-12">
-      <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+    <div className="px-4 py-8 md:py-12">
+      <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
         <div className="flex flex-col gap-4">
           <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg">
             <Image
