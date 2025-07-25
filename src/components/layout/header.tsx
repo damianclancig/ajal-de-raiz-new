@@ -8,16 +8,21 @@ import { ThemeToggle } from "@/components/layout/theme-toggle";
 import LanguageSwitcher from "@/components/layout/language-switcher";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { UserNav } from "./user-nav";
 import HeaderNavLinks from "./header-nav-links";
 import { useState } from "react";
+import { useCart } from "@/contexts/cart-context";
+import { Badge } from "../ui/badge";
 
 export default function Header() {
   const { t } = useLanguage();
   const { data: session } = useSession();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { cart } = useCart();
+
+  const cartItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -44,7 +49,23 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
             <ThemeToggle />
-            {session ? <UserNav session={session} /> : (
+
+            {session ? (
+              <>
+                <UserNav session={session} />
+                <Button asChild variant="ghost" size="icon" className="relative">
+                  <Link href="/cart">
+                    <ShoppingCart className="h-5 w-5" />
+                    {cartItemCount > 0 && (
+                      <Badge variant="destructive" className="absolute -top-2 -right-2 h-5 w-5 justify-center rounded-full p-0 text-xs">
+                        {cartItemCount}
+                      </Badge>
+                    )}
+                    <span className="sr-only">{t('Shopping_Cart')}</span>
+                  </Link>
+                </Button>
+              </>
+            ) : (
               <Button asChild variant="outline">
                 <Link href="/login">{t('Login')}</Link>
               </Button>

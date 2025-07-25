@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useTransition } from 'react';
@@ -71,8 +72,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
               <TableHead className="w-[80px]">{t('Image')}</TableHead>
               <TableHead>{t('Product_Name')}</TableHead>
               <TableHead>{t('Category')}</TableHead>
-              <TableHead>{t('Brand')}</TableHead>
-              <TableHead className="hidden md:table-cell">{t('Description')}</TableHead>
+              <TableHead className="hidden md:table-cell">{t('Stock')}</TableHead>
               <TableHead>{t('Featured')}</TableHead>
               <TableHead>{t('State')}</TableHead>
               <TableHead className="text-right">{t('Price')}</TableHead>
@@ -101,8 +101,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
                     </TableCell>
                     <TableCell className="font-medium">{product.name}</TableCell>
                     <TableCell>{product.category}</TableCell>
-                    <TableCell>{product.brand}</TableCell>
-                    <TableCell className="hidden md:table-cell max-w-[200px] truncate" title={product.description}>{product.description}</TableCell>
+                    <TableCell className="hidden md:table-cell">{product.countInStock}</TableCell>
                     <TableCell>{product.isFeatured ? t('Yes') : t('No')}</TableCell>
                     <TableCell>
                         <Badge variant={product.state === 'activo' ? 'default' : product.state === 'inactivo' ? 'secondary' : 'destructive'}>

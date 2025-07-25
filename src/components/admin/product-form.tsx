@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useTransition, useState } from 'react';
@@ -146,7 +147,7 @@ export default function ProductForm({ product }: ProductFormProps) {
               </div>
             </div>
           
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div>
                 <Label htmlFor="category">{t('Category')}</Label>
                 <Input id="category" name="category" defaultValue={product?.category || ''} />
@@ -167,6 +168,10 @@ export default function ProductForm({ product }: ProductFormProps) {
                 />
                  <input type="hidden" name="price" value={parseFloat(rawPrice) / 100} />
               </div>
+               <div>
+                  <Label htmlFor="countInStock">{t('Stock')}</Label>
+                  <Input id="countInStock" name="countInStock" type="number" defaultValue={product?.countInStock || 0} />
+                </div>
                <div>
                 <Label htmlFor="state">{t('State')}</Label>
                 <Select name="state" defaultValue={product?.state || 'activo'}>

@@ -20,7 +20,11 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 - **Catálogo de Productos**: Explora una amplia gama de plantas y suministros.
 - **Búsqueda y Filtrado**: Encuentra productos fácilmente usando la búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
-- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo imágenes, descripción y precio.
+- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes, descripción, precio y disponibilidad de stock.
+- **Carrito de Compras**: Sistema de carrito de compras completo para usuarios autenticados.
+  - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
+  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
+  - **Resumen de Compra**: Muestra precios unitarios, subtotales y el costo total del pedido.
 - **Autenticación**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
 - **Diseño Adaptable**: Experiencia de usuario optimizada para dispositivos móviles y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
@@ -29,8 +33,9 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 ### Para Administradores
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios administradores.
-- **Gestión de Productos (CRUD)**: Crea, lee, actualiza y desactiva productos del catálogo.
-- **Carga de Imágenes**: Sube imágenes de productos directamente a Cloudinary a través de un componente dedicado.
+- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock.
+- **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary a través de un componente dedicado.
+- **Eliminación Segura**: Sistema de doble confirmación para la eliminación física de productos, requiriendo la escritura de una palabra clave para evitar borrados accidentales.
 - **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna roles de administrador.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones y novedades.
 

@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -6,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { X, UploadCloud, Image as ImageIcon, Loader2 } from 'lucide-react';
 import NextImage from 'next/image';
+import { useLanguage } from '@/hooks/use-language';
 
 const MAX_IMAGES = 5;
 
@@ -18,6 +20,7 @@ export default function MultiImageUploader({ name, defaultValues = [] }: MultiIm
   const [imageUrls, setImageUrls] = useState<string[]>(defaultValues);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -26,16 +29,16 @@ export default function MultiImageUploader({ name, defaultValues = [] }: MultiIm
     if (imageUrls.length >= MAX_IMAGES) {
       toast({
         variant: 'destructive',
-        title: "Límite alcanzado",
-        description: `No puedes subir más de ${MAX_IMAGES} imágenes.`,
+        title: t('Image_Limit_Title'),
+        description: t('Image_Limit_Desc', { max: MAX_IMAGES }),
       });
       return;
     }
 
     setLoading(true);
     toast({
-      title: "Subiendo imagen...",
-      description: "Por favor espera.",
+      title: t('Uploading_Image_Title'),
+      description: t('Uploading_Image_Desc'),
     });
 
     try {
@@ -75,15 +78,21 @@ export default function MultiImageUploader({ name, defaultValues = [] }: MultiIm
       setImageUrls(prev => [...prev, data.secure_url]);
 
       toast({
-        title: "Imagen subida",
-        description: "La imagen se ha subido correctamente.",
+        title: t('Image_upload_success_title'),
+        description: t('Image_upload_success_desc'),
       });
 
     } catch (err: any) {
+        console.error("Image upload error:", err);
+        let description = t('Upload_Error_Desc');
+        if (err?.message?.includes('File size too large')) {
+          description = t('Upload_Error_File_Too_Large_Desc');
+        }
+
         toast({
             variant: 'destructive',
-            title: "Error al subir",
-            description: err.message,
+            title: t('Upload_Error_Title'),
+            description: description,
         });
     } finally {
         setLoading(false);

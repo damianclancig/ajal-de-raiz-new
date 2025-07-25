@@ -129,7 +129,8 @@ export const translations = {
   'Reset_Error_Title': { en: 'Error', es: 'Error', pt: 'Erro' },
   'New_Password_Success_Title': { en: 'Password Updated', es: 'Contraseña Actualizada', pt: 'Senha Atualizada' },
   'New_Password_Success_Desc': { en: 'Your password has been updated successfully. You can now log in.', es: 'Tu contraseña ha sido actualizada. Ya puedes iniciar sesión.', pt: 'Sua senha foi atualizada. Você já pode fazer login.' },
-  
+  'Login_to_Buy': { en: 'Login to Buy', es: 'Inicia Sesión para Comprar', pt: 'Faça Login para Comprar' },
+
   // Admin Page
   'Admin_Panel': { en: 'Admin Panel', es: 'Panel de Administración', pt: 'Painel Administrativo' },
   'Manage_your_products_and_store_data': {
@@ -186,6 +187,9 @@ export const translations = {
   'Yes': { en: 'Yes', es: 'Sí', pt: 'Sim' },
   'No': { en: 'No', es: 'No', pt: 'Não' },
   'State': { en: 'State', es: 'Estado', pt: 'Estado' },
+  'Stock': { en: 'Stock', es: 'Stock', pt: 'Estoque' },
+  'Available': { en: 'Available', es: 'Disponible', pt: 'Disponível' },
+  'Sold_Out': { en: 'Sold Out', es: 'Agotado', pt: 'Esgotado' },
   'activo': { en: 'Active', es: 'Activo', pt: 'Ativo' },
   'inactivo': { en: 'Inactive', es: 'Inactivo', pt: 'Inativo' },
   'vendido': { en: 'Sold', es: 'Vendido', pt: 'Vendido' },
@@ -194,7 +198,6 @@ export const translations = {
   'Delete_Product_Permanently': { en: 'Delete Product Permanently', es: 'Eliminar Producto Permanentemente', pt: 'Excluir Produto Permanentemente' },
   'Delete_Permanently_Warning': { en: 'Once you delete this product, there is no going back. Please be certain.', es: 'Una vez que elimines este producto, no hay vuelta atrás. Por favor, asegúrate.', pt: 'Depois de excluir este produto, não há como voltar atrás. Por favor, tenha certeza.' },
   'Type_DELETE_to_confirm': { en: 'To confirm, type "{word}" in the box below.', es: 'Para confirmar, escribe "{word}" en el campo de abajo.', pt: 'Para confirmar, digite "{word}" na caixa abaixo.' },
-
 
   // Toast Notifications
   'Product_Deactivated_Title': { en: 'Product Deactivated', es: 'Producto Desactivado', pt: 'Produto Desativado' },
@@ -208,8 +211,15 @@ export const translations = {
   'Image_upload_success_title': { en: 'Image Uploaded', es: 'Imagen Subida', pt: 'Imagem Carregada' },
   'Image_upload_success_desc': { en: 'The image has been uploaded successfully.', es: 'La imagen se ha subido correctamente.', pt: 'A imagem foi carregada com sucesso.' },
   'Upload_an_Image': { en: 'Upload an Image', es: 'Subir una Imagen', pt: 'Carregar uma Imagem' },
+  'Image_Limit_Title': { en: 'Image Limit Reached', es: 'Límite de Imágenes Alcanzado', pt: 'Limite de Imagens Atingido' },
+  'Image_Limit_Desc': { en: 'You cannot upload more than {max} images.', es: 'No puedes subir más de {max} imágenes.', pt: 'Você não pode carregar mais de {max} imagens.' },
   'User_Updated_Title': { en: 'User Updated', es: 'Usuario Actualizado', pt: 'Usuário Atualizado' },
   'User_Saved_Desc': { en: 'The user has been saved successfully.', es: 'El usuario se ha guardado correctamente.', pt: 'O usuário foi salvo com sucesso.' },
+  'Uploading_Image_Title': { en: 'Uploading Image...', es: 'Subiendo imagen...', pt: 'Enviando imagem...' },
+  'Uploading_Image_Desc': { en: 'Please wait while the image is being uploaded.', es: 'Por favor, espera mientras se sube la imagen.', pt: 'Por favor, aguarde enquanto a imagem está sendo enviada.' },
+  'Upload_Error_Title': { en: 'Upload Error', es: 'Error al Subir', pt: 'Erro de Upload' },
+  'Upload_Error_Desc': { en: 'An unexpected error occurred while uploading the image.', es: 'Ocurrió un error inesperado al subir la imagen.', pt: 'Ocorreu um erro inesperado ao enviar a imagem.' },
+  'Upload_Error_File_Too_Large_Desc': { en: 'The file is too large. Please upload a smaller file.', es: 'El archivo es demasiado grande. Por favor, sube un archivo más pequeño.', pt: 'O arquivo é muito grande. Por favor, carregue um arquivo menor.' },
 
   // Slides / Novedades
   'Slides': { en: 'Slides', es: 'Novedades', pt: 'Novidades' },
@@ -226,7 +236,18 @@ export const translations = {
   'Slide_Deleted_Desc': { en: 'The slide has been deleted successfully.', es: 'La novedad ha sido eliminada correctamente.', pt: 'A novidade foi excluída com sucesso.' },
   'Slide_Updated_Title': { en: 'Slide Updated', es: 'Novedad Actualizada', pt: 'Novidade Atualizada' },
   'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Novidade Criada' },
-  'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' }
-};
+  'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' },
 
-    
+  // Cart
+  'Shopping_Cart': { en: 'Shopping Cart', es: 'Carrito de Compras', pt: 'Carrinho de Compras' },
+  'Add_to_Cart': { en: 'Add to Cart', es: 'Añadir al Carrito', pt: 'Adicionar ao Carrinho' },
+  'Product_Added_to_Cart_Title': { en: 'Product Added', es: 'Producto Añadido', pt: 'Produto Adicionado' },
+  'Product_Added_to_Cart_Desc': { en: '{quantity} x {name} has been added to your cart.', es: '{quantity} x {name} ha sido añadido a tu carrito.', pt: '{quantity} x {name} foi adicionado ao seu carrinho.' },
+  'Your_cart_is_empty': { en: 'Your cart is empty', es: 'Tu carrito está vacío', pt: 'Seu carrinho está vazio' },
+  'Looks_like_you_havent_added_anything': { en: 'Looks like you haven\'t added anything to your cart yet.', es: 'Parece que todavía no has añadido nada a tu carrito.', pt: 'Parece que você ainda não adicionou nada ao seu carrinho.' },
+  'Go_Shopping': { en: 'Go Shopping', es: 'Ir de Compras', pt: 'Ir às Compras' },
+  'Order_Summary': { en: 'Order Summary', es: 'Resumen del Pedido', pt: 'Resumo do Pedido' },
+  'Subtotal': { en: 'Subtotal', es: 'Subtotal', pt: 'Subtotal' },
+  'Total': { en: 'Total', es: 'Total', pt: 'Total' },
+  'Proceed_to_Checkout': { en: 'Proceed to Checkout', es: 'Proceder al Pago', pt: 'Finalizar Compra' }
+};

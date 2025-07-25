@@ -8,11 +8,22 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/use-language';
 import type { Product } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+import { useCart } from '@/contexts/cart-context';
+import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
-// This is a Client Component that handles user interaction (state).
 export default function ProductDetailClient({ product }: { product: Product }) {
   const [selectedImage, setSelectedImage] = useState<string>(product.images?.[0] || 'https://placehold.co/600x600.png');
+  const [quantity, setQuantity] = useState(1);
   const { t, language } = useLanguage();
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+  const { data: session } = useSession();
+  const router = useRouter();
+
 
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -23,9 +34,25 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     }).format(price);
   };
   
+  const handleAddToCart = () => {
+    if (!session) {
+      router.push('/login');
+      return;
+    }
+    if (product) {
+      addToCart(product, quantity);
+      toast({
+        title: t('Product_Added_to_Cart_Title'),
+        description: t('Product_Added_to_Cart_Desc', { quantity, name: product.name }),
+      });
+    }
+  };
+
   if (!product) {
     return <div>Loading...</div>; // Or a more sophisticated skeleton loader
   }
+
+  const isSoldOut = product.countInStock <= 0;
 
   return (
     <div className="container py-8 md:py-12">
@@ -69,8 +96,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         <div className="flex flex-col justify-center">
             <Card>
                 <CardHeader>
-                    <p className="text-sm text-muted-foreground">{product.category}</p>
-                    <CardTitle className="font-headline text-4xl md:text-5xl">{product.name}</CardTitle>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <p className="text-sm text-muted-foreground">{product.category}</p>
+                            <CardTitle className="font-headline text-4xl md:text-5xl">{product.name}</CardTitle>
+                        </div>
+                        <Badge variant={!isSoldOut ? "default" : "destructive"}>
+                            {!isSoldOut ? t('Available') : t('Sold_Out')}
+                        </Badge>
+                    </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <p className="text-lg text-muted-foreground">{product.description}</p>
@@ -79,9 +113,27 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                         ${formatPrice(product.price)}
                     </div>
 
-                    <Button size="lg" className="w-full">
-                        {t('Contact_Us')}
-                    </Button>
+                    { isSoldOut ? (
+                      <Button size="lg" className="w-full" disabled>{t('Sold_Out')}</Button>
+                    ) : session ? (
+                      <div className="flex gap-4">
+                        <Input
+                          type="number"
+                          value={quantity}
+                          onChange={(e) => setQuantity(Math.max(1, Math.min(product.countInStock, Number(e.target.value))))}
+                          min="1"
+                          max={product.countInStock}
+                          className="w-24 text-center"
+                        />
+                        <Button size="lg" className="w-full" onClick={handleAddToCart}>
+                          {t('Add_to_Cart')}
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button size="lg" className="w-full" onClick={handleAddToCart}>
+                          {t('Login_to_Buy')}
+                      </Button>
+                    )}
                 </CardContent>
             </Card>
         </div>

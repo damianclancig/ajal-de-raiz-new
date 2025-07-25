@@ -9,6 +9,7 @@ import Footer from '@/components/layout/footer';
 import { Toaster } from '@/components/ui/toaster';
 import WhatsAppButton from '@/components/layout/whatsapp-button';
 import { SessionProvider } from 'next-auth/react';
+import { CartProvider } from '@/contexts/cart-context';
 
 export default function RootLayout({
   children,
@@ -34,13 +35,15 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <LanguageProvider>
-              <div className="flex min-h-screen flex-col">
-                <Header />
-                <main className="flex-grow pb-12">{children}</main>
-                <Footer />
-              </div>
-              <WhatsAppButton />
-              <Toaster />
+              <CartProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Header />
+                  <main className="flex-grow pb-12">{children}</main>
+                  <Footer />
+                </div>
+                <WhatsAppButton />
+                <Toaster />
+              </CartProvider>
             </LanguageProvider>
           </ThemeProvider>
         </SessionProvider>

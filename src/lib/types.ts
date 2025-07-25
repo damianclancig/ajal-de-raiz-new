@@ -1,3 +1,4 @@
+
 'use server';
 
 import type { ObjectId } from 'mongodb';
@@ -49,4 +50,32 @@ export interface HeroSlide {
     dataAiHint?: string;
     createdAt?: string;
     updatedAt?: string;
+}
+
+export interface CartItem {
+  productId: ObjectId;
+  quantity: number;
+}
+
+export interface Cart {
+  _id: ObjectId;
+  userId: ObjectId;
+  items: CartItem[];
+}
+
+export interface PopulatedCartItem {
+  productId: string;
+  name: string;
+  slug: string;
+  price: number;
+  quantity: number;
+  image: string;
+  countInStock: number;
+}
+
+export interface PopulatedCart {
+  id: string;
+  userId: string;
+  items: PopulatedCartItem[];
+  totalPrice: number;
 }
