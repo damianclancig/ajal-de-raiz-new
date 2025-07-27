@@ -20,7 +20,7 @@ export default function OrderStatusForm({ order }: OrderStatusFormProps) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
     
-    const statuses: OrderStatus[] = ['Pendiente', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'];
+    const statuses: OrderStatus[] = ['Pendiente', 'Pendiente de Pago', 'Pendiente de Confirmación', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'];
 
     const handleSubmit = (formData: FormData) => {
         startTransition(async () => {

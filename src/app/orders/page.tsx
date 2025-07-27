@@ -1,7 +1,6 @@
 
 import { getMyOrders } from '@/lib/order-service';
-import { useLanguage } from '@/hooks/use-language';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -10,6 +9,10 @@ import { cookies } from 'next/headers';
 import { translations } from '@/lib/translations';
 import Image from 'next/image';
 import { NO_IMAGE_URL } from '@/lib/utils';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Info } from 'lucide-react';
+import type { OrderStatus } from '@/lib/types';
+import UploadReceiptButton from './_components/upload-receipt-button';
 
 const getLanguage = () => {
     const cookieStore = cookies();
@@ -19,6 +22,13 @@ const getLanguage = () => {
         return lang;
     }
     return 'es'; 
+};
+
+const bankDetails = {
+    alias: process.env.BANK_ALIAS,
+    cbu: process.env.BANK_CBU,
+    cuit: process.env.BANK_CUIT,
+    accountName: process.env.BANK_ACCOUNT_NAME
 };
 
 
@@ -44,6 +54,20 @@ export default async function OrdersPage() {
             day: 'numeric',
         });
     };
+    
+    const getStatusVariant = (status: OrderStatus) => {
+        switch (status) {
+            case 'Pendiente': return 'secondary';
+            case 'Pendiente de Pago': return 'destructive';
+            case 'Pendiente de Confirmación': return 'default';
+            case 'Confirmado': return 'default';
+            case 'Enviado': return 'default';
+            case 'Entregado': return 'default';
+            case 'Cancelado': return 'destructive';
+            default: return 'outline';
+        }
+    }
+
 
     return (
         <div className="container py-8 md:py-12">
@@ -67,11 +91,30 @@ export default async function OrdersPage() {
                                     <CardDescription>{t('Order_Date')}: {formatDate(order.createdAt)}</CardDescription>
                                 </div>
                                 <div className="flex gap-4 items-center">
-                                    <Badge variant={order.status === 'Pendiente' ? 'secondary' : 'default'}>{t(order.status as keyof typeof translations)}</Badge>
+                                    <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
                                     <span className="font-bold text-lg">${formatPrice(order.totalPrice)}</span>
                                 </div>
                             </CardHeader>
                             <CardContent>
+                               {order.status === 'Pendiente de Pago' && (
+                                   <Alert className="mb-6">
+                                       <Info className="h-4 w-4" />
+                                       <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
+                                       <AlertDescription>
+                                           <div className="space-y-2 mt-2">
+                                                <p>{t('Transfer_Instruction')}</p>
+                                                <p className="font-semibold">{t('Total_Amount')}: <span className="font-bold text-lg">${formatPrice(order.totalPrice)}</span></p>
+                                                <ul className="list-disc list-inside space-y-1 text-sm bg-muted p-3 rounded-md">
+                                                    {bankDetails.alias && <li><strong>{t('Alias')}:</strong> {bankDetails.alias}</li>}
+                                                    {bankDetails.cbu && <li><strong>CBU/CVU:</strong> {bankDetails.cbu}</li>}
+                                                    {bankDetails.cuit && <li><strong>CUIT:</strong> {bankDetails.cuit}</li>}
+                                                    {bankDetails.accountName && <li><strong>{t('Account_Holder')}:</strong> {bankDetails.accountName}</li>}
+                                                </ul>
+                                           </div>
+                                       </AlertDescription>
+                                   </Alert>
+                               )}
+
                                <Table>
                                     <TableHeader>
                                         <TableRow>
@@ -91,7 +134,6 @@ export default async function OrdersPage() {
                                                         width={64}
                                                         height={64}
                                                         className="rounded-md object-cover"
-                                                        data-ai-hint="product image"
                                                     />
                                                 </TableCell>
                                                 <TableCell>
@@ -106,6 +148,12 @@ export default async function OrdersPage() {
                                     </TableBody>
                                </Table>
                             </CardContent>
+                             {order.status === 'Pendiente de Pago' && (
+                                <CardFooter className="flex-col items-start gap-2 pt-4">
+                                     <p className="text-sm text-muted-foreground">{t('After_payment_instruction')}</p>
+                                     <UploadReceiptButton orderId={order.id} />
+                                </CardFooter>
+                             )}
                         </Card>
                     ))}
                 </div>

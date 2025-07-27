@@ -80,7 +80,15 @@ export interface PopulatedCart {
   totalPrice: number;
 }
 
-export type OrderStatus = 'Pendiente' | 'Confirmado' | 'Enviado' | 'Entregado' | 'Cancelado';
+export type OrderStatus = 
+    | 'Pendiente' 
+    | 'Pendiente de Pago'
+    | 'Pendiente de Confirmación'
+    | 'Confirmado' 
+    | 'Enviado' 
+    | 'Entregado' 
+    | 'Cancelado';
+
 export type PaymentMethod = 'Efectivo' | 'Transferencia Bancaria' | 'MercadoPago';
 
 export interface OrderItem {
@@ -101,6 +109,7 @@ export interface Order {
     totalPrice: number;
     paymentMethod: PaymentMethod;
     status: OrderStatus;
+    receiptUrl?: string;
     createdAt: string;
     updatedAt: string;
 }

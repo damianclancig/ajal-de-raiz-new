@@ -3,7 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import clientPromise from '@/lib/mongodb';
-import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem, Order, OrderItem, OrderStatus } from './types';
+import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem, Order, OrderItem, OrderStatus, PaymentMethod } from './types';
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
 import { hash } from 'bcryptjs';
@@ -542,7 +542,7 @@ async function getPopulatedCart(userId: string): Promise<PopulatedCart | null> {
                     slug: product.slug,
                     price: product.price,
                     quantity: item.quantity,
-                    image: product.images?.[0] || '',
+                    image: product.images[0],
                     countInStock: product.countInStock
                 };
             }
@@ -683,7 +683,7 @@ export async function removeFromCart(productId: string): Promise<ActionResponse>
 
 // ORDER ACTIONS
 
-export async function createOrder(): Promise<ActionResponse> {
+export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionResponse> {
     const session = await auth();
     if (!session?.user?.id) {
         return { success: false, message: "User not authenticated." };
@@ -701,6 +701,11 @@ export async function createOrder(): Promise<ActionResponse> {
         return { success: false, message: "El carrito está vacío." };
     }
     
+    let initialStatus: OrderStatus = 'Pendiente';
+    if (paymentMethod === 'Transferencia Bancaria') {
+        initialStatus = 'Pendiente de Pago';
+    }
+
     try {
         const orderItems: OrderItem[] = cart.items.map(item => ({
             productId: item.productId,
@@ -715,8 +720,8 @@ export async function createOrder(): Promise<ActionResponse> {
             userId: userId,
             items: orderItems,
             totalPrice: cart.totalPrice,
-            paymentMethod: 'Efectivo',
-            status: 'Pendiente',
+            paymentMethod: paymentMethod,
+            status: initialStatus,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
@@ -736,13 +741,13 @@ export async function createOrder(): Promise<ActionResponse> {
 
         revalidatePath('/cart');
         revalidatePath('/orders');
+        
+        return { success: true, message: "Order created successfully." };
 
     } catch (error) {
         const message = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, message: `Failed to create order: ${message}` };
     }
-    
-    redirect('/orders');
 }
 
 export async function updateOrderStatus(orderId: string, formData: FormData): Promise<ActionResponse> {
@@ -752,7 +757,7 @@ export async function updateOrderStatus(orderId: string, formData: FormData): Pr
     }
     
     const status = formData.get('status') as OrderStatus;
-    if (!['Pendiente', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'].includes(status)) {
+    if (!['Pendiente', 'Pendiente de Pago', 'Pendiente de Confirmación', 'Confirmado', 'Enviado', 'Entregado', 'Cancelado'].includes(status)) {
         return { success: false, message: "Invalid status." };
     }
 
@@ -777,4 +782,38 @@ export async function updateOrderStatus(orderId: string, formData: FormData): Pr
     revalidatePath(`/admin/orders`);
     revalidatePath(`/admin/orders/${orderId}`);
     redirect(`/admin/orders`);
+}
+
+export async function submitReceipt(orderId: string, receiptUrl: string): Promise<ActionResponse> {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, message: "User not authenticated." };
+    }
+
+    try {
+        const db = await getDb();
+        const ordersCollection = db.collection('orders');
+
+        const result = await ordersCollection.updateOne(
+            { _id: new ObjectId(orderId), userId: new ObjectId(session.user.id) },
+            { $set: { 
+                status: 'Pendiente de Confirmación' as OrderStatus, 
+                receiptUrl: receiptUrl,
+                updatedAt: new Date() 
+            }}
+        );
+
+        if (result.matchedCount === 0) {
+            return { success: false, message: "Order not found or you are not authorized to update it." };
+        }
+
+        revalidatePath('/orders');
+        revalidatePath(`/admin/orders/${orderId}`);
+        revalidatePath('/admin/orders');
+        return { success: true, message: "Receipt submitted successfully." };
+
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, message: `Failed to submit receipt: ${message}` };
+    }
 }

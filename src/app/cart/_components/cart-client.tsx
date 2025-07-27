@@ -7,12 +7,11 @@ import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Trash2, Wallet } from 'lucide-react';
+import { Loader2, Trash2, Wallet, Landmark } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -24,12 +23,15 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { createOrder } from '@/lib/actions';
 import { NO_IMAGE_URL } from '@/lib/utils';
+import type { PaymentMethod } from '@/lib/types';
+import { useRouter } from 'next/navigation';
 
 export default function CartClient() {
   const { cart, loading, updateQuantity, removeFromCart, clearCart } = useCart();
   const { t, language } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
   
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -40,14 +42,15 @@ export default function CartClient() {
     }).format(price);
   };
 
-  const handleCreateOrder = () => {
+  const handleCreateOrder = (paymentMethod: PaymentMethod) => {
     startTransition(async () => {
-      const result = await createOrder();
+      const result = await createOrder(paymentMethod);
       if(result.success) {
         toast({
           title: t('Order_Success_Title'),
           description: t('Order_Success_Desc'),
         });
+        router.push('/orders');
       } else {
         toast({
           variant: 'destructive',
@@ -96,7 +99,7 @@ export default function CartClient() {
                 <CardContent className="p-0">
                     <div className="divide-y">
                     {cart.items.map(item => {
-                        const imageUrl = (item.image || NO_IMAGE_URL).replace(/\.heic$/i, '.png');
+                        const imageUrl = (item.image || NO_IMAGE_URL);
 
                         return (
                             <div key={item.productId} className="flex flex-col md:flex-row items-start md:items-center p-4 gap-4">
@@ -167,22 +170,37 @@ export default function CartClient() {
                     <AlertDialogHeader>
                         <AlertDialogTitle>{t('Payment_Method')}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Por favor, selecciona tu método de pago. Por el momento solo aceptamos efectivo.
+                            {t('Payment_Method_Desc')}
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <Button 
-                        variant="outline" 
-                        className="w-full justify-start"
-                        onClick={handleCreateOrder}
-                        disabled={isPending}
-                    >
-                       {isPending ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        ) : (
-                          <Wallet className="mr-2 h-4 w-4" />
-                        )}
-                       {t('Pay_in_Cash')}
-                    </Button>
+                    <div className="flex flex-col gap-3">
+                         <Button 
+                            variant="outline" 
+                            className="w-full justify-start"
+                            onClick={() => handleCreateOrder('Efectivo')}
+                            disabled={isPending}
+                        >
+                           {isPending ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                            <Wallet className="mr-2 h-4 w-4" />
+                            )}
+                           {t('Pay_in_Cash')}
+                        </Button>
+                         <Button 
+                            variant="outline" 
+                            className="w-full justify-start"
+                            onClick={() => handleCreateOrder('Transferencia Bancaria')}
+                            disabled={isPending}
+                        >
+                           {isPending ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                            <Landmark className="mr-2 h-4 w-4" />
+                            )}
+                           {t('Pay_by_Bank_Transfer')}
+                        </Button>
+                    </div>
                     <AlertDialogFooter>
                         <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
                     </AlertDialogFooter>

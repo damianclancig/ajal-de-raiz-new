@@ -47,6 +47,8 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
      const getStatusVariant = (status: OrderStatus) => {
         switch (status) {
             case 'Pendiente': return 'secondary';
+            case 'Pendiente de Pago': return 'destructive';
+            case 'Pendiente de Confirmación': return 'default';
             case 'Confirmado': return 'default';
             case 'Enviado': return 'default';
             case 'Entregado': return 'default';
@@ -71,10 +73,10 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                     </TableHeader>
                     <TableBody>
                         {orders.map((order) => (
-                            <TableRow key={order.id}>
+                            <TableRow key={order.id} className={order.status === 'Pendiente de Confirmación' ? 'bg-primary/10' : ''}>
                                 <TableCell className="font-medium">{order.id.substring(0, 8)}...</TableCell>
                                 <TableCell>
-                                    <div>{order.user?.name}</div>
+                                    <div>{order.user?.name || 'Usuario no encontrado'}</div>
                                     <div className="text-xs text-muted-foreground">{order.user?.email}</div>
                                 </TableCell>
                                 <TableCell>

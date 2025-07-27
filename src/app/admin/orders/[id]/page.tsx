@@ -8,7 +8,8 @@ import Image from 'next/image';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import OrderStatusForm from './_components/order-status-form';
-import { NO_IMAGE_URL } from '@/lib/utils';
+import { OrderStatus } from '@/lib/types';
+import Link from 'next/link';
 
 const getLanguage = () => {
     const cookieStore = cookies();
@@ -49,6 +50,18 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             minute: '2-digit',
         });
     };
+     const getStatusVariant = (status: OrderStatus) => {
+        switch (status) {
+            case 'Pendiente': return 'secondary';
+            case 'Pendiente de Pago': return 'destructive';
+            case 'Pendiente de Confirmación': return 'default';
+            case 'Confirmado': return 'default';
+            case 'Enviado': return 'default';
+            case 'Entregado': return 'default';
+            case 'Cancelado': return 'destructive';
+            default: return 'outline';
+        }
+    }
     
     return (
         <div className="space-y-6 px-4">
@@ -56,6 +69,21 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">
+                    {order.receiptUrl && (
+                        <Card className="border-primary">
+                            <CardHeader>
+                                <CardTitle>Comprobante de Pago</CardTitle>
+                                <CardDescription>El cliente ha subido un comprobante para esta orden.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Link href={order.receiptUrl} target="_blank" rel="noopener noreferrer">
+                                    <div className="relative aspect-video w-full rounded-md overflow-hidden border">
+                                        <Image src={order.receiptUrl} alt="Comprobante de pago" fill className="object-contain" />
+                                    </div>
+                                </Link>
+                            </CardContent>
+                        </Card>
+                    )}
                     <Card>
                         <CardHeader>
                             <CardTitle>Productos</CardTitle>
@@ -75,7 +103,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                                         <TableRow key={item.productId}>
                                             <TableCell className="hidden md:table-cell">
                                                 <Image
-                                                    src={item.image || NO_IMAGE_URL}
+                                                    src={item.image}
                                                     alt={item.name}
                                                     width={64}
                                                     height={64}
@@ -106,9 +134,13 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                                 <span className="text-muted-foreground">Fecha</span>
                                 <span>{formatDate(order.createdAt)}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between items-center">
+                                <span className="text-muted-foreground">Estado</span>
+                                <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
+                            </div>
+                            <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Método de Pago</span>
-                                <Badge variant="outline">{order.paymentMethod}</Badge>
+                                <Badge variant="outline">{t(order.paymentMethod as keyof typeof translations)}</Badge>
                             </div>
                              <div className="flex justify-between font-bold text-xl">
                                 <span>Total</span>

@@ -24,8 +24,8 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Proceso de Pedido Simplificado**: Completa tu compra seleccionando "Pagar en Efectivo" como método de pago.
-  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes, visualizando los productos, el monto total y el estado actual de cada pedido (Pendiente, Confirmado, Enviado, etc.).
+  - **Proceso de Pedido Flexible**: Al finalizar la compra, elige entre "Pagar en Efectivo" o "Transferencia Bancaria".
+  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción.
 - **Autenticación Segura**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
@@ -36,9 +36,10 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock.
 - **Gestión de Órdenes**:
-  - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada.
-  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, y montos.
-  - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente" a "Confirmado") para mantener informado al cliente.
+  - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
+  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos y montos.
+  - **Verificación de Pagos**: Visualiza los comprobantes de transferencia subidos por los clientes directamente en el detalle del pedido.
+  - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente de Confirmación" a "Confirmado") para mantener informado al cliente y gestionar el flujo de trabajo.
 - **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna o revoca roles de administrador.
 - **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
@@ -109,6 +110,17 @@ CLOUDINARY_SECRET=tu_api_secret_de_cloudinary
 
 # Número de WhatsApp (opcional)
 NEXT_PUBLIC_WHATSAPP_NUMBER="54911xxxxxxxx"
+
+# Datos Bancarios para Transferencias
+BANK_ALIAS="tu.alias.mp"
+BANK_CBU="0000003100055555555555"
+BANK_CUIT="20-12345678-9"
+BANK_ACCOUNT_NAME="Nombre del Titular"
+
+# Emailing Service (Maileroo)
+MAILEROO_API_KEY="tu_api_key_de_maileroo"
+MAILEROO_FROM_EMAIL="tu@emailverificado.com"
+MAILEROO_TO_CONTACT="email_para_recibir_contactos@dominio.com"
 ```
 
 ### 5. Iniciar el Servidor de Desarrollo

@@ -17,12 +17,16 @@ const orderFromDoc = (doc: any): Order | null => {
   }
   return {
     id: doc._id.toString(),
-    userId: doc.userId.toString(),
+    userId: doc.userId?.toString() || '',
     user: doc.user,
-    items: doc.items,
+    items: (doc.items || []).map((item: any) => ({
+      ...item,
+      productId: item.productId?.toString() || '',
+    })),
     totalPrice: doc.totalPrice,
     paymentMethod: doc.paymentMethod,
     status: doc.status,
+    receiptUrl: doc.receiptUrl,
     createdAt: doc.createdAt.toISOString(),
     updatedAt: doc.updatedAt.toISOString(),
   };
@@ -58,7 +62,7 @@ export const getAllOrders = async (): Promise<Order[]> => {
       }
     },
     {
-      $unwind: '$user'
+      $unwind: { path: '$user', preserveNullAndEmptyArrays: true }
     },
     {
         $project: {

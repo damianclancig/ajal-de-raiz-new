@@ -243,7 +243,7 @@ export const translations = {
   'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Novidade Criada' },
   'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' },
 
-  // Cart
+  // Cart & Payment
   'Shopping_Cart': { en: 'Shopping Cart', es: 'Carrito de Compras', pt: 'Carrinho de Compras' },
   'Add_to_Cart': { en: 'Add to Cart', es: 'Añadir al Carrito', pt: 'Adicionar ao Carrinho' },
   'Product_Added_to_Cart_Title': { en: 'Product Added', es: 'Producto Añadido', pt: 'Produto Adicionado' },
@@ -256,10 +256,13 @@ export const translations = {
   'Total': { en: 'Total', es: 'Total', pt: 'Total' },
   'Proceed_to_Checkout': { en: 'Proceed to Checkout', es: 'Proceder al Pago', pt: 'Finalizar Compra' },
   'Pay_in_Cash': { en: 'Pay in Cash', es: 'Pagar en Efectivo', pt: 'Pagar em Dinheiro' },
+  'Pay_by_Bank_Transfer': { en: 'Pay by Bank Transfer', es: 'Pagar por Transferencia', pt: 'Pagar por Transferência' },
   'Confirm_Order': { en: 'Confirm Order', es: 'Confirmar Pedido', pt: 'Confirmar Pedido' },
   'Order_Success_Title': { en: 'Order Placed!', es: '¡Pedido Realizado!', pt: 'Pedido Realizado!' },
   'Order_Success_Desc': { en: 'Your order has been placed successfully. You can view it in "My Orders".', es: 'Tu pedido ha sido realizado con éxito. Puedes verlo en "Mis Pedidos".', pt: 'Seu pedido foi realizado com sucesso. Você pode visualizá-lo em "Meus Pedidos".' },
   'Order_Error_Desc': { en: 'There was an error placing your order. Please try again.', es: 'Hubo un error al realizar tu pedido. Por favor, inténtalo de nuevo.', pt: 'Houve um erro ao fazer seu pedido. Por favor, tente novamente.' },
+  'Payment_Method': { en: 'Payment Method', es: 'Método de Pago', pt: 'Método de Pagamento' },
+  'Payment_Method_Desc': { en: 'Please select your payment method. For now, we only accept cash and bank transfers.', es: 'Por favor, selecciona tu método de pago. Por el momento solo aceptamos efectivo y transferencia bancaria.', pt: 'Por favor, selecione seu método de pagamento. No momento, aceitamos apenas dinheiro e transferência bancária.' },
   
   // Orders
   'My_Orders': { en: 'My Orders', es: 'Mis Pedidos', pt: 'Meus Pedidos' },
@@ -271,11 +274,20 @@ export const translations = {
   'Order_Total': { en: 'Total', es: 'Total', pt: 'Total' },
   'Order_Status': { en: 'Status', es: 'Estado', pt: 'Status' },
   'Pendiente': { en: 'Pending', es: 'Pendiente', pt: 'Pendente' },
+  'Pendiente de Pago': { en: 'Pending Payment', es: 'Pendiente de Pago', pt: 'Pagamento Pendente' },
+  'Pendiente de Confirmación': { en: 'Pending Confirmation', es: 'Pendiente de Confirmación', pt: 'Confirmação Pendente' },
   'Confirmado': { en: 'Confirmed', es: 'Confirmado', pt: 'Confirmado' },
   'Enviado': { en: 'Shipped', es: 'Enviado', pt: 'Enviado' },
   'Entregado': { en: 'Delivered', es: 'Entregado', pt: 'Entregue' },
   'Cancelado': { en: 'Cancelled', es: 'Cancelado', pt: 'Cancelado' },
-  'Payment_Method': { en: 'Payment Method', es: 'Método de Pago', pt: 'Método de Pagamento' },
-  'Efectivo': { en: 'Cash', es: 'Efectivo', pt: 'Dinheiro' }
+  'Efectivo': { en: 'Cash', es: 'Efectivo', pt: 'Dinheiro' },
+  'Transferencia Bancaria': { en: 'Bank Transfer', es: 'Transferencia Bancaria', pt: 'Transferência Bancária' },
+  'Complete_your_Payment': { en: 'Complete your Payment', es: 'Completa tu Pago', pt: 'Complete seu Pagamento' },
+  'Transfer_Instruction': { en: 'To confirm your order, please transfer the total amount to the following account:', es: 'Para confirmar tu pedido, por favor transfiere el monto total a la siguiente cuenta:', pt: 'Para confirmar seu pedido, por favor, transfira o valor total para a seguinte conta:' },
+  'Total_Amount': { en: 'Total Amount', es: 'Monto Total', pt: 'Valor Total' },
+  'Alias': { en: 'Alias', es: 'Alias', pt: 'Alias' },
+  'Account_Holder': { en: 'Account Holder', es: 'Titular de la Cuenta', pt: 'Titular da Conta' },
+  'After_payment_instruction': { en: 'Once the payment is made, upload the receipt to speed up the confirmation process.', es: 'Una vez realizado el pago, sube el comprobante para agilizar el proceso de confirmación.', pt: 'Após o pagamento ser efetuado, carregue o comprovante para agilizar o processo de confirmação.' },
+  'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' }
   
 };
