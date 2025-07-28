@@ -102,7 +102,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
                     <TableCell className="hidden md:table-cell">{product.countInStock}</TableCell>
                     <TableCell>{product.isFeatured ? t('Yes') : t('No')}</TableCell>
                     <TableCell>
-                        <Badge variant={product.state === 'activo' ? 'default' : product.state === 'inactivo' ? 'secondary' : 'destructive'}>
+                        <Badge variant={product.state === 'activo' ? 'default' : 'destructive'}>
                           {t(product.state as 'activo' | 'inactivo' | 'vendido')}
                         </Badge>
                     </TableCell>

@@ -7,7 +7,7 @@ import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Trash2, Wallet, Landmark } from 'lucide-react';
+import { Loader2, Trash2, Wallet, Landmark, CreditCard } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -46,11 +46,16 @@ export default function CartClient() {
     startTransition(async () => {
       const result = await createOrder(paymentMethod);
       if(result.success) {
-        toast({
-          title: t('Order_Success_Title'),
-          description: t('Order_Success_Desc'),
-        });
-        router.push('/orders');
+        if(result.init_point) {
+            router.push(result.init_point);
+        } else {
+            toast({
+                title: t('Order_Success_Title'),
+                description: t('Order_Success_Desc'),
+            });
+            clearCart();
+            router.push('/orders');
+        }
       } else {
         toast({
           variant: 'destructive',
@@ -199,6 +204,19 @@ export default function CartClient() {
                             <Landmark className="mr-2 h-4 w-4" />
                             )}
                            {t('Pay_by_Bank_Transfer')}
+                        </Button>
+                        <Button 
+                            variant="outline" 
+                            className="w-full justify-start"
+                            onClick={() => handleCreateOrder('MercadoPago')}
+                            disabled={isPending}
+                        >
+                           {isPending ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                            <CreditCard className="mr-2 h-4 w-4" />
+                            )}
+                           {t('Pay_with_MercadoPago')}
                         </Button>
                     </div>
                     <AlertDialogFooter>

@@ -100,6 +100,13 @@ export interface OrderItem {
     image: string;
 }
 
+export interface MercadoPagoPaymentDetails {
+    paymentMethodId: string; // e.g., 'visa'
+    paymentTypeId: string;   // e.g., 'credit_card'
+    lastFourDigits?: string;
+    installments?: number;
+}
+
 export interface Order {
     id: string;
     _id?: ObjectId;
@@ -110,6 +117,10 @@ export interface Order {
     paymentMethod: PaymentMethod;
     status: OrderStatus;
     receiptUrl?: string;
+    mercadoPagoPreferenceId?: string;
+    mercadoPagoPaymentId?: string;
+    mercadoPagoPaymentDetails?: MercadoPagoPaymentDetails;
+    mercadoPagoInitPoint?: string;
     createdAt: string;
     updatedAt: string;
 }

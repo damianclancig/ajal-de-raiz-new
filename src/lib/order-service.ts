@@ -27,6 +27,10 @@ const orderFromDoc = (doc: any): Order | null => {
     paymentMethod: doc.paymentMethod,
     status: doc.status,
     receiptUrl: doc.receiptUrl,
+    mercadoPagoPreferenceId: doc.mercadoPagoPreferenceId,
+    mercadoPagoInitPoint: doc.mercadoPagoInitPoint,
+    mercadoPagoPaymentId: doc.mercadoPagoPaymentId,
+    mercadoPagoPaymentDetails: doc.mercadoPagoPaymentDetails,
     createdAt: doc.createdAt.toISOString(),
     updatedAt: doc.updatedAt.toISOString(),
   };

@@ -16,7 +16,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function ProductDetailClient({ product }: { product: Product }) {
-  const [selectedImage, setSelectedImage] = useState<string>(product.images[0]);
+  const [selectedMedia, setSelectedMedia] = useState<string>(product.images[0]);
   const [quantity, setQuantity] = useState(1);
   const { t, language } = useLanguage();
   const { addToCart } = useCart();
@@ -24,6 +24,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const { data: session } = useSession();
   const router = useRouter();
 
+  const isVideo = (url: string) => /\.(mp4|webm)$/i.test(url);
 
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -58,35 +59,55 @@ export default function ProductDetailClient({ product }: { product: Product }) {
     <div className="px-4 py-8 md:py-12">
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
         <div className="flex flex-col gap-4">
-          <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg">
-            <Image
-              src={selectedImage.replace(/\.heic$/i, '.png')}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-              priority
-              data-ai-hint={product.dataAiHint || 'product image'}
-            />
+          <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg bg-muted/20">
+            {isVideo(selectedMedia) ? (
+              <video
+                key={selectedMedia}
+                src={selectedMedia}
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-contain"
+              >
+                Tu navegador no soporta el tag de video.
+              </video>
+            ) : (
+              <Image
+                src={selectedMedia.replace(/\.heic$/i, '.png')}
+                alt={product.name}
+                fill
+                className="object-contain"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                priority
+                data-ai-hint={product.dataAiHint || 'product image'}
+              />
+            )}
           </div>
           {product.images && product.images.length > 1 && (
              <div className="grid grid-cols-5 gap-2">
-                {product.images.map((img, index) => (
+                {product.images.map((media, index) => (
                     <button
                         key={index}
-                        onClick={() => setSelectedImage(img)}
+                        onClick={() => setSelectedMedia(media)}
                         className={cn(
                           "relative aspect-square w-full rounded-md overflow-hidden ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring",
-                          selectedImage === img && 'ring-2 ring-primary'
+                          selectedMedia === media && 'ring-2 ring-primary'
                         )}
                     >
                         <Image
-                            src={img.replace(/\.heic$/i, '.png')}
+                            src={media.replace(/\.heic$/i, '.png').replace(/\.(mp4|webm)$/i, '.jpg')}
                             alt={`${product.name} thumbnail ${index + 1}`}
                             fill
                             className="object-cover"
                             sizes="20vw"
                         />
+                         {isVideo(media) && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-8 w-8 text-white"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                            </div>
+                        )}
                     </button>
                 ))}
             </div>

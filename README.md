@@ -19,14 +19,14 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 ### Para Usuarios
 
-- **Catálogo de Productos**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo.
+- **Catálogo de Productos**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo que soporta tanto imágenes como videos por producto.
 - **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
-- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes, descripción, precio y disponibilidad de stock.
+- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y disponibilidad de stock.
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Proceso de Pedido Flexible**: Al finalizar la compra, elige entre "Pagar en Efectivo" o "Transferencia Bancaria".
-  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción.
+  - **Proceso de Pedido Flexible**: Al finalizar la compra, elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
+  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción. Para pagos con MercadoPago, puedes reintentar un pago si falló y, una vez aprobado, ver los detalles de la transacción (método de pago, cuotas, etc.).
 - **Autenticación Segura**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
@@ -35,14 +35,14 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 ### Para Administradores
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
-- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock.
+- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock y carga de videos.
 - **Gestión de Órdenes**:
   - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
-  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos y montos.
-  - **Verificación de Pagos**: Visualiza los comprobantes de transferencia subidos por los clientes directamente en el detalle del pedido.
+  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, montos y el ID de pago de MercadoPago.
+  - **Verificación de Pagos**: Visualiza los comprobantes de transferencia subidos por los clientes directamente en el detalle del pedido. Los pagos con MercadoPago se confirman automáticamente vía webhook.
   - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente de Confirmación" a "Confirmado") para mantener informado al cliente y gestionar el flujo de trabajo.
 - **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna o revoca roles de administrador.
-- **Carga de Múltiples Imágenes**: Sube hasta 5 imágenes por producto directamente a Cloudinary.
+- **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
 
 ## Stack Tecnológico
@@ -56,8 +56,9 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
   - [Lucide React](https://lucide.dev/) para iconos.
 - **Autenticación**: [NextAuth.js](https://next-auth.js.org/)
 - **Base de Datos**: [MongoDB](https://www.mongodb.com/)
-- **Gestión de Imágenes**: [Cloudinary](https://cloudinary.com/)
+- **Gestión de Imágenes y Videos**: [Cloudinary](https://cloudinary.com/)
 - **Validación de Formularios**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Pagos**: [MercadoPago SDK](https://www.mercadopago.com.ar/developers/es/docs)
 
 ## Instalación y Desarrollo Local
 
@@ -68,7 +69,8 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina local.
 - [Node.js](https://nodejs.org/en/) (versión 18 o superior)
 - [npm](https://www.npmjs.com/) o [yarn](https://yarnpkg.com/)
 - Una base de datos MongoDB (puedes usar una instancia local o una gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
-- Una cuenta en [Cloudinary](https://cloudinary.com/) para la gestión de imágenes.
+- Una cuenta en [Cloudinary](https://cloudinary.com/) para la gestión de imágenes y videos.
+- Una cuenta en [MercadoPago](https://mercadopago.com.ar) para gestionar los pagos.
 
 ### 2. Clonar el Repositorio
 
@@ -104,10 +106,14 @@ MONGODB_URI="tu_string_de_conexion_a_mongodb"
 AUTH_SECRET="tu_secreto_para_nextauth"
 NEXTAUTH_URL="http://localhost:9002"
 
-# Cloudinary - Para la carga de imágenes
+# Cloudinary - Para la carga de imágenes y videos
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary
 NEXT_PUBLIC_CLOUDINARY_API_KEY=tu_api_key_de_cloudinary
 CLOUDINARY_SECRET=tu_api_secret_de_cloudinary
+
+# MercadoPago - Para procesar pagos
+MERCADOPAGO_ACCESS_TOKEN="tu_access_token_de_produccion_o_testing"
+MERCADOPAGO_WEBHOOK_SECRET="tu_secreto_para_verificar_webhooks"
 
 # Redes Sociales
 NEXT_PUBLIC_WHATSAPP_NUMBER="54911xxxxxxxx"
@@ -132,6 +138,15 @@ npm run dev
 ```
 
 La aplicación estará disponible en [http://localhost:9002](http://localhost:9002).
+
+### 6. Configurar Webhook de MercadoPago
+
+Para que la confirmación de pagos funcione automáticamente, debes configurar un Webhook en tu [Panel de Desarrollador de MercadoPago](https://www.mercadopago.com.ar/developers/panel).
+
+- **URL del Webhook**: `https://tu-dominio-de-produccion.com/api/webhooks/mercadopago`
+- **Eventos**: Selecciona el evento `payment`.
+
+En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para exponer tu `localhost` a internet y recibir los webhooks.
 
 ## Licencia
 
@@ -158,3 +173,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+

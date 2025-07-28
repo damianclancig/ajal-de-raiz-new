@@ -12,6 +12,7 @@ import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
 import { auth } from '@/auth';
 import { getOrderById } from './order-service';
+import { createPreference } from './mercadopago-service';
 
 const productFromDoc = (doc: any): Product => {
   return {
@@ -42,6 +43,7 @@ type ActionResponse = {
   slide?: HeroSlide | null;
   cart?: PopulatedCart | null;
   order?: Order | null;
+  init_point?: string;
 };
 
 // Helper function to create a URL-friendly slug
@@ -707,7 +709,7 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
     }
     
     let initialStatus: OrderStatus = 'Pendiente';
-    if (paymentMethod === 'Transferencia Bancaria') {
+    if (paymentMethod === 'Transferencia Bancaria' || paymentMethod === 'MercadoPago') {
         initialStatus = 'Pendiente de Pago';
     }
 
@@ -720,8 +722,8 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
             price: item.price,
             image: item.image,
         }));
-
-        const newOrder = {
+        
+        const orderToInsert = {
             userId: userId,
             items: orderItems,
             totalPrice: cart.totalPrice,
@@ -731,7 +733,8 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
             updatedAt: new Date(),
         };
 
-        const result = await ordersCollection.insertOne(newOrder);
+        const result = await ordersCollection.insertOne(orderToInsert);
+        const orderId = result.insertedId;
 
         // Decrease stock
         for (const item of cart.items) {
@@ -746,6 +749,22 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
 
         revalidatePath('/cart');
         revalidatePath('/orders');
+
+        if (paymentMethod === 'MercadoPago') {
+            const preference = await createPreference({
+                id: orderId.toString(),
+                items: orderItems,
+                user: session.user,
+            });
+            await ordersCollection.updateOne(
+                { _id: orderId },
+                { $set: { 
+                    mercadoPagoPreferenceId: preference.id,
+                    mercadoPagoInitPoint: preference.init_point,
+                }}
+            );
+            return { success: true, message: "Order created, redirecting to payment", init_point: preference.init_point };
+        }
         
         return { success: true, message: "Order created successfully." };
 

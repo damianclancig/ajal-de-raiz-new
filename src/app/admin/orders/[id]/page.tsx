@@ -142,6 +142,12 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                                 <span className="text-muted-foreground">Método de Pago</span>
                                 <Badge variant="outline">{t(order.paymentMethod as keyof typeof translations)}</Badge>
                             </div>
+                            {order.mercadoPagoPaymentId && (
+                                <div className="flex justify-between">
+                                    <span className="text-muted-foreground">ID Pago MP</span>
+                                    <span className="font-mono text-sm">{order.mercadoPagoPaymentId}</span>
+                                </div>
+                            )}
                              <div className="flex justify-between font-bold text-xl">
                                 <span>Total</span>
                                 <span>${formatPrice(order.totalPrice)}</span>

@@ -24,21 +24,33 @@ export default function ProductCard({ product }: ProductCardProps) {
     }).format(price);
   };
 
-  const imageUrl = product.images[0].replace(/\.heic$/i, '.png');
+  const mediaUrl = product.images[0].replace(/\.heic$/i, '.png');
+  const isVideo = /\.(mp4|webm)$/i.test(mediaUrl);
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
       <Link href={`/products/${product.slug}`} aria-label={`View details for ${product.name}`}>
         <CardHeader className="p-0">
           <div className="relative aspect-square w-full">
-            <Image
-              src={imageUrl}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              data-ai-hint={product.dataAiHint || 'product image'}
-            />
+            {isVideo ? (
+              <video
+                src={mediaUrl}
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+            ) : (
+              <Image
+                src={mediaUrl}
+                alt={product.name}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                data-ai-hint={product.dataAiHint || 'product image'}
+              />
+            )}
           </div>
         </CardHeader>
       </Link>
