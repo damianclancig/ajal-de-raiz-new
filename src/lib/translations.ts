@@ -75,6 +75,7 @@ export const translations = {
   'Send_Message': { en: 'Send Message', es: 'Enviar Mensaje', pt: 'Enviar Mensagem' },
   'Lets_Talk': { en: "Let's talk?", es: "¿Hablamos?", pt: "Vamos conversar?" },
   'Web_design_and_development_by': { en: 'Web design and development by', es: 'Diseño y desarrollo web por', pt: 'Design e desenvolvimento web por' },
+  'Our_Social_Networks': { en: 'Our Social Networks', es: 'Nuestras Redes Sociales', pt: 'Nossas Redes Sociais' },
   
   // Products Page
   'Our_Collection': { en: 'Our Collection', es: 'Nuestra Colección', pt: 'Nossa Coleção' },
@@ -227,7 +228,7 @@ export const translations = {
   'Uploading_Image_Title': { en: 'Uploading Image...', es: 'Subiendo imagen...', pt: 'Enviando imagem...' },
   'Uploading_Image_Desc': { en: 'Please wait while the image is being uploaded.', es: 'Por favor, espera mientras se sube la imagen.', pt: 'Por favor, aguarde enquanto a imagem está sendo enviada.' },
   'Upload_Error_Title': { en: 'Upload Error', es: 'Error al Subir', pt: 'Erro de Upload' },
-  'Upload_Error_Desc': { en: 'An unexpected error occurred while uploading the image.', es: 'Ocurrió un error inesperado al subir la imagen.', pt: 'Ocorreu um erro inesperado ao enviar a imagem.' },
+  'Upload_Error_Desc': { en: 'An unexpected error occurred while uploading the image.', es: 'Ocurrió un error inesperado al subir la imagen.', pt: 'Ocorreu um erro inesperado ao enviar la imagem.' },
   'Upload_Error_File_Too_Large_Desc': { en: 'The file is too large. Please upload a smaller file.', es: 'El archivo es demasiado grande. Por favor, sube un archivo más pequeño.', pt: 'O arquivo é muito grande. Por favor, carregue um arquivo menor.' },
 
   // Slides / Novedades
@@ -295,5 +296,3 @@ export const translations = {
   'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' }
   
 };
-
-    

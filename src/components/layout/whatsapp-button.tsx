@@ -1,8 +1,11 @@
+
 "use client";
 
 import { useLanguage } from "@/hooks/use-language";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 const WhatsAppIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg 
@@ -24,6 +27,26 @@ export default function WhatsAppButton() {
   const { t } = useLanguage();
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5491168793296';
   const pathname = usePathname();
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const footer = document.getElementById('page-footer');
+      if (footer) {
+        const footerRect = footer.getBoundingClientRect();
+        // Hide the button if the top of the footer is visible on the screen
+        const shouldBeVisible = footerRect.top > window.innerHeight;
+        setIsVisible(shouldBeVisible);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Check visibility on initial render
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   if (pathname.startsWith('/admin')) {
     return null;
@@ -38,7 +61,10 @@ export default function WhatsAppButton() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Contactar por WhatsApp"
-            className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-transform hover:scale-110 hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className={cn(
+              "fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-[#128C7E] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none"
+            )}
           >
             <WhatsAppIcon className="h-9 w-9"/>
           </a>

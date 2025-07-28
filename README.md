@@ -1,3 +1,4 @@
+
 # Ajal de Raiz - Vivero & Jardinería E-commerce
 
 <p align="center">
@@ -108,8 +109,9 @@ NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary
 NEXT_PUBLIC_CLOUDINARY_API_KEY=tu_api_key_de_cloudinary
 CLOUDINARY_SECRET=tu_api_secret_de_cloudinary
 
-# Número de WhatsApp (opcional)
+# Redes Sociales
 NEXT_PUBLIC_WHATSAPP_NUMBER="54911xxxxxxxx"
+NEXT_PUBLIC_INSTAGRAM_USERNAME="tu_usuario_de_instagram"
 
 # Datos Bancarios para Transferencias
 BANK_ALIAS="tu.alias.mp"
