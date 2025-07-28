@@ -501,17 +501,22 @@ export async function resetPassword(formData: FormData): Promise<ActionResponse>
 
 export async function handleContactForm(formData: FormData): Promise<ActionResponse> {
   const email = formData.get('email') as string;
+  const message = formData.get('message') as string;
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     return { success: false, message: 'Por favor, ingresa un correo electrónico válido.' };
   }
+   if (!message) {
+    return { success: false, message: 'Por favor, escribe un mensaje.' };
+  }
   
   try {
-    await sendContactRequestEmail(email);
+    await sendContactRequestEmail(email, message);
     return { success: true, message: 'Email sent successfully!' };
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
-    return { success: false, message: `Failed to send contact email: ${message}` };
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to send contact email: ${errorMessage}` };
   }
 }
 

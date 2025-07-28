@@ -1,3 +1,4 @@
+import ContactSection from "@/components/home/contact-section";
 import FeaturedProducts from "@/components/home/featured-products";
 import HeroBanner from "@/components/home/hero-banner";
 import ServicesSection from "@/components/home/services-section";
@@ -13,6 +14,7 @@ export default async function Home() {
       <HeroBanner slides={slides} />
       <FeaturedProducts products={featuredProducts} />
       <ServicesSection />
+      <ContactSection />
     </div>
   );
 }

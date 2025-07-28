@@ -6,6 +6,7 @@ export const translations = {
   'Home': { en: 'Home', es: 'Inicio', pt: 'Início' },
   'Products': { en: 'Products', es: 'Productos', pt: 'Produtos' },
   'Services': { en: 'Services', es: 'Servicios', pt: 'Serviços' },
+  'Contact': { en: 'Contact', es: 'Contacto', pt: 'Contato' },
   'Admin': { en: 'Admin', es: 'Admin', pt: 'Admin' },
   'Mobile_Menu': { en: 'Mobile Menu', es: 'Menú Móvil', pt: 'Menu Móvel' },
 
@@ -55,9 +56,9 @@ export const translations = {
     es: '¿Sueñas con un nuevo jardín? Nuestros expertos pueden ayudarte a diseñar y crear el jardín perfecto para tu espacio, desde balcones hasta patios.',
     pt: 'Sonhando com um novo jardim? Nossos especialistas podem ajudar a projetar e montar o jardim perfeito para seu espaço, de varandas a quintais.'
   },
-  'Contact_Us': { en: 'Contact Us', es: 'Contáctanos', pt: 'Fale Conosco' },
   
   // Footer
+  'Contact_Us': { en: 'Contact Us', es: 'Contáctanos', pt: 'Fale Conosco' },
   'A_green_touch_for_modern_living': {
     en: 'A green touch for modern living.',
     es: 'Un toque verde para la vida moderna.',
@@ -65,10 +66,13 @@ export const translations = {
   },
   'All_rights_reserved': { en: 'All rights reserved.', es: 'Todos los derechos reservados.', pt: 'Todos os direitos reservados.' },
   'Have_questions': {
-    en: "Have questions? We're here to help.",
-    es: "¿Tienes preguntas? Estamos aquí para ayudarte.",
-    pt: "Tem perguntas? Estamos aqui para ajudar."
+    en: "Do you have questions or want more information about a product? We're here to help.",
+    es: "¿Tienes preguntas o quieres más información sobre un producto? Estamos aquí para ayudarte.",
+    pt: "Você tem dúvidas ou quer mais informações sobre um produto? Estamos aqui para ajudar."
   },
+  'Your_Message': { en: 'Your Message', es: 'Tu Mensaje', pt: 'Sua Mensagem' },
+  'Message_Placeholder': { en: 'Hello, I would like to...', es: 'Hola, me gustaría...', pt: 'Olá, eu gostaria de...' },
+  'Send_Message': { en: 'Send Message', es: 'Enviar Mensaje', pt: 'Enviar Mensagem' },
   'Lets_Talk': { en: "Let's talk?", es: "¿Hablamos?", pt: "Vamos conversar?" },
   'Web_design_and_development_by': { en: 'Web design and development by', es: 'Diseño y desarrollo web por', pt: 'Design e desenvolvimento web por' },
   
@@ -291,3 +295,5 @@ export const translations = {
   'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' }
   
 };
+
+    

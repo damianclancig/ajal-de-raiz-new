@@ -46,6 +46,7 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
     { href: "/", label: t("Home") },
     { href: "/#services", label: t("Services") },
     { href: "/products", label: t("Products") },
+    { href: "/#contact", label: t("Contact") },
   ];
 
   if (isClient && isAdmin) {

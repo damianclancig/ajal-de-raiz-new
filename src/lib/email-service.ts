@@ -73,7 +73,7 @@ export async function sendPasswordResetEmail(to: string, name: string, resetUrl:
     console.log('Password reset email sent successfully to:', to);
 }
 
-export async function sendContactRequestEmail(userEmail: string): Promise<void> {
+export async function sendContactRequestEmail(userEmail: string, message: string): Promise<void> {
     const toEmail = process.env.MAILEROO_TO_CONTACT;
     const fromEmail = process.env.MAILEROO_FROM_EMAIL;
 
@@ -82,14 +82,22 @@ export async function sendContactRequestEmail(userEmail: string): Promise<void> 
         throw new Error('Contact email receiver is not configured.');
     }
 
-    const subject = `Nueva solicitud de contacto de: ${userEmail}`;
-    const plainBody = `El usuario con el correo electrónico ${userEmail} ha solicitado que te pongas en contacto.`;
+    const subject = `Nueva consulta de: ${userEmail}`;
+    const plainBody = `El usuario con el correo electrónico ${userEmail} ha enviado el siguiente mensaje:\n\n${message}`;
     const htmlBody = `
-        <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-            <h2>Nueva Solicitud de Contacto</h2>
-            <p>Has recibido una nueva solicitud de contacto a través del formulario del footer de tu web.</p>
-            <p><strong>Email del usuario:</strong> <a href="mailto:${userEmail}">${userEmail}</a></p>
-            <p>Por favor, ponte en contacto con esta persona a la brevedad.</p>
+        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+                <h2 style="color: #10B981;">Nueva Consulta desde la Web</h2>
+                <p>Has recibido un nuevo mensaje a través del formulario de contacto de tu web.</p>
+                <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p><strong>Email del usuario:</strong> <a href="mailto:${userEmail}" style="color: #10B981;">${userEmail}</a></p>
+                <div style="margin-top: 20px; padding: 15px; background-color: #f9f9f9; border-left: 4px solid #10B981;">
+                    <p><strong>Mensaje:</strong></p>
+                    <p style="white-space: pre-wrap; margin: 0;">${message}</p>
+                </div>
+                 <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+                <p>Por favor, ponte en contacto con esta persona a la brevedad.</p>
+            </div>
         </div>
     `;
 
