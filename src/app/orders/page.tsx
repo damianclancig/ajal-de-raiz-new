@@ -2,6 +2,7 @@
 import { getMyOrders } from '@/lib/order-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -169,21 +170,24 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                     </Button>
                 </div>
             ) : (
-                <div className="space-y-6">
+                <Accordion type="multiple" className="space-y-4">
                     {orders.map((order) => (
-                        <Card key={order.id}>
-                            <CardHeader className="flex flex-col md:flex-row md:justify-between md:items-center">
-                                <div className='mb-4 md:mb-0'>
-                                    <CardTitle className="text-xl">{t('Order_ID')}: {order.id.substring(0, 8)}...</CardTitle>
-                                    <CardDescription>{t('Order_Date')}: {formatDate(order.createdAt)}</CardDescription>
+                        <AccordionItem key={order.id} value={order.id} className="border rounded-lg bg-card shadow-sm">
+                           <AccordionTrigger className="p-4 hover:no-underline">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4 text-left">
+                                    <div className="flex-grow">
+                                        <p className="text-sm font-medium">{t('Order_ID')}: {order.id.substring(0, 8)}...</p>
+                                        <p className="text-xs text-muted-foreground">{t('Order_Date')}: {formatDate(order.createdAt)}</p>
+                                    </div>
+                                    <div className="flex items-center gap-4 w-full justify-between md:w-auto md:justify-end">
+                                        <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
+                                        <span className="font-bold text-lg text-right md:w-[120px]">${formatPrice(order.totalPrice)}</span>
+                                    </div>
                                 </div>
-                                <div className="flex gap-4 items-center">
-                                    <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
-                                    <span className="font-bold text-lg">${formatPrice(order.totalPrice)}</span>
-                                </div>
-                            </CardHeader>
-                            <CardContent>
-                               {order.status === 'Pendiente de Pago' && (
+                            </AccordionTrigger>
+                            <AccordionContent className="p-4 pt-0">
+                               <div className="border-t pt-4">
+                                {order.status === 'Pendiente de Pago' && (
                                    <Alert className="mb-6">
                                        <Info className="h-4 w-4" />
                                        <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
@@ -247,6 +251,7 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                                               alt={item.name}
                                                               fill
                                                               className="rounded-md object-cover"
+                                                              sizes="64px"
                                                           />
                                                         </div>
                                                     </TableCell>
@@ -262,16 +267,18 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                         })}
                                     </TableBody>
                                </Table>
-                            </CardContent>
-                             {order.status === 'Pendiente de Pago' && order.paymentMethod === 'Transferencia Bancaria' && (
-                                <CardFooter className="flex-col items-start gap-2 pt-4">
-                                     <p className="text-sm text-muted-foreground">{t('After_payment_instruction')}</p>
-                                     <UploadReceiptButton orderId={order.id} />
-                                </CardFooter>
-                             )}
-                        </Card>
+                               
+                                {order.status === 'Pendiente de Pago' && order.paymentMethod === 'Transferencia Bancaria' && (
+                                    <div className="mt-4 flex flex-col items-start gap-2">
+                                         <p className="text-sm text-muted-foreground">{t('After_payment_instruction')}</p>
+                                         <UploadReceiptButton orderId={order.id} />
+                                    </div>
+                                 )}
+                               </div>
+                            </AccordionContent>
+                        </AccordionItem>
                     ))}
-                </div>
+                </Accordion>
             )}
         </div>
     );

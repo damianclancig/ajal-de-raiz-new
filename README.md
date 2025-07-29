@@ -11,7 +11,7 @@
 
 ## Descripción
 
-**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, usuarios y contenido del sitio.
+**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
 
 La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
@@ -25,9 +25,11 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Proceso de Pedido Flexible**: Al finalizar la compra, elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
+  - **Proceso de Pedido Inteligente**: Al finalizar la compra, si los datos de domicilio están incompletos, el sistema solicitará la información necesaria para continuar con el pago. Elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
   - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción. Para pagos con MercadoPago, puedes reintentar un pago si falló y, una vez aprobado, ver los detalles de la transacción (método de pago, cuotas, etc.).
-- **Autenticación Segura**: Sistema completo de registro, inicio de sesión y recuperación de contraseña.
+- **Autenticación y Perfil Completo**:
+  - **Registro en Dos Pasos**: Un sistema de registro que primero captura los datos básicos y luego ofrece completar el perfil con información de envío.
+  - **Gestión de Perfil ("Mi Perfil")**: Los usuarios pueden editar su nombre, teléfono, dirección de envío y subir una foto de perfil personalizada, optimizada para un rendimiento eficiente.
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
@@ -41,7 +43,9 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
   - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, montos y el ID de pago de MercadoPago.
   - **Verificación de Pagos**: Visualiza los comprobantes de transferencia subidos por los clientes directamente en el detalle del pedido. Los pagos con MercadoPago se confirman automáticamente vía webhook.
   - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente de Confirmación" a "Confirmado") para mantener informado al cliente y gestionar el flujo de trabajo.
-- **Gestión de Usuarios**: Visualiza todos los usuarios registrados y asigna o revoca roles de administrador.
+- **Gestión de Usuarios Completa**:
+    - **Vista Desplegable**: Visualiza todos los usuarios registrados en una lista interactiva. Cada usuario se puede expandir para mostrar sus datos de contacto y dirección completa.
+    - **Edición Total**: Edita toda la información del perfil de un usuario, incluyendo nombre, teléfono, dirección de envío y rol de administrador.
 - **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
 
@@ -173,4 +177,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-

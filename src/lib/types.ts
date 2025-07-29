@@ -25,6 +25,16 @@ export interface Product {
   updatedAt?: string;
 }
 
+export interface Address {
+  street?: string;
+  number?: string;
+  city?: string;
+  province?: string;
+  country?: string;
+  zipCode?: string;
+  instructions?: string;
+}
+
 export interface User {
   id: string;
   _id?: ObjectId;
@@ -32,6 +42,9 @@ export interface User {
   email: string;
   password?: string;
   isAdmin: boolean;
+  phone?: string;
+  profileImage?: string;
+  address?: Address;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   createdAt?: string;

@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut } from "next-auth/react";
-import { LogOut, User as UserIcon, Loader2, ShoppingBag } from "lucide-react";
+import { LogOut, User as UserIcon, Loader2, ShoppingBag, Settings } from "lucide-react";
 import { useLanguage } from "@/hooks/use-language";
 import { useState } from "react";
 import Link from "next/link";
@@ -67,6 +67,12 @@ export function UserNav({ session }: { session: Session }) {
               <Link href="/orders">
                 <ShoppingBag className="mr-2 h-4 w-4" />
                 <span>{t('My_Orders')}</span>
+              </Link>
+           </DropdownMenuItem>
+           <DropdownMenuItem asChild className="cursor-pointer">
+              <Link href="/profile">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Mi Perfil</span>
               </Link>
            </DropdownMenuItem>
         </DropdownMenuGroup>

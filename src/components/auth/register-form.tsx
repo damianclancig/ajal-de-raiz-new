@@ -13,6 +13,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { useToast } from "@/hooks/use-toast";
 import { registerUser } from "@/lib/actions";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 
 const formSchema = z.object({
@@ -52,7 +53,14 @@ export default function RegisterForm() {
                     title: t('Register_Success_Title'), 
                     description: t('Register_Success_Desc') 
                 });
-                router.push('/login');
+                
+                await signIn('credentials', {
+                    email: values.email,
+                    password: values.password,
+                    redirect: false,
+                });
+
+                router.push('/register/complete-profile');
             }
         });
     };

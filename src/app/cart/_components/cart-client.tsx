@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useTransition } from 'react';
+import { useTransition, useState } from 'react';
 import { useCart } from '@/contexts/cart-context';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Trash2, Wallet, Landmark, CreditCard } from 'lucide-react';
+import { Loader2, Trash2, Wallet, Landmark, CreditCard, Building } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -23,16 +23,22 @@ import {
 import { useToast } from '@/hooks/use-toast';
 import { createOrder } from '@/lib/actions';
 import { NO_IMAGE_URL } from '@/lib/utils';
-import type { PaymentMethod } from '@/lib/types';
+import type { PaymentMethod, User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
+import CompleteProfileForm from '@/components/auth/complete-profile-form';
 
-export default function CartClient() {
+interface CartClientProps {
+  user: User | null;
+}
+
+export default function CartClient({ user }: CartClientProps) {
   const { cart, loading, updateQuantity, removeFromCart, clearCart } = useCart();
   const { t, language } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
-  
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
     return new Intl.NumberFormat(locale, {
@@ -65,7 +71,20 @@ export default function CartClient() {
       }
     });
   };
-  
+
+  const isAddressComplete = (user: User | null): boolean => {
+    if (!user || !user.address) return false;
+    const { street, city, province, country } = user.address;
+    return !!street && !!city && !!province && !!country;
+  };
+
+  const handleCheckoutClick = (e: React.MouseEvent) => {
+    if (!isAddressComplete(user)) {
+      e.preventDefault();
+      setIsAddressModalOpen(true);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[calc(100vh-20rem)]">
@@ -169,7 +188,7 @@ export default function CartClient() {
               </div>
                <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button size="lg" className="w-full mt-4">{t('Proceed_to_Checkout')}</Button>
+                    <Button size="lg" className="w-full mt-4" onClick={handleCheckoutClick}>{t('Proceed_to_Checkout')}</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -224,6 +243,31 @@ export default function CartClient() {
                     </AlertDialogFooter>
                 </AlertDialogContent>
                </AlertDialog>
+               <AlertDialog open={isAddressModalOpen} onOpenChange={setIsAddressModalOpen}>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="flex items-center gap-2">
+                        <Building className="h-6 w-6 text-primary" />
+                        Completar Dirección de Envío
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Necesitamos tu dirección para poder realizar el envío de tu pedido. Por favor, completa los siguientes datos.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <div className="max-h-[60vh] overflow-y-auto p-1">
+                      <CompleteProfileForm 
+                        user={user} 
+                        onSuccess={() => {
+                          setIsAddressModalOpen(false);
+                          // Re-enable checkout button or trigger it programmatically
+                          // For simplicity, user can click again.
+                          toast({ title: "Dirección guardada", description: "Ahora puedes proceder al pago."});
+                          router.refresh(); // Refresh to get the new user data
+                        }} 
+                      />
+                    </div>
+                  </AlertDialogContent>
+                </AlertDialog>
             </CardContent>
           </Card>
         </div>

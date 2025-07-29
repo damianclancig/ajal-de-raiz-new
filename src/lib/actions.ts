@@ -3,7 +3,7 @@
 
 import { revalidatePath } from 'next/cache';
 import clientPromise from '@/lib/mongodb';
-import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem, Order, OrderItem, OrderStatus, PaymentMethod } from './types';
+import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, PopulatedCart, PopulatedCartItem, Order, OrderItem, OrderStatus, PaymentMethod, Address } from './types';
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
 import { hash } from 'bcryptjs';
@@ -261,12 +261,63 @@ export async function registerUser(formData: FormData): Promise<ActionResponse> 
 
     await usersCollection.insertOne(newUser);
     
+    return { success: true, message: "User registered successfully" };
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown error occurred.';
     return { success: false, message: `Failed to register user: ${message}` };
   }
+}
 
-  redirect('/login');
+export async function updateUserProfile(formData: FormData): Promise<ActionResponse> {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, message: "User not authenticated." };
+    }
+
+    try {
+        const db = await getDb();
+        const usersCollection = db.collection('users');
+        const userId = new ObjectId(session.user.id);
+        
+        const address: Address = {
+            street: formData.get('street') as string,
+            number: formData.get('number') as string,
+            city: formData.get('city') as string,
+            province: formData.get('province') as string,
+            country: "Argentina", // Defaulting as it's not in the form
+            zipCode: formData.get('zipCode') as string,
+            instructions: formData.get('instructions') as string,
+        };
+
+        const updateData: Partial<User> & { updatedAt: Date } = {
+            name: formData.get('name') as string,
+            phone: formData.get('phone') as string,
+            address: address,
+            updatedAt: new Date(),
+        };
+        
+        const profileImage = formData.get('profileImage') as string;
+        if (profileImage) {
+            updateData.profileImage = profileImage;
+        }
+
+        const result = await usersCollection.updateOne(
+            { _id: userId },
+            { $set: updateData }
+        );
+
+        if (result.matchedCount === 0) {
+            return { success: false, message: 'User not found.' };
+        }
+
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, message: `Failed to update profile: ${message}` };
+    }
+
+    revalidatePath('/profile');
+    revalidatePath('/cart');
+    return { success: true, message: 'Profile updated successfully.' };
 }
 
 
@@ -283,9 +334,21 @@ export async function updateUser(userId: string, formData: FormData): Promise<Ac
       return { success: false, message: 'Name is required.' };
     }
 
+    const address: Address = {
+        street: formData.get('street') as string,
+        number: formData.get('number') as string,
+        city: formData.get('city') as string,
+        province: formData.get('province') as string,
+        country: formData.get('country') as string,
+        zipCode: formData.get('zipCode') as string,
+        instructions: formData.get('instructions') as string,
+    };
+
     const updateData = {
       name: name,
       isAdmin: formData.get('isAdmin') === 'on',
+      phone: formData.get('phone') as string,
+      address: address,
       updatedAt: new Date(),
     };
 
@@ -841,3 +904,5 @@ export async function submitReceipt(orderId: string, receiptUrl: string): Promis
         return { success: false, message: `Failed to submit receipt: ${message}` };
     }
 }
+
+

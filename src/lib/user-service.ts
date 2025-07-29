@@ -2,6 +2,7 @@
 import clientPromise from '@/lib/mongodb';
 import type { User } from './types';
 import { ObjectId } from 'mongodb';
+import { auth } from '@/auth';
 
 const getDb = async () => {
   const client = await clientPromise;
@@ -17,6 +18,9 @@ const userFromDoc = (doc: any): User | null => {
     name: doc.name,
     email: doc.email,
     isAdmin: doc.isAdmin || false,
+    phone: doc.phone || '',
+    profileImage: doc.profileImage || '',
+    address: doc.address || {},
     createdAt: doc.createdAt?.toString(),
     updatedAt: doc.updatedAt?.toString(),
   };
@@ -48,4 +52,12 @@ export const getUserById = async (id: string): Promise<User | null> => {
     console.error(`Failed to get user by id ${id}:`, error);
     return null;
   }
+};
+
+export const getCurrentUser = async (): Promise<User | null> => {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return null;
+  }
+  return getUserById(session.user.id);
 };

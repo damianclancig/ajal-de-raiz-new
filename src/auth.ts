@@ -5,6 +5,8 @@ import clientPromise from '@/lib/mongodb';
 import { compare } from 'bcryptjs';
 import type { User as DbUser } from '@/lib/types';
 import type { NextAuthConfig } from 'next-auth';
+import { getDb } from './lib/product-service';
+import { ObjectId } from 'mongodb';
 
 export const authConfig = {
   pages: {
@@ -28,10 +30,22 @@ export const authConfig = {
 
       return true;
     },
-    jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session?.user) {
+        token.name = session.user.name;
+        token.picture = session.user.image;
+      }
+
       if (user) {
         token.id = user.id;
         token.isAdmin = user.isAdmin;
+        // Fetch full user object on initial sign in to include profile image
+        const db = await getDb();
+        const usersCollection = db.collection<DbUser>("users");
+        const dbUser = await usersCollection.findOne({ _id: new ObjectId(user.id) });
+        if (dbUser) {
+          token.picture = dbUser.profileImage;
+        }
       }
       return token;
     },
@@ -41,6 +55,9 @@ export const authConfig = {
       }
       if (session.user) {
         session.user.isAdmin = token.isAdmin as boolean;
+        if(token.picture) {
+          session.user.image = token.picture as string;
+        }
       }
       return session;
     },
@@ -72,6 +89,7 @@ export const authConfig = {
           id: user._id.toString(), 
           email: user.email, 
           name: user.name,
+          image: user.profileImage,
           isAdmin: user.isAdmin || false,
         };
       }

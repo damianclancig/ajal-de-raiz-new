@@ -56,8 +56,8 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             case 'Pendiente de Pago': return 'destructive';
             case 'Pendiente de Confirmación': return 'default';
             case 'Confirmado': return 'default';
-            case 'Enviado': return 'default';
-            case 'Entregado': return 'default';
+            case 'Enviado': return 'secondary';
+            case 'Entregado': return 'secondary';
             case 'Cancelado': return 'destructive';
             default: return 'outline';
         }

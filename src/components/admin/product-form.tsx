@@ -12,7 +12,7 @@ import { Loader2, Trash2, AlertTriangle } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import MultiImageUploader from './image-uploader';
+import MultiMediaUploader from './image-uploader';
 import { createProduct, updateProduct, physicallyDeleteProduct } from '@/lib/actions';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -142,8 +142,8 @@ export default function ProductForm({ product }: ProductFormProps) {
                   </div>
               </div>
               <div className="space-y-4">
-                  <Label htmlFor="images">{t('Image')}</Label>
-                  <MultiImageUploader name="images" defaultValues={product?.images || []} />
+                  <Label htmlFor="images">Imágenes y Videos</Label>
+                  <MultiMediaUploader name="images" defaultValues={product?.images || []} />
               </div>
             </div>
           
