@@ -12,7 +12,7 @@ export default async function EditSlidePage({ params }: { params: { id: string }
   }
   
   return (
-    <div className="py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       <SlideForm slide={slide} />
     </div>
   );

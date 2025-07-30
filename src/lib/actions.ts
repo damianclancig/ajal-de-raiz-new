@@ -904,5 +904,3 @@ export async function submitReceipt(orderId: string, receiptUrl: string): Promis
         return { success: false, message: `Failed to submit receipt: ${message}` };
     }
 }
-
-

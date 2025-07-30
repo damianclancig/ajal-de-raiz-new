@@ -7,9 +7,9 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="px-4">
+    <div>
        <AdminNav />
-       <main className="py-8">
+       <main className="py-8 px-4 md:px-6 lg:px-8">
         {children}
        </main>
     </div>
