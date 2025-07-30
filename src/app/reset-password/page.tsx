@@ -1,4 +1,5 @@
 
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { translations } from "@/lib/translations";
@@ -29,7 +30,9 @@ function ResetPasswordContent() {
                     <CardDescription>{t('Your_new_password_must_be_different')}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <ResetPasswordForm />
+                    <Suspense fallback={<div className="h-[188px] w-full animate-pulse bg-muted/50 rounded-md" />}>
+                      <ResetPasswordForm />
+                    </Suspense>
                 </CardContent>
                 <CardFooter className="justify-center">
                     <Button variant="link" size="sm" asChild>
@@ -43,9 +46,5 @@ function ResetPasswordContent() {
 
 
 export default function ResetPasswordPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ResetPasswordContent />
-    </Suspense>
-  )
+  return <ResetPasswordContent />
 }

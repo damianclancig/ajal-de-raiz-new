@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 function LoginButton() {
   const { pending } = useFormStatus();
@@ -30,7 +31,7 @@ function LoginButton() {
   );
 }
 
-export default function LoginPage() {
+function LoginForm() {
   const { t } = useLanguage();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
@@ -46,6 +47,41 @@ export default function LoginPage() {
   }
 
   return (
+    <form action={handleSignIn} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="email">{t('Email')}</Label>
+        <Input 
+          id="email" 
+          name="email"
+          type="email" 
+          placeholder={t('Placeholder_Email')} 
+          required 
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="password">{t('Password')}</Label>
+        <Input 
+          id="password" 
+          name="password"
+          type="password" 
+          required 
+        />
+      </div>
+       {error === 'CredentialsSignin' && (
+        <div className="flex items-center gap-2 text-sm text-destructive">
+          <AlertCircle className="h-4 w-4" />
+          <p>{t('Login_Error_Description')}</p>
+        </div>
+      )}
+      <LoginButton />
+    </form>
+  )
+}
+
+export default function LoginPage() {
+  const { t } = useLanguage();
+
+  return (
     <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
@@ -53,34 +89,9 @@ export default function LoginPage() {
           <CardDescription>{t('Enter_your_credentials_to_log_in')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <form action={handleSignIn} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{t('Email')}</Label>
-              <Input 
-                id="email" 
-                name="email"
-                type="email" 
-                placeholder={t('Placeholder_Email')} 
-                required 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">{t('Password')}</Label>
-              <Input 
-                id="password" 
-                name="password"
-                type="password" 
-                required 
-              />
-            </div>
-             {error === 'CredentialsSignin' && (
-              <div className="flex items-center gap-2 text-sm text-destructive">
-                <AlertCircle className="h-4 w-4" />
-                <p>{t('Login_Error_Description')}</p>
-              </div>
-            )}
-            <LoginButton />
-          </form>
+          <Suspense fallback={<div className="h-[236px] w-full animate-pulse bg-muted/50 rounded-md" />}>
+            <LoginForm />
+          </Suspense>
         </CardContent>
         <CardFooter className="flex-col items-center space-y-2 text-sm">
            <div className="flex justify-between w-full">
