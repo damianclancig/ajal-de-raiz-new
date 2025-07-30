@@ -30,10 +30,15 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
         toast({ title: 'Subiendo imagen...', description: 'Por favor, espera.' });
 
         try {
-            const resSign = await fetch('/api/sign-cloudinary-params', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({}) });
+            const transformation = 'w_60,h_60,c_fill,g_face';
+            const resSign = await fetch('/api/sign-cloudinary-params', { 
+              method: 'POST', 
+              headers: { 'Content-Type': 'application/json' }, 
+              body: JSON.stringify({ transformation }) 
+            });
             if (!resSign.ok) throw new Error('Failed to get signature.');
             
-            const { signature, timestamp, transformation } = await resSign.json();
+            const { signature, timestamp } = await resSign.json();
             const formData = new FormData();
             formData.append('file', file);
             formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
@@ -42,12 +47,16 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
             formData.append('transformation', transformation);
             
             const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: 'POST', body: formData });
-            if (!res.ok) throw new Error('Cloudinary upload failed.');
+            if (!res.ok) {
+              const errorData = await res.json();
+              throw new Error(errorData.error.message || 'Cloudinary upload failed.');
+            }
             
             const data = await res.json();
             onImageUpload(data.secure_url);
             toast({ title: 'Imagen subida', description: 'La imagen de perfil se ha actualizado.' });
         } catch (err: any) {
+            console.error("Profile image upload error:", err);
             toast({ variant: 'destructive', title: 'Error de subida', description: err.message });
         } finally {
             setLoading(false);
@@ -90,21 +99,19 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
     };
 
     const handleFormSubmit = async (formData: FormData) => {
-        const data = new FormData();
-        // Append all form fields from the CompleteProfileForm
-        new FormData(document.querySelector('form')!).forEach((value, key) => {
-            data.append(key, value);
-        });
-
-        // Append the profile image URL
-        data.append('profileImage', profileImage || '');
+        // Append the profile image URL if it has been updated
+        if (profileImage) {
+            formData.append('profileImage', profileImage);
+        } else {
+            formData.append('profileImage', '');
+        }
 
         startTransition(async () => {
-            const result = await updateUserProfile(data);
+            const result = await updateUserProfile(formData);
             if (result.success) {
                 toast({ title: "Perfil Actualizado", description: "Tu información ha sido guardada." });
                 await handleProfileUpdateSuccess({ 
-                    name: data.get('name') as string,
+                    name: formData.get('name') as string,
                     image: profileImage
                 });
             } else {
@@ -115,13 +122,19 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
 
     return (
         <div className="container py-12">
-             <form action={handleFormSubmit}>
-                <Card className="max-w-4xl mx-auto">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-3xl">Mi Perfil</CardTitle>
-                        <CardDescription>Administra la información de tu cuenta y tus datos de envío.</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card className="max-w-4xl mx-auto">
+                <CardHeader>
+                    <CardTitle className="font-headline text-3xl">Mi Perfil</CardTitle>
+                    <CardDescription>Administra la información de tu cuenta y tus datos de envío.</CardDescription>
+                </CardHeader>
+                <CompleteProfileForm 
+                    user={user} 
+                    isSubmitting={isPending}
+                    showSkipButton={false}
+                    onFormSubmit={handleFormSubmit}
+                >
+                     {/* Children of the form are rendered inside it */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
                         <div className="md:col-span-1">
                             <ProfileImageUploader 
                                 currentImage={profileImage}
@@ -130,21 +143,17 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
                             />
                         </div>
                         <div className="md:col-span-2">
-                            <CompleteProfileForm 
-                                user={user} 
-                                isSubmitting={isPending}
-                                showSkipButton={false} 
-                            />
+                            {/* The fields will be rendered here via CompleteProfileForm */}
                         </div>
-                    </CardContent>
+                    </div>
                     <CardFooter className="flex justify-end">
                         <Button type="submit" disabled={isPending}>
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Guardar Cambios
                         </Button>
                     </CardFooter>
-                </Card>
-             </form>
+                </CompleteProfileForm>
+            </Card>
         </div>
     );
 }

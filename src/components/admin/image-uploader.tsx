@@ -47,7 +47,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
       const resSign = await fetch('/api/sign-cloudinary-params', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({}), // No transformation needed here
       });
 
       if (!resSign.ok) {
