@@ -10,18 +10,34 @@ cloudinary.config({
 
 export async function POST(request: Request) {
   const timestamp = Math.round(new Date().getTime() / 1000);
-  const transformation = 'w_60,h_60,c_fill,g_face'; // Transformation for 60x60 avatar
-
+  
   try {
+    const body = await request.json().catch(() => ({})); // Handle empty body
+    const { transformation } = body;
+
+    const paramsToSign: { timestamp: number, transformation?: string } = { timestamp };
+    
+    // Only add transformation to signature if it was requested
+    if (transformation) {
+      paramsToSign.transformation = transformation;
+    }
+
     const signature = cloudinary.utils.api_sign_request(
-      {
-        timestamp: timestamp,
-        transformation: transformation
-      },
+      paramsToSign,
       process.env.CLOUDINARY_SECRET!
     );
+    
+    // Return transformation in the response if it was used
+    const responseBody: { signature: string; timestamp: number; transformation?: string } = {
+      signature,
+      timestamp,
+    };
 
-    return Response.json({ signature, timestamp, transformation });
+    if (transformation) {
+      responseBody.transformation = transformation;
+    }
+
+    return Response.json(responseBody);
   } catch (error) {
     console.error('Error signing Cloudinary request:', error);
     return Response.json({ error: 'Failed to sign request' }, { status: 500 });
