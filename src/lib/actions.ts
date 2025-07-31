@@ -10,7 +10,7 @@ import { hash } from 'bcryptjs';
 import { getDb, getProductById } from './product-service';
 import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
-import { auth } from '@/auth';
+import { auth, signIn } from '@/auth';
 import { getOrderById } from './order-service';
 import { createPreference } from './mercadopago-service';
 
@@ -261,7 +261,8 @@ export async function registerUser(formData: FormData): Promise<ActionResponse> 
 
     await usersCollection.insertOne(newUser);
     
-    return { success: true, message: "User registered successfully" };
+    return { success: true, message: 'User created successfully.' };
+    
   } catch (error) {
     const message = error instanceof Error ? error.message : 'An unknown error occurred.';
     return { success: false, message: `Failed to register user: ${message}` };
@@ -284,7 +285,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
             number: formData.get('number') as string,
             city: formData.get('city') as string,
             province: formData.get('province') as string,
-            country: "Argentina", // Defaulting as it's not in the form
+            country: "Argentina",
             zipCode: formData.get('zipCode') as string,
             instructions: formData.get('instructions') as string,
         };

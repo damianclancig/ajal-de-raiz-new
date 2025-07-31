@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
@@ -15,10 +15,14 @@ import { resetPassword } from "@/lib/actions";
 import { useSearchParams, useRouter } from 'next/navigation'
 
 const formSchema = z.object({
-  password: z.string().min(6, { message: "Password must be at least 6 characters." }),
+  password: z
+    .string()
+    .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
+    .regex(/[0-9]/, { message: "La contraseña debe contener al menos un número." })
+    .regex(/[^a-zA-Z0-9]/, { message: "La contraseña debe contener al menos un carácter especial." }),
   confirmPassword: z.string()
 }).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords do not match.",
+  message: "Las contraseñas no coinciden.",
   path: ["confirmPassword"]
 });
 
@@ -79,6 +83,9 @@ export default function ResetPasswordForm() {
                             <FormControl>
                                 <Input type="password" placeholder="******" {...field} disabled={isPending} />
                             </FormControl>
+                            <FormDescription>
+                                {t('Password_Requirements')}
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}

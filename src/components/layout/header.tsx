@@ -27,7 +27,7 @@ export default function Header() {
   useEffect(() => {
     setIsClient(true);
   }, []);
-
+  
   const cartItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   // Placeholder to prevent layout shift before client-side rendering

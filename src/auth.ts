@@ -24,8 +24,14 @@ export const authConfig = {
         return false;
       } 
       
-      if (isLoggedIn && (nextUrl.pathname.startsWith('/login') || nextUrl.pathname.startsWith('/register'))) {
-         return Response.redirect(new URL('/', nextUrl));
+      const isTryingToCompleteProfile = nextUrl.pathname === '/register/complete-profile';
+      const isOnAuthPages = nextUrl.pathname.startsWith('/login') || nextUrl.pathname.startsWith('/register');
+
+      if (isLoggedIn && isOnAuthPages) {
+        if (isTryingToCompleteProfile) {
+          return true; // Allow access to complete-profile page even if logged in
+        }
+        return Response.redirect(new URL('/', nextUrl)); // For other auth pages, redirect to home
       }
 
       return true;
