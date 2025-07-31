@@ -123,7 +123,7 @@ export default function CartClient({ user }: CartClientProps) {
                 <CardContent className="p-0">
                     <div className="divide-y">
                     {cart.items.map(item => {
-                        const imageUrl = (item.image || NO_IMAGE_URL);
+                        const imageUrl = (item.image || NO_IMAGE_URL).replace(/\.(mp4|webm)$/i, '.jpg');
 
                         return (
                             <div key={item.productId} className="flex flex-col md:flex-row items-start md:items-center p-4 gap-4">

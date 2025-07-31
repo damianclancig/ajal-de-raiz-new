@@ -1,6 +1,7 @@
 
 "use client";
 
+import * as React from "react";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,9 +14,9 @@ import { useLanguage } from "@/hooks/use-language";
 import { useToast } from "@/hooks/use-toast";
 import { updateUserProfile } from "@/lib/actions";
 import { Textarea } from "../ui/textarea";
-import Link from "next/link";
 import { User } from "@/lib/types";
 import { useRouter } from "next/navigation";
+import { Separator } from "../ui/separator";
 
 const formSchema = z.object({
   name: z.string().min(2, 'El nombre es requerido'),
@@ -32,7 +33,6 @@ const formSchema = z.object({
 interface CompleteProfileFormProps {
     user?: User | null;
     onSuccess?: () => void;
-    showSkipButton?: boolean;
     isSubmitting?: boolean;
     onFormSubmit?: (formData: FormData) => void;
     children?: React.ReactNode;
@@ -41,7 +41,6 @@ interface CompleteProfileFormProps {
 export default function CompleteProfileForm({ 
     user, 
     onSuccess, 
-    showSkipButton = true, 
     isSubmitting: parentIsSubmitting = false,
     onFormSubmit,
     children
@@ -80,10 +79,8 @@ export default function CompleteProfileForm({
             return;
         }
 
-        // This is for the initial registration flow
         startTransition(async () => {
             const result = await updateUserProfile(formData);
-
             if (result.success) {
                  toast({ 
                     title: "Perfil Actualizado", 
@@ -106,261 +103,154 @@ export default function CompleteProfileForm({
 
     const isSubmitting = isPending || parentIsSubmitting;
     
-    // When used inside another form (like Profile page)
-    if (onFormSubmit) {
-         return (
-            <Form {...form}>
-                 <form onSubmit={form.handleSubmit(onSubmit)}>
-                    {children}
-                    <div className="md:col-span-2 space-y-6">
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Nombre Completo</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Ej: Homero Simpson" {...field} name="name" disabled={isSubmitting} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teléfono / WhatsApp</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Ej: 1122334455" {...field} name="phone" disabled={isSubmitting} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                        
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium">Dirección de Envío</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="street"
-                                    render={({ field }) => (
-                                        <FormItem className="md:col-span-2">
-                                            <FormLabel>Calle</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Ej: Av. Siempreviva" {...field} name="street" disabled={isSubmitting} />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="number"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Número</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Ej: 742" {...field} name="number" disabled={isSubmitting} />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <FormField
-                                    control={form.control}
-                                    name="city"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Ciudad</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Ej: Springfield" {...field} name="city" disabled={isSubmitting} />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="province"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Provincia</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Ej: Buenos Aires" {...field} name="province" disabled={isSubmitting} />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="zipCode"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Código Postal</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="Ej: 1605" {...field} name="zipCode" disabled={isSubmitting} />
-                                            </FormControl>
-                                            <FormMessage/>
-                                        </FormItem>
-                                    )}
-                                />
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="instructions"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Indicaciones Adicionales</FormLabel>
-                                        <FormControl>
-                                            <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} name="instructions" disabled={isSubmitting} />
-                                        </FormControl>
-                                        <FormMessage/>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-                    </div>
-                </form>
-            </Form>
-        );
-    }
+    const formContent = (
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nombre Completo</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Ej: Homero Simpson" {...field} disabled={isSubmitting} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="phone"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Teléfono / WhatsApp</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Ej: 1122334455" {...field} disabled={isSubmitting} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+            </div>
+            
+            <Separator />
 
-    // This is the standalone version for the /register/complete-profile page
-    return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                     <FormField
+            <div className="space-y-4">
+                <h3 className="text-base font-medium text-center md:text-left">Dirección de Envío</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <FormField
                         control={form.control}
-                        name="name"
+                        name="street"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Nombre Completo</FormLabel>
+                            <FormItem className="md:col-span-2">
+                                <FormLabel>Calle</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ej: Homero Simpson" {...field} disabled={isSubmitting} />
+                                    <Input placeholder="Ej: Av. Siempreviva" {...field} disabled={isSubmitting} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage/>
                             </FormItem>
                         )}
                     />
                     <FormField
                         control={form.control}
-                        name="phone"
+                        name="number"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Teléfono / WhatsApp</FormLabel>
+                                <FormLabel>Número</FormLabel>
                                 <FormControl>
-                                    <Input placeholder="Ej: 1122334455" {...field} disabled={isSubmitting} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </div>
-                
-                <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Dirección de Envío</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <FormField
-                            control={form.control}
-                            name="street"
-                            render={({ field }) => (
-                                <FormItem className="md:col-span-2">
-                                    <FormLabel>Calle</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ej: Av. Siempreviva" {...field} disabled={isSubmitting} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                         <FormField
-                            control={form.control}
-                            name="number"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Número</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ej: 742" {...field} disabled={isSubmitting} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                         <FormField
-                            control={form.control}
-                            name="city"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Ciudad</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ej: Springfield" {...field} disabled={isSubmitting} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="province"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Provincia</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ej: Buenos Aires" {...field} disabled={isSubmitting} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="zipCode"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Código Postal</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="Ej: 1605" {...field} disabled={isSubmitting} />
-                                    </FormControl>
-                                    <FormMessage/>
-                                </FormItem>
-                            )}
-                        />
-                    </div>
-                     <FormField
-                        control={form.control}
-                        name="instructions"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Indicaciones Adicionales</FormLabel>
-                                <FormControl>
-                                    <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} disabled={isSubmitting} />
+                                    <Input placeholder="Ej: 742" {...field} disabled={isSubmitting} />
                                 </FormControl>
                                 <FormMessage/>
                             </FormItem>
                         )}
                     />
                 </div>
-                
-                <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
-                    {showSkipButton && (
-                        <Button variant="link" asChild>
-                            <Link href="/">Omitir por ahora</Link>
-                        </Button>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <FormField
+                        control={form.control}
+                        name="city"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Ciudad</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Ej: Springfield" {...field} disabled={isSubmitting} />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="province"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Provincia</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Ej: Buenos Aires" {...field} disabled={isSubmitting} />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="zipCode"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Código Postal</FormLabel>
+                                <FormControl>
+                                    <Input placeholder="Ej: 1605" {...field} disabled={isSubmitting} />
+                                </FormControl>
+                                <FormMessage/>
+                            </FormItem>
+                        )}
+                    />
+                </div>
+                <FormField
+                    control={form.control}
+                    name="instructions"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Indicaciones Adicionales</FormLabel>
+                            <FormControl>
+                                <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} disabled={isSubmitting} />
+                            </FormControl>
+                            <FormMessage/>
+                        </FormItem>
                     )}
+                />
+            </div>
+        </div>
+    );
+
+    if (children) {
+        return (
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                    {React.Children.map(children, child => {
+                        if (React.isValidElement(child) && child.props.className?.includes('p-6')) { // Find CardContent
+                            return React.cloneElement(child as React.ReactElement<any>, {
+                                children: formContent,
+                            });
+                        }
+                         if (React.isValidElement(child)) { // For CardFooter
+                            return child;
+                         }
+                        return null;
+                    })}
+                </form>
+            </Form>
+        );
+    }
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                {formContent}
+                 <div className="flex justify-end pt-4">
                     <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar y Continuar
+                        {isSubmitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Guardar Cambios"}
                     </Button>
                 </div>
             </form>

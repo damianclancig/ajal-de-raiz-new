@@ -32,6 +32,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { NO_IMAGE_URL } from '@/lib/utils';
 
 interface ProductTableProps {
   initialProducts: Product[];
@@ -82,7 +83,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
           </TableHeader>
           <TableBody>
             {products.map(product => {
-                const imageUrl = product.images[0].replace(/\.heic$/i, '.png').replace(/\.(mp4|webm)$/i, '.jpg');
+                const imageUrl = (product.images[0] || NO_IMAGE_URL).replace(/\.(mp4|webm)$/i, '.jpg');
 
                 return (
                   <TableRow key={product.id} className="flex flex-col md:table-row p-4 md:p-0 border-b even:bg-muted/25">

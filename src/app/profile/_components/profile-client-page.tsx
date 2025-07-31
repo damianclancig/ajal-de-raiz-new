@@ -30,7 +30,7 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
         toast({ title: 'Subiendo imagen...', description: 'Por favor, espera.' });
 
         try {
-            const transformation = 'w_60,h_60,c_fill,g_face';
+            const transformation = 'w_128,h_128,c_fill,g_face,r_max';
             const resSign = await fetch('/api/sign-cloudinary-params', { 
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
@@ -66,7 +66,7 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
 
     return (
         <div className="flex flex-col items-center gap-4">
-            <div className="relative h-32 w-32 rounded-full overflow-hidden bg-muted">
+            <div className="relative h-32 w-32 rounded-full overflow-hidden bg-muted border-4 border-background shadow-lg">
                 {currentImage ? (
                     <Image src={currentImage} alt="Foto de perfil" fill className="object-cover" />
                 ) : (
@@ -75,7 +75,7 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
                     </div>
                 )}
             </div>
-            <Button asChild variant="outline" size="sm" disabled={loading || isSubmitting}>
+            <Button asChild variant="outline" size="sm" className="bg-background/80" disabled={loading || isSubmitting}>
                 <label htmlFor="profile-image-upload" className="cursor-pointer">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UploadCloud className="mr-2 h-4 w-4" />}
                     Cambiar Foto
@@ -99,7 +99,6 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
     };
 
     const handleFormSubmit = async (formData: FormData) => {
-        // Append the profile image URL if it has been updated
         if (profileImage) {
             formData.append('profileImage', profileImage);
         } else {
@@ -121,32 +120,26 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
     }
 
     return (
-        <div className="container py-12">
-            <Card className="max-w-4xl mx-auto">
-                <CardHeader>
-                    <CardTitle className="font-headline text-3xl">Mi Perfil</CardTitle>
-                    <CardDescription>Administra la información de tu cuenta y tus datos de envío.</CardDescription>
+        <div className="container max-w-4xl mx-auto px-4 py-8">
+            <Card>
+                <CardHeader className="text-center">
+                    <ProfileImageUploader 
+                        currentImage={profileImage}
+                        onImageUpload={setProfileImage}
+                        isSubmitting={isPending}
+                    />
+                    <CardTitle className="font-headline text-3xl pt-4">{user.name}</CardTitle>
+                    <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
-                <CompleteProfileForm 
+                 <CompleteProfileForm 
                     user={user} 
                     isSubmitting={isPending}
-                    showSkipButton={false}
                     onFormSubmit={handleFormSubmit}
                 >
-                     {/* Children of the form are rendered inside it */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6">
-                        <div className="md:col-span-1">
-                            <ProfileImageUploader 
-                                currentImage={profileImage}
-                                onImageUpload={setProfileImage}
-                                isSubmitting={isPending}
-                            />
-                        </div>
-                        <div className="md:col-span-2">
-                            {/* The fields will be rendered here via CompleteProfileForm */}
-                        </div>
-                    </div>
-                    <CardFooter className="flex justify-end">
+                    <CardContent className="p-6">
+                       {/* The fields will be rendered here via CompleteProfileForm's children prop */}
+                    </CardContent>
+                    <CardFooter className="flex justify-end bg-muted/30 p-4 border-t">
                         <Button type="submit" disabled={isPending}>
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                             Guardar Cambios
