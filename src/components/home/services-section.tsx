@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useLanguage } from "@/hooks/use-language";
@@ -20,7 +21,7 @@ export default function ServicesSection() {
       </div>
       <div className="grid md:grid-cols-2 gap-8 items-center">
         <div className="relative aspect-video w-full rounded-lg overflow-hidden shadow-lg">
-           <Image src="https://placehold.co/800x600.png" alt="Gardening services" layout="fill" objectFit="cover" data-ai-hint="gardening tools" />
+           <Image src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1753971387/Imagen_de_WhatsApp_2025-07-31_a_las_11.12.34_6ed49bfb_hkonqb.jpg" alt="Gardening services" layout="fill" objectFit="cover" data-ai-hint="gardening tools" />
         </div>
         <div className="space-y-6">
             <Card>
