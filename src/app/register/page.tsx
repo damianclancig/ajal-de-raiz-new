@@ -5,6 +5,12 @@ import { translations } from "@/lib/translations";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import RegisterForm from "@/components/auth/register-form";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Crear Cuenta",
+    description: "Regístrate en Ajal de Raiz para empezar a comprar y guardar tus productos favoritos.",
+};
 
 const getLanguage = () => {
     const cookieStore = cookies();

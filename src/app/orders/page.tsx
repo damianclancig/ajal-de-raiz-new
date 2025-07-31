@@ -15,6 +15,16 @@ import { Info, CreditCard, CheckCircle2, AlertCircle } from 'lucide-react';
 import type { OrderStatus, MercadoPagoPaymentDetails } from '@/lib/types';
 import UploadReceiptButton from './_components/upload-receipt-button';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Mis Pedidos',
+  description: 'Consulta el historial y el estado de todos tus pedidos en Ajal de Raiz.',
+  robots: {
+    index: false,
+    follow: false,
+  }
+};
 
 // Revalidate this page every 30 seconds to get live order status updates
 export const revalidate = 30;
