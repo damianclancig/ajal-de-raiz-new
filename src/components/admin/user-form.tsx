@@ -52,7 +52,7 @@ export default function UserForm({ user }: UserFormProps) {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Teléfono / WhatsApp</Label>
-                <Input id="phone" name="phone" defaultValue={user.phone} disabled={isPending}/>
+                <Input id="phone" name="phone" defaultValue={user.phone} disabled={isPending} placeholder="Ej: 541122334455"/>
               </div>
               <div className="flex items-center gap-4 pt-2">
                 <Label htmlFor="isAdmin">{t('Admin')}</Label>

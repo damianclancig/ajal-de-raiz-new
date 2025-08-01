@@ -1,48 +1,75 @@
+
 "use client";
 
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { updateUserProfile } from "@/lib/actions";
 import { Textarea } from "../ui/textarea";
 import { User } from "@/lib/types";
-import { useRouter } from "next/navigation";
 import { Separator } from "../ui/separator";
-import Link from "next/link";
 import { CardContent, CardFooter } from "../ui/card";
+import PhoneNumberInput from "./phone-number-input";
 
 const formSchema = z.object({
   name: z.string().min(2, 'El nombre es requerido'),
   phone: z.string().optional(),
-  street: z.string().min(1, 'La calle es requerida'),
+  countryCode: z.string().optional(),
+  street: z.string().optional(),
   number: z.string().optional(),
-  city: z.string().min(1, 'La ciudad es requerida'),
-  province: z.string().min(1, 'La provincia es requerida'),
+  city: z.string().optional(),
+  province: z.string().optional(),
   country: z.string().optional(),
   zipCode: z.string().optional(),
   instructions: z.string().optional(),
+}).superRefine((data, ctx) => {
+    const addressFields = [data.street, data.number, data.city, data.province, data.zipCode];
+    const isAnyAddressFieldFilled = addressFields.some(field => field);
+
+    if (isAnyAddressFieldFilled) {
+        if (!data.street) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La calle es requerida.", path: ["street"] });
+        }
+        if (!data.city) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La ciudad es requerida.", path: ["city"] });
+        }
+        if (!data.province) {
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La provincia es requerida.", path: ["province"] });
+        }
+    }
 });
+
+type ProfileFormValues = z.infer<typeof formSchema>;
 
 interface CompleteProfileFormProps {
     user: User;
+    isSubmitting: boolean;
+    onFormSubmit: (formData: FormData) => void;
 }
 
-export default function CompleteProfileForm({ user }: CompleteProfileFormProps) {
-    const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
-    const router = useRouter();
+export default function CompleteProfileForm({ user, isSubmitting, onFormSubmit }: CompleteProfileFormProps) {
+    
+    // Helper to extract country code and number from a full phone string
+    const parsePhoneNumber = (fullNumber?: string) => {
+        if (!fullNumber) return { countryCode: '54', number: '' };
+        if (fullNumber.startsWith('54')) return { countryCode: '54', number: fullNumber.substring(2) };
+        if (fullNumber.startsWith('51')) return { countryCode: '51', number: fullNumber.substring(2) };
+        if (fullNumber.startsWith('52')) return { countryCode: '52', number: fullNumber.substring(2) };
+        return { countryCode: '54', number: fullNumber }; // Default to AR
+    };
 
-    const form = useForm<z.infer<typeof formSchema>>({
+    const { countryCode, number: initialNumber } = parsePhoneNumber(user?.phone);
+
+    const form = useForm<ProfileFormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: user?.name || "",
-            phone: user?.phone || "",
+            countryCode: countryCode,
+            phone: initialNumber,
             street: user?.address?.street || "",
             number: user?.address?.number || "",
             city: user?.address?.city || "",
@@ -53,33 +80,28 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
         },
     });
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = (values: ProfileFormValues) => {
         const formData = new FormData();
+        
+        // Combine country code and phone number
+        const fullPhoneNumber = values.countryCode && values.phone ? `${values.countryCode}${values.phone}` : '';
+
         Object.keys(values).forEach(key => {
-            const value = values[key as keyof typeof values];
+            const formKey = key as keyof ProfileFormValues;
+            // Handle combined phone number, skip individual parts
+            if (formKey === 'phone' || formKey === 'countryCode') return;
+            
+            const value = values[formKey];
             if (value !== undefined && value !== null) {
                 formData.append(key, String(value));
             }
         });
 
-        startTransition(async () => {
-            const result = await updateUserProfile(formData);
-            if (result.success) {
-                 toast({ 
-                    title: "Perfil Guardado", 
-                    description: "Tu información de envío ha sido guardada." 
-                });
-                router.push('/');
-            } else {
-                 toast({ 
-                    title: "Error", 
-                    description: result.message,
-                    variant: 'destructive'
-                });
-            }
-        });
+        formData.append('phone', fullPhoneNumber);
+        
+        onFormSubmit(formData);
     };
-    
+
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -93,7 +115,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                     <FormItem>
                                         <FormLabel>Nombre Completo</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej: Homero Simpson" {...field} disabled={isPending} />
+                                            <Input placeholder="Ej: Homero Simpson" {...field} disabled={isSubmitting} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -103,13 +125,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                 control={form.control}
                                 name="phone"
                                 render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Teléfono / WhatsApp</FormLabel>
-                                        <FormControl>
-                                            <Input placeholder="Ej: 1122334455" {...field} disabled={isPending} />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
+                                     <PhoneNumberInput form={form} disabled={isSubmitting} />
                                 )}
                             />
                         </div>
@@ -117,7 +133,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                         <Separator />
 
                         <div className="space-y-4">
-                            <h3 className="text-base font-medium text-center md:text-left">Dirección de Envío</h3>
+                            <h3 className="text-base font-medium text-center md:text-left">Dirección de Envío (Opcional)</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <FormField
                                     control={form.control}
@@ -126,7 +142,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                         <FormItem className="md:col-span-2">
                                             <FormLabel>Calle</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Ej: Av. Siempreviva" {...field} disabled={isPending} />
+                                                <Input placeholder="Ej: Av. Siempreviva" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -139,7 +155,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                         <FormItem>
                                             <FormLabel>Número</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Ej: 742" {...field} disabled={isPending} />
+                                                <Input placeholder="Ej: 742" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -154,7 +170,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                         <FormItem>
                                             <FormLabel>Ciudad</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Ej: Springfield" {...field} disabled={isPending} />
+                                                <Input placeholder="Ej: Springfield" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -167,7 +183,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                         <FormItem>
                                             <FormLabel>Provincia</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Ej: Buenos Aires" {...field} disabled={isPending} />
+                                                <Input placeholder="Ej: Buenos Aires" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -180,7 +196,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                         <FormItem>
                                             <FormLabel>Código Postal</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Ej: 1605" {...field} disabled={isPending} />
+                                                <Input placeholder="Ej: 1605" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
                                             <FormMessage/>
                                         </FormItem>
@@ -194,7 +210,7 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                                     <FormItem>
                                         <FormLabel>Indicaciones Adicionales</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} disabled={isPending} />
+                                            <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -203,13 +219,10 @@ export default function CompleteProfileForm({ user }: CompleteProfileFormProps) 
                         </div>
                     </div>
                 </CardContent>
-                <CardFooter className="flex justify-between bg-muted/30 p-4 border-t">
-                    <Button asChild type="button" variant="ghost" disabled={isPending}>
-                        <Link href="/">Omitir por ahora</Link>
-                    </Button>
-                    <Button type="submit" disabled={isPending}>
-                        {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar y Continuar
+                <CardFooter className="flex justify-end bg-muted/30 p-4 border-t">
+                    <Button type="submit" disabled={isSubmitting}>
+                        {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Guardar Cambios
                     </Button>
                 </CardFooter>
             </form>

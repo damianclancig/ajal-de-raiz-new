@@ -18,7 +18,12 @@ interface ProfileClientPageProps {
     user: User;
 }
 
-function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { currentImage?: string, onImageUpload: (url: string) => void, isSubmitting: boolean }) {
+function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSubmitting }: { 
+    currentImage?: string; 
+    onImageUpload: (url: string) => void;
+    onImageRemove: () => void;
+    isSubmitting: boolean; 
+}) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
 
@@ -74,6 +79,17 @@ function ProfileImageUploader({ currentImage, onImageUpload, isSubmitting }: { c
                        <UserIcon className="h-16 w-16 text-muted-foreground" />
                     </div>
                 )}
+                 {currentImage && (
+                    <Button 
+                        variant="destructive" 
+                        size="sm"
+                        className="absolute bottom-1 right-1 h-7 w-7 rounded-full p-0"
+                        onClick={onImageRemove}
+                        disabled={loading || isSubmitting}
+                    >
+                        <UserIcon className="h-4 w-4" />
+                    </Button>
+                )}
             </div>
             <Button asChild variant="outline" size="sm" className="bg-background/80" disabled={loading || isSubmitting}>
                 <label htmlFor="profile-image-upload" className="cursor-pointer">
@@ -93,17 +109,15 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
     const router = useRouter();
     const [profileImage, setProfileImage] = useState(user.profileImage);
 
-    const handleProfileUpdateSuccess = async (updatedUser: { name?: string, image?: string}) => {
-        await update({ user: { name: updatedUser.name, image: updatedUser.image } });
+    const handleProfileUpdateSuccess = async (updatedData: { name?: string, image?: string | null }) => {
+        await update({ user: { name: updatedData.name, image: updatedData.image } });
         router.refresh();
     };
 
     const handleFormSubmit = async (formData: FormData) => {
-        if (profileImage) {
-            formData.append('profileImage', profileImage);
-        } else {
-            formData.append('profileImage', '');
-        }
+        // formData is already populated by react-hook-form
+        // We just need to add the profile image state
+        formData.append('profileImage', profileImage || '');
 
         startTransition(async () => {
             const result = await updateUserProfile(formData);
@@ -126,26 +140,17 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
                     <ProfileImageUploader 
                         currentImage={profileImage}
                         onImageUpload={setProfileImage}
+                        onImageRemove={() => setProfileImage(undefined)}
                         isSubmitting={isPending}
                     />
                     <CardTitle className="font-headline text-3xl pt-4">{user.name}</CardTitle>
                     <CardDescription>{user.email}</CardDescription>
                 </CardHeader>
-                 <CompleteProfileForm 
+                <CompleteProfileForm 
                     user={user} 
                     isSubmitting={isPending}
                     onFormSubmit={handleFormSubmit}
-                >
-                    <CardContent className="p-6">
-                       {/* The fields will be rendered here via CompleteProfileForm's children prop */}
-                    </CardContent>
-                    <CardFooter className="flex justify-end bg-muted/30 p-4 border-t">
-                        <Button type="submit" disabled={isPending}>
-                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            Guardar Cambios
-                        </Button>
-                    </CardFooter>
-                </CompleteProfileForm>
+                />
             </Card>
         </div>
     );

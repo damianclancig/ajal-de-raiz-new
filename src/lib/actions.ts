@@ -290,7 +290,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
             instructions: formData.get('instructions') as string,
         };
 
-        const updateData: Partial<User> & { updatedAt: Date } = {
+        const updateData: Partial<User> & { $unset?: { profileImage?: string } } = {
             name: formData.get('name') as string,
             phone: formData.get('phone') as string,
             address: address,
@@ -298,8 +298,14 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
         };
         
         const profileImage = formData.get('profileImage') as string;
+
         if (profileImage) {
             updateData.profileImage = profileImage;
+        } else {
+            // If the profileImage field is present but empty, it means we should remove it.
+            if (formData.has('profileImage')) {
+                 updateData.$unset = { profileImage: "" };
+            }
         }
 
         const result = await usersCollection.updateOne(
