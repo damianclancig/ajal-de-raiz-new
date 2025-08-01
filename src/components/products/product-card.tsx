@@ -7,12 +7,15 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 interface ProductCardProps {
   product: Product;
+  size?: 'sm' | 'lg';
+  onProductClick?: () => void;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, size = 'lg', onProductClick }: ProductCardProps) {
   const { language, t } = useLanguage();
 
   const formatPrice = (price: number) => {
@@ -29,7 +32,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
-      <Link href={`/products/${product.slug}`} aria-label={`View details for ${product.name}`}>
+      <Link href={`/products/${product.slug}`} aria-label={`View details for ${product.name}`} onClick={onProductClick}>
         <CardHeader className="p-0">
           <div className="relative aspect-square w-full">
             {isVideo ? (
@@ -47,25 +50,27 @@ export default function ProductCard({ product }: ProductCardProps) {
                 alt={product.name}
                 fill
                 className="object-cover"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1200px) 25vw, 20vw"
                 data-ai-hint={product.dataAiHint || 'product image'}
               />
             )}
           </div>
         </CardHeader>
       </Link>
-      <CardContent className="flex-grow p-4">
-        <p className="text-sm text-muted-foreground">{product.category}</p>
-        <Link href={`/products/${product.slug}`}>
-            <CardTitle className="font-headline text-xl mt-1 leading-tight hover:text-primary transition-colors">
+      <CardContent className={cn("flex-grow", size === 'lg' ? 'p-4' : 'p-3')}>
+        <p className={cn("text-muted-foreground", size === 'lg' ? 'text-sm' : 'text-xs')}>{product.category}</p>
+        <Link href={`/products/${product.slug}`} onClick={onProductClick}>
+            <CardTitle className={cn("font-headline mt-1 leading-tight hover:text-primary transition-colors", size === 'lg' ? 'text-xl' : 'text-base')}>
             {product.name}
             </CardTitle>
         </Link>
       </CardContent>
-      <CardFooter className="p-4 pt-0 flex justify-between items-center">
-        <p className="text-lg font-bold text-primary">${formatPrice(product.price)}</p>
-        <Button asChild size="sm" variant="outline">
-          <Link href={`/products/${product.slug}`}>
+      <CardFooter className={cn("pt-0", 
+        size === 'lg' ? 'p-4 flex justify-between items-center' : 'p-3 flex flex-col items-start gap-2'
+      )}>
+        <p className={cn("font-bold text-primary", size === 'lg' ? 'text-lg' : 'text-base')}>${formatPrice(product.price)}</p>
+        <Button asChild size="sm" variant="outline" className={cn(size === 'sm' && 'w-full')}>
+          <Link href={`/products/${product.slug}`} onClick={onProductClick}>
             {t("View_Details")}
           </Link>
         </Button>

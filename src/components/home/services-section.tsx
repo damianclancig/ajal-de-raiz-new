@@ -3,54 +3,28 @@
 
 import { useLanguage } from "@/hooks/use-language";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, SprayCan } from "lucide-react";
+import { Leaf, SprayCan, HandCoins, Sprout } from "lucide-react";
 import Image from "next/image";
+import { servicesData } from "@/lib/services-data";
+import ServiceCard from "./service-card";
 
 export default function ServicesSection() {
   const { t } = useLanguage();
 
   return (
-    <section id="services" className="container py-12 md:py-20 bg-secondary/50 rounded-lg">
+    <section id="services" className="container py-12 md:py-20">
       <div className="text-center mb-12">
         <h2 className="font-headline text-3xl md:text-4xl font-bold">
-          {t('Our_Services')}
+          Servicios de Ajal de Raíz
         </h2>
-        <p className="text-muted-foreground mt-2 text-lg">
-          {t('Expert_care_for_your_green_space')}
+        <p className="text-muted-foreground mt-2 text-lg max-w-2xl mx-auto">
+          Todo lo que necesitás para cuidar tus plantas, energías y rituales. Hecho con amor y raíces.
         </p>
       </div>
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="relative aspect-video w-full rounded-lg overflow-hidden shadow-lg">
-           <Image src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1753971387/Imagen_de_WhatsApp_2025-07-31_a_las_11.12.34_6ed49bfb_hkonqb.jpg" alt="Gardening services" layout="fill" objectFit="cover" data-ai-hint="gardening tools" />
-        </div>
-        <div className="space-y-6">
-            <Card>
-              <CardHeader className="flex flex-row items-center gap-4">
-                <div className="bg-primary/10 p-3 rounded-full">
-                  <SprayCan className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle className="font-headline text-2xl">{t('Plant_Maintenance')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t('We_offer_regular_maintenance_services')}
-                </p>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardHeader className="flex flex-row items-center gap-4">
-                 <div className="bg-primary/10 p-3 rounded-full">
-                    <Leaf className="h-6 w-6 text-primary" />
-                 </div>
-                <CardTitle className="font-headline text-2xl">{t('Garden_Setup')}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">
-                  {t('Dreaming_of_a_new_garden')}
-                </p>
-              </CardContent>
-            </Card>
-        </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
+        {servicesData.map((service) => (
+          <ServiceCard key={service.id} service={service} />
+        ))}
       </div>
     </section>
   );

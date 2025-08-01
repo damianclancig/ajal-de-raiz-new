@@ -16,7 +16,7 @@ export default async function Home() {
   const slides = await getActiveSlides();
   
   return (
-    <div className="space-y-12 md:space-y-20 lg:space-y-28">
+    <div className="space-y-12 md:space-y-16 lg:space-y-20">
       <HeroBanner slides={slides} />
       <FeaturedProducts products={featuredProducts} />
       <ServicesSection />

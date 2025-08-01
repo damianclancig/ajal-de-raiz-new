@@ -137,3 +137,13 @@ export interface Order {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface Service {
+  id: string;
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  details: string[];
+  price: string;
+  note?: string;
+}
