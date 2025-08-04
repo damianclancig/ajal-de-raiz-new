@@ -53,7 +53,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
             case 'Confirmado': return 'default';
             case 'Enviado': return 'secondary';
             case 'Entregado': return 'secondary';
-            case 'Cancelado': return 'destructive';
+            case 'Cancelado': return 'outline';
             default: return 'outline';
         }
     }

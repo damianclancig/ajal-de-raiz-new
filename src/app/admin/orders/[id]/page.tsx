@@ -58,7 +58,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
             case 'Confirmado': return 'default';
             case 'Enviado': return 'secondary';
             case 'Entregado': return 'secondary';
-            case 'Cancelado': return 'destructive';
+            case 'Cancelado': return 'outline';
             default: return 'outline';
         }
     }

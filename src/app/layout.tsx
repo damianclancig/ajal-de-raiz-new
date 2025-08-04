@@ -11,6 +11,7 @@ import WhatsAppButton from '@/components/layout/whatsapp-button';
 import { SessionProvider } from 'next-auth/react';
 import { CartProvider } from '@/contexts/cart-context';
 import type { Metadata } from 'next';
+import { NotificationProvider } from '@/contexts/notification-context';
 
 /*
 export const metadata: Metadata = {
@@ -93,15 +94,17 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <LanguageProvider>
-              <CartProvider>
-                <div className="flex min-h-screen flex-col">
-                  <Header />
-                  <main className="flex-grow pb-12">{children}</main>
-                  <Footer />
-                </div>
-                <WhatsAppButton />
-                <Toaster />
-              </CartProvider>
+              <NotificationProvider>
+                <CartProvider>
+                  <div className="flex min-h-screen flex-col">
+                    <Header />
+                    <main className="flex-grow pb-12">{children}</main>
+                    <Footer />
+                  </div>
+                  <WhatsAppButton />
+                  <Toaster />
+                </CartProvider>
+              </NotificationProvider>
             </LanguageProvider>
           </ThemeProvider>
         </SessionProvider>

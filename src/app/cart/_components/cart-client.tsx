@@ -26,6 +26,7 @@ import { NO_IMAGE_URL } from '@/lib/utils';
 import type { PaymentMethod, User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import CompleteProfileForm from '@/components/auth/complete-profile-form';
+import { useNotification } from '@/contexts/notification-context';
 
 interface CartClientProps {
   user: User | null;
@@ -38,6 +39,7 @@ export default function CartClient({ user }: CartClientProps) {
   const { toast } = useToast();
   const router = useRouter();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
+  const { refreshPendingCount } = useNotification();
 
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -59,6 +61,7 @@ export default function CartClient({ user }: CartClientProps) {
                 title: t('Order_Success_Title'),
                 description: t('Order_Success_Desc'),
             });
+            await refreshPendingCount();
             clearCart();
             router.push('/orders');
         }

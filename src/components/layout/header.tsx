@@ -16,6 +16,7 @@ import { useState, useEffect } from "react";
 import { useCart } from "@/contexts/cart-context";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
+import { useNotification } from "@/contexts/notification-context";
 
 export default function Header() {
   const { t } = useLanguage();
@@ -23,10 +24,17 @@ export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart } = useCart();
   const [isClient, setIsClient] = useState(false);
+  const { pendingPaymentCount, refreshPendingCount } = useNotification();
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
+      refreshPendingCount();
+    }
+  }, [status, refreshPendingCount]);
   
   const cartItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
@@ -75,7 +83,7 @@ export default function Header() {
                   <span className="sr-only">{t('Shopping_Cart')}</span>
                 </Link>
               </Button>
-              <UserNav session={session} />
+              <UserNav session={session} pendingPaymentCount={pendingPaymentCount} />
             </div>
           ) : (
             <Button asChild variant="outline" className="hidden md:flex">

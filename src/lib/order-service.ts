@@ -7,7 +7,7 @@ import clientPromise from '@/lib/mongodb';
 import type { Order, User } from './types';
 import { ObjectId } from 'mongodb';
 
-export const getDb = async () => {
+const getDb = async () => {
   const client = await clientPromise;
   return client.db('ajal-de-raiz');
 };
@@ -50,6 +50,20 @@ export const getMyOrders = async (): Promise<Order[]> => {
     .toArray();
   
   return orders.map(orderFromDoc).filter((order): order is Order => order !== null);
+};
+
+export const getPendingPaymentOrdersCount = async (): Promise<number> => {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return 0;
+    }
+    const db = await getDb();
+    const ordersCollection = db.collection('orders');
+    const count = await ordersCollection.countDocuments({ 
+        userId: new ObjectId(session.user.id),
+        status: 'Pendiente de Pago' 
+    });
+    return count;
 };
 
 

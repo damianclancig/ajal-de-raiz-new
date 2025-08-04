@@ -12,30 +12,9 @@ import { getDb, getProductById } from './product-service';
 import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail, sendNewOrderNotification, sendReceiptSubmittedNotification } from './email-service';
 import { auth, signIn } from '@/auth';
-import { getOrderById } from './order-service';
+import { getOrderById, getPendingPaymentOrdersCount } from './order-service';
 import { createPreference } from './mercadopago-service';
 import { getCurrentUser } from './user-service';
-
-const productFromDoc = (doc: any): Product => {
-  return {
-    id: doc._id.toString(),
-    name: doc.name,
-    slug: doc.slug,
-    category: doc.category,
-    images: doc.images || [],
-    price: doc.price,
-    brand: doc.brand,
-    rating: doc.rating,
-    numReviews: doc.numReviews,
-    countInStock: doc.countInStock,
-    description: doc.description,
-    isFeatured: doc.isFeatured || false,
-    state: doc.state || 'inactivo',
-    dataAiHint: doc.dataAiHint || 'product image',
-    createdAt: doc.createdAt?.toString(),
-    updatedAt: doc.updatedAt?.toString(),
-  };
-};
 
 type ActionResponse = {
   success: boolean;
@@ -191,13 +170,18 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
       return { success: false, message: 'Product not found.' };
     }
     
-    const updatedProduct = await productsCollection.findOne({_id: new ObjectId(productId)});
+    const updatedProductDoc = await productsCollection.findOne({_id: new ObjectId(productId)});
+    const productFromDoc = (doc: any): Product => ({
+        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(),
+    });
+    const updatedProduct = productFromDoc(updatedProductDoc);
+
 
     revalidatePath('/admin');
     revalidatePath('/products');
     revalidatePath('/');
     
-    return { success: true, message: 'Product set to inactive.', product: productFromDoc(updatedProduct) };
+    return { success: true, message: 'Product set to inactive.', product: updatedProduct };
   } catch (error) {
     console.error(error);
     const message = error instanceof Error ? error.message : 'An unknown error occurred.';
@@ -913,7 +897,7 @@ export async function submitReceipt(orderId: string, receiptUrl: string): Promis
         }
         
         const updatedOrder = await getOrderById(orderId);
-
+        
         if (updatedOrder) {
             await sendReceiptSubmittedNotification(updatedOrder, user);
         }
@@ -927,4 +911,77 @@ export async function submitReceipt(orderId: string, receiptUrl: string): Promis
         const message = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, message: `Failed to submit receipt: ${message}` };
     }
+}
+
+export async function getPendingPaymentCount(): Promise<number> {
+    return getPendingPaymentOrdersCount();
+}
+
+export async function cancelOrder(orderId: string): Promise<ActionResponse> {
+    const session = await auth();
+    if (!session?.user?.id) {
+        return { success: false, message: "Usuario no autenticado." };
+    }
+
+    const db = await getDb();
+    const ordersCollection = db.collection('orders');
+    const productsCollection = db.collection('products');
+    const userId = new ObjectId(session.user.id);
+
+    if (!ObjectId.isValid(orderId)) {
+        return { success: false, message: "ID de pedido inválido." };
+    }
+    const orderObjectId = new ObjectId(orderId);
+
+    const order = await ordersCollection.findOne({ _id: orderObjectId, userId });
+
+    if (!order) {
+        return { success: false, message: "Pedido no encontrado o no autorizado." };
+    }
+
+    if (order.status !== 'Pendiente de Pago') {
+        return { success: false, message: "Solo se pueden cancelar los pedidos pendientes de pago." };
+    }
+
+    // Use a transaction to ensure atomicity
+    const client = await clientPromise;
+    const dbSession = client.startSession();
+
+    try {
+        await dbSession.withTransaction(async () => {
+            // Restore stock for each item in the order
+            for (const item of order.items) {
+                await productsCollection.updateOne(
+                    { _id: new ObjectId(item.productId) },
+                    { $inc: { countInStock: item.quantity } },
+                    { session: dbSession }
+                );
+            }
+
+            // Update order status to "Cancelled"
+            const result = await ordersCollection.updateOne(
+                { _id: orderObjectId },
+                { 
+                    $set: { 
+                        status: 'Cancelado' as OrderStatus, 
+                        updatedAt: new Date() 
+                    } 
+                },
+                { session: dbSession }
+            );
+
+            if (result.matchedCount === 0) {
+                throw new Error("No se pudo encontrar el pedido para actualizar.");
+            }
+        });
+
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'Ocurrió un error desconocido.';
+        return { success: false, message: `Error al cancelar el pedido: ${message}` };
+    } finally {
+        await dbSession.endSession();
+    }
+    
+    revalidatePath('/orders');
+    return { success: true, message: 'El pedido ha sido cancelado exitosamente.' };
 }

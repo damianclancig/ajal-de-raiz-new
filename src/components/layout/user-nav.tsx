@@ -18,8 +18,9 @@ import { LogOut, User as UserIcon, Loader2, ShoppingBag, Settings } from "lucide
 import { useLanguage } from "@/hooks/use-language";
 import { useState } from "react";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 
-export function UserNav({ session }: { session: Session }) {
+export function UserNav({ session, pendingPaymentCount }: { session: Session; pendingPaymentCount: number }) {
   const { user } = session;
   const { t } = useLanguage();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -50,6 +51,11 @@ export function UserNav({ session }: { session: Session }) {
                 <UserIcon className="h-5 w-5" />
             </AvatarFallback>
           </Avatar>
+           {pendingPaymentCount > 0 && (
+              <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 justify-center rounded-full p-0 text-xs">
+                  {pendingPaymentCount}
+              </Badge>
+          )}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -64,9 +70,14 @@ export function UserNav({ session }: { session: Session }) {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
            <DropdownMenuItem asChild className="cursor-pointer">
-              <Link href="/orders">
-                <ShoppingBag className="mr-2 h-4 w-4" />
-                <span>{t('My_Orders')}</span>
+              <Link href="/orders" className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                    <ShoppingBag className="mr-2 h-4 w-4" />
+                    <span>{t('My_Orders')}</span>
+                </div>
+                {pendingPaymentCount > 0 && (
+                    <span className="h-2 w-2 rounded-full bg-red-500" />
+                )}
               </Link>
            </DropdownMenuItem>
            <DropdownMenuItem asChild className="cursor-pointer">

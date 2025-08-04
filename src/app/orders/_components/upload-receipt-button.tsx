@@ -19,6 +19,8 @@ import { UploadCloud, Image as ImageIcon, Loader2 } from 'lucide-react';
 import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
 import { submitReceipt } from '@/lib/actions';
+import { useNotification } from '@/contexts/notification-context';
+import { useRouter } from 'next/navigation';
 
 interface UploadReceiptButtonProps {
     orderId: string;
@@ -31,6 +33,8 @@ export default function UploadReceiptButton({ orderId }: UploadReceiptButtonProp
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { refreshPendingCount } = useNotification();
+  const router = useRouter();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -88,7 +92,9 @@ export default function UploadReceiptButton({ orderId }: UploadReceiptButtonProp
         const result = await submitReceipt(orderId, imageUrl);
         if (result.success) {
             toast({ title: "Comprobante Enviado", description: "Hemos recibido tu comprobante, lo verificaremos a la brevedad." });
+            await refreshPendingCount();
             setOpen(false);
+            router.refresh();
         } else {
             toast({ variant: 'destructive', title: "Error", description: result.message });
         }
