@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -9,10 +10,11 @@ import { redirect } from 'next/navigation';
 import { hash } from 'bcryptjs';
 import { getDb, getProductById } from './product-service';
 import crypto from 'crypto';
-import { sendPasswordResetEmail, sendContactRequestEmail } from './email-service';
+import { sendPasswordResetEmail, sendContactRequestEmail, sendNewOrderNotification, sendReceiptSubmittedNotification } from './email-service';
 import { auth, signIn } from '@/auth';
 import { getOrderById } from './order-service';
 import { createPreference } from './mercadopago-service';
+import { getCurrentUser } from './user-service';
 
 const productFromDoc = (doc: any): Product => {
   return {
@@ -762,7 +764,8 @@ export async function removeFromCart(productId: string): Promise<ActionResponse>
 
 export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionResponse> {
     const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!session?.user?.id || !user) {
         return { success: false, message: "User not authenticated." };
     }
 
@@ -817,6 +820,12 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
         // Clear cart
         await cartsCollection.deleteOne({ userId });
 
+        // Admin Notification
+        const newOrder = await getOrderById(orderId.toString());
+        if (newOrder) {
+            await sendNewOrderNotification(newOrder, user);
+        }
+
         revalidatePath('/cart');
         revalidatePath('/orders');
 
@@ -824,7 +833,7 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
             const preference = await createPreference({
                 id: orderId.toString(),
                 items: orderItems,
-                user: session.user,
+                user: user,
             });
             await ordersCollection.updateOne(
                 { _id: orderId },
@@ -880,7 +889,8 @@ export async function updateOrderStatus(orderId: string, formData: FormData): Pr
 
 export async function submitReceipt(orderId: string, receiptUrl: string): Promise<ActionResponse> {
     const session = await auth();
-    if (!session?.user?.id) {
+    const user = await getCurrentUser();
+    if (!session?.user?.id || !user) {
         return { success: false, message: "User not authenticated." };
     }
 
@@ -888,17 +898,24 @@ export async function submitReceipt(orderId: string, receiptUrl: string): Promis
         const db = await getDb();
         const ordersCollection = db.collection('orders');
 
-        const result = await ordersCollection.updateOne(
+        const result = await ordersCollection.findOneAndUpdate(
             { _id: new ObjectId(orderId), userId: new ObjectId(session.user.id) },
             { $set: { 
                 status: 'Pendiente de Confirmación' as OrderStatus, 
                 receiptUrl: receiptUrl,
                 updatedAt: new Date() 
-            }}
+            }},
+            { returnDocument: 'after' }
         );
-
-        if (result.matchedCount === 0) {
+        
+        if (!result) {
             return { success: false, message: "Order not found or you are not authorized to update it." };
+        }
+        
+        const updatedOrder = await getOrderById(orderId);
+
+        if (updatedOrder) {
+            await sendReceiptSubmittedNotification(updatedOrder, user);
         }
 
         revalidatePath('/orders');

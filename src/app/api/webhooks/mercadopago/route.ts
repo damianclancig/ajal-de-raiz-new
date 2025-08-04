@@ -3,8 +3,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getPaymentWithClient } from '@/lib/mercadopago-service';
 import { getDb } from '@/lib/product-service';
 import { ObjectId } from 'mongodb';
-import { MercadoPagoConfig } from 'mercadopago';
 import type { MercadoPagoPaymentDetails } from '@/lib/types';
+import { sendMercadoPagoPaymentSuccessNotification } from '@/lib/email-service';
 
 export async function POST(req: NextRequest) {
   try {
@@ -74,6 +74,8 @@ export async function POST(req: NextRequest) {
 
         if (updateResult.matchedCount > 0) {
             console.log(`Order ${orderId} confirmed via webhook.`);
+            // Send admin notification
+            await sendMercadoPagoPaymentSuccessNotification(orderId, paymentId.toString());
         } else {
             console.warn(`Webhook received for order ${orderId}, but no matching order was found to update.`);
         }

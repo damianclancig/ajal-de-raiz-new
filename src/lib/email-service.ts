@@ -2,6 +2,7 @@
 'use server';
 
 import { toast } from '@/hooks/use-toast';
+import { Order, User } from './types';
 
 async function sendEmail(formData: FormData): Promise<void> {
   const apiKey = process.env.MAILEROO_API_KEY;
@@ -102,7 +103,6 @@ export async function sendContactRequestEmail(userEmail: string, message: string
     `;
 
     const formData = new FormData();
-    // Use a valid, verified sender email address.
     formData.append('from', `Ajal de Raiz <${fromEmail}>`);
     formData.append('reply_to', userEmail);
     formData.append('to', toEmail);
@@ -112,4 +112,112 @@ export async function sendContactRequestEmail(userEmail: string, message: string
 
     await sendEmail(formData);
     console.log('Contact request email sent successfully for:', userEmail);
+}
+
+// --- Admin Notification Emails ---
+
+const adminNotificationWrapper = (title: string, content: string) => `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px;">
+            <h2 style="color: #3b7e4c;">${title}</h2>
+            ${content}
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
+            <p style="font-size: 0.9em; color: #777;">Esta es una notificación automática de tu tienda Ajal de Raiz.</p>
+        </div>
+    </div>
+`;
+
+export async function sendNewOrderNotification(order: Order, user: User): Promise<void> {
+    const toEmail = process.env.MAILEROO_TO_CONTACT;
+    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
+    if (!toEmail || !fromEmail) return;
+
+    const subject = `¡Nuevo Pedido! - #${order.id.substring(0, 8)}`;
+    const plainBody = `Has recibido un nuevo pedido de ${user.name} (${user.email}) por un total de $${order.totalPrice}. Método de pago: ${order.paymentMethod}.`;
+    const htmlContent = `
+        <p>Has recibido un nuevo pedido de <strong>${user.name}</strong> (${user.email}).</p>
+        <ul>
+            <li><strong>ID Pedido:</strong> ${order.id}</li>
+            <li><strong>Monto Total:</strong> $${order.totalPrice.toFixed(2)}</li>
+            <li><strong>Método de Pago:</strong> ${order.paymentMethod}</li>
+        </ul>
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="${process.env.NEXTAUTH_URL}/admin/orders/${order.id}" style="display: inline-block; padding: 12px 24px; background-color: #3b7e4c; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Ver Pedido
+            </a>
+        </p>
+    `;
+    const htmlBody = adminNotificationWrapper('¡Nuevo Pedido Recibido!', htmlContent);
+
+    const formData = new FormData();
+    formData.append('from', `Ajal de Raiz <${fromEmail}>`);
+    formData.append('to', toEmail);
+    formData.append('subject', subject);
+    formData.append('plain', plainBody);
+    formData.append('html', htmlBody);
+
+    await sendEmail(formData);
+    console.log(`New order notification sent for order ${order.id}`);
+}
+
+export async function sendReceiptSubmittedNotification(order: Order, user: User): Promise<void> {
+    const toEmail = process.env.MAILEROO_TO_CONTACT;
+    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
+    if (!toEmail || !fromEmail) return;
+
+    const subject = `Comprobante Recibido - Pedido #${order.id.substring(0, 8)}`;
+    const plainBody = `El cliente ${user.name} ha subido un comprobante para el pedido #${order.id.substring(0, 8)}. Por favor, verifica el pago.`;
+    const htmlContent = `
+        <p>El cliente <strong>${user.name}</strong> (${user.email}) ha subido un comprobante de pago para el pedido #${order.id.substring(0, 8)}.</p>
+        <p>El estado del pedido ha sido actualizado a "Pendiente de Confirmación".</p>
+        <p style="text-align: center; margin-top: 20px;">
+            <a href="${process.env.NEXTAUTH_URL}/admin/orders/${order.id}" style="display: inline-block; padding: 12px 24px; background-color: #3b7e4c; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Verificar Comprobante
+            </a>
+        </p>
+    `;
+    const htmlBody = adminNotificationWrapper('Comprobante de Pago Recibido', htmlContent);
+
+    const formData = new FormData();
+    formData.append('from', `Ajal de Raiz <${fromEmail}>`);
+    formData.append('to', toEmail);
+    formData.append('subject', subject);
+    formData.append('plain', plainBody);
+    formData.append('html', htmlBody);
+
+    await sendEmail(formData);
+    console.log(`Receipt submitted notification sent for order ${order.id}`);
+}
+
+export async function sendMercadoPagoPaymentSuccessNotification(orderId: string, paymentId: string): Promise<void> {
+    const toEmail = process.env.MAILEROO_TO_CONTACT;
+    const fromEmail = process.env.MAILEROO_FROM_EMAIL;
+    if (!toEmail || !fromEmail) return;
+
+    const subject = `¡Pago Confirmado por MercadoPago! - Pedido #${orderId.substring(0, 8)}`;
+    const plainBody = `Se ha confirmado un pago a través de MercadoPago para el pedido #${orderId.substring(0, 8)}. ID de Pago de MP: ${paymentId}.`;
+    const htmlContent = `
+        <p>¡Buenas noticias! Se ha confirmado un pago a través de <strong>MercadoPago</strong>.</p>
+        <ul>
+            <li><strong>ID Pedido:</strong> ${orderId}</li>
+            <li><strong>ID Pago MercadoPago:</strong> ${paymentId}</li>
+        </ul>
+        <p>El estado del pedido se ha actualizado automáticamente a "Confirmado".</p>
+         <p style="text-align: center; margin-top: 20px;">
+            <a href="${process.env.NEXTAUTH_URL}/admin/orders/${orderId}" style="display: inline-block; padding: 12px 24px; background-color: #3b7e4c; color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                Ver Pedido Confirmado
+            </a>
+        </p>
+    `;
+    const htmlBody = adminNotificationWrapper('Pago Confirmado por MercadoPago', htmlContent);
+    
+    const formData = new FormData();
+    formData.append('from', `Ajal de Raiz <${fromEmail}>`);
+    formData.append('to', toEmail);
+    formData.append('subject', subject);
+    formData.append('plain', plainBody);
+    formData.append('html', htmlBody);
+
+    await sendEmail(formData);
+    console.log(`MercadoPago success notification sent for order ${orderId}`);
 }

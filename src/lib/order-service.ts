@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { auth } from '@/auth';
@@ -88,7 +89,7 @@ export const getOrderById = async (orderId: string): Promise<Order | null> => {
     }
     const db = await getDb();
     const ordersCollection = db.collection('orders');
-    const order = await ordersCollection.findOne({ _id: new ObjectId(orderId) });
+    const orderDoc = await ordersCollection.findOne({ _id: new ObjectId(orderId) });
 
-    return orderFromDoc(order);
+    return orderFromDoc(orderDoc);
 }
