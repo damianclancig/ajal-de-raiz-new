@@ -119,9 +119,10 @@ CLOUDINARY_SECRET=tu_api_secret_de_cloudinary
 MERCADOPAGO_ACCESS_TOKEN="tu_access_token_de_produccion_o_testing"
 MERCADOPAGO_WEBHOOK_SECRET="tu_secreto_para_verificar_webhooks"
 
-# Redes Sociales
+# Redes Sociales y Contacto
 NEXT_PUBLIC_WHATSAPP_NUMBER="54911xxxxxxxx"
 NEXT_PUBLIC_INSTAGRAM_USERNAME="tu_usuario_de_instagram"
+NEXT_PUBLIC_CONTACT_EMAIL="tu@email_de_contacto.com"
 
 # Datos Bancarios para Transferencias
 BANK_ALIAS="tu.alias.mp"
@@ -177,3 +178,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+

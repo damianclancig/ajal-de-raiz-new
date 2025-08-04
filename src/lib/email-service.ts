@@ -104,6 +104,7 @@ export async function sendContactRequestEmail(userEmail: string, message: string
     const formData = new FormData();
     // Use a valid, verified sender email address.
     formData.append('from', `Ajal de Raiz <${fromEmail}>`);
+    formData.append('reply_to', userEmail);
     formData.append('to', toEmail);
     formData.append('subject', subject);
     formData.append('plain', plainBody);
