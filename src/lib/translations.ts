@@ -6,6 +6,7 @@ export const translations = {
   'Home': { en: 'Home', es: 'Inicio', pt: 'Início' },
   'Products': { en: 'Products', es: 'Productos', pt: 'Produtos' },
   'Services': { en: 'Services', es: 'Servicios', pt: 'Serviços' },
+  'About_Us': { en: 'About Us', es: 'Sobre Nosotros', pt: 'Sobre Nós' },
   'Contact': { en: 'Contact', es: 'Contacto', pt: 'Contato' },
   'Admin': { en: 'Admin', es: 'Admin', pt: 'Admin' },
   'Mobile_Menu': { en: 'Mobile Menu', es: 'Menú Móvil', pt: 'Menu Móvel' },
