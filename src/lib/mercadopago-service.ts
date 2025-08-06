@@ -29,7 +29,6 @@ export async function createPreference(request: PreferenceRequest) {
             unit_price: item.price,
             currency_id: 'ARS',
             picture_url: item.image,
-            description: item.name,
         })),
         payer: {
             name: request.user.name || undefined,
