@@ -23,7 +23,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg">
             <Image
-              src="https://placehold.co/600x600.png"
+              src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754482094/ajal-de-raiz/Mini_Jungla_w5d2s8.jpg"
               alt="Planta de Ajal de Raíz en un entorno natural"
               fill
               className="object-cover"
@@ -50,7 +50,7 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
            <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg md:order-2">
             <Image
-              src="https://placehold.co/600x600.png"
+              src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754482844/ajal-de-raiz/Varias_Especies_ofsqvv.jpg"
               alt="Variedad de suculentas y cactus"
               fill
               className="object-cover"
@@ -72,12 +72,12 @@ export default function AboutPage() {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
            <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg">
             <Image
-              src="https://placehold.co/600x600.png"
-              alt="Creando un rincón verde con macetas"
+              src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754481734/ajal-de-raiz/Mini_Kokedama_i5zsry.jpg"
+              alt="Mini Kokedama de Ajal de Raíz"
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
-              data-ai-hint="potting plants"
+              data-ai-hint="kokedama plant"
             />
           </div>
           <div className="font-headline text-lg md:text-xl text-foreground/80 space-y-4">
