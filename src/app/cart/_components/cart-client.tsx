@@ -101,7 +101,7 @@ export default function CartClient({ user }: CartClientProps) {
       <div className="container py-12 text-center flex flex-col items-center">
         <div className="relative w-48 h-48 mb-6">
             <Image
-                src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1753451875/Empty_Cart_i9oydd.png"
+                src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754481735/ajal-de-raiz/Empty_Cart_yidvrj.png"
                 alt="Empty shopping cart"
                 layout="fill"
                 objectFit="contain"

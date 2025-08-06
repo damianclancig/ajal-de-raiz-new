@@ -10,6 +10,7 @@ import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
 
 const MAX_MEDIA = 5;
+const UPLOAD_FOLDER = 'ajal-de-raiz/Productos';
 
 interface MultiMediaUploaderProps {
   name: string;
@@ -47,7 +48,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
       const resSign = await fetch('/api/sign-cloudinary-params', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}), // No transformation needed here
+        body: JSON.stringify({ folder: UPLOAD_FOLDER }),
       });
 
       if (!resSign.ok) {
@@ -61,6 +62,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
       formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
       formData.append('signature', signature);
       formData.append('timestamp', timestamp);
+      formData.append('folder', UPLOAD_FOLDER);
       
       const res = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,

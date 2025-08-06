@@ -16,6 +16,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card
 import Link from 'next/link';
 import SingleImageUploader from './single-image-uploader';
 
+const UPLOAD_FOLDER = 'ajal-de-raiz/Novedades';
+
 interface SlideFormProps {
   slide?: HeroSlide | null;
 }
@@ -76,7 +78,7 @@ export default function SlideForm({ slide }: SlideFormProps) {
           <div className="space-y-2">
             <Label htmlFor="image">{t('Image')}</Label>
             <div className="max-w-sm mx-auto">
-              <SingleImageUploader name="image" defaultValue={slide?.image} />
+              <SingleImageUploader name="image" defaultValue={slide?.image} folder={UPLOAD_FOLDER} />
             </div>
           </div>
         </CardContent>

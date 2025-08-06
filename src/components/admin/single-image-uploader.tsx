@@ -12,9 +12,10 @@ import { useLanguage } from '@/hooks/use-language';
 interface SingleImageUploaderProps {
   name: string;
   defaultValue?: string;
+  folder?: string;
 }
 
-export default function SingleImageUploader({ name, defaultValue = '' }: SingleImageUploaderProps) {
+export default function SingleImageUploader({ name, defaultValue = '', folder }: SingleImageUploaderProps) {
   const [imageUrl, setImageUrl] = useState<string>(defaultValue);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
@@ -34,7 +35,7 @@ export default function SingleImageUploader({ name, defaultValue = '' }: SingleI
       const resSign = await fetch('/api/sign-cloudinary-params', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
+        body: JSON.stringify({ folder }),
       });
 
       if (!resSign.ok) throw new Error('Failed to get signature.');
@@ -45,6 +46,9 @@ export default function SingleImageUploader({ name, defaultValue = '' }: SingleI
       formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
       formData.append('signature', signature);
       formData.append('timestamp', timestamp);
+      if (folder) {
+        formData.append('folder', folder);
+      }
       
       const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, {
         method: 'POST',

@@ -13,13 +13,18 @@ export async function POST(request: Request) {
   
   try {
     const body = await request.json().catch(() => ({})); // Handle empty body
-    const { transformation } = body;
+    const { transformation, folder } = body;
 
-    const paramsToSign: { timestamp: number, transformation?: string } = { timestamp };
+    const paramsToSign: { timestamp: number, transformation?: string, folder?: string } = { timestamp };
     
     // Only add transformation to signature if it was requested
     if (transformation) {
       paramsToSign.transformation = transformation;
+    }
+    
+    // Only add folder to signature if it was requested
+    if (folder) {
+        paramsToSign.folder = folder;
     }
 
     const signature = cloudinary.utils.api_sign_request(

@@ -14,6 +14,8 @@ import { Loader2, UploadCloud, User as UserIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 
+const UPLOAD_FOLDER = 'ajal-de-raiz/Profiles';
+
 interface ProfileClientPageProps {
     user: User;
 }
@@ -39,7 +41,7 @@ function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSu
             const resSign = await fetch('/api/sign-cloudinary-params', { 
               method: 'POST', 
               headers: { 'Content-Type': 'application/json' }, 
-              body: JSON.stringify({ transformation }) 
+              body: JSON.stringify({ transformation, folder: UPLOAD_FOLDER }) 
             });
             if (!resSign.ok) throw new Error('Failed to get signature.');
             
@@ -50,6 +52,7 @@ function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSu
             formData.append('signature', signature);
             formData.append('timestamp', timestamp);
             formData.append('transformation', transformation);
+            formData.append('folder', UPLOAD_FOLDER);
             
             const res = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`, { method: 'POST', body: formData });
             if (!res.ok) {

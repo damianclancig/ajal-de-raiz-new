@@ -2,7 +2,7 @@
 # Ajal de Raiz - Vivero & Jardinería E-commerce
 
 <p align="center">
-  <img src="public/images/logo.png" alt="Ajal de Raiz Logo" width="150">
+  <img src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754490326/ajal-de-raiz/logo-min_ycwot1.png" alt="Ajal de Raiz Logo" width="150">
 </p>
 
 <p align="center">
@@ -33,6 +33,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
+- **Página "Sobre Nosotros"**: Una sección dedicada para contar la historia y la misión de Ajal de Raíz.
 
 ### Para Administradores
 
@@ -178,4 +179,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
