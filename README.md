@@ -49,6 +49,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
     - **Edición Total**: Edita toda la información del perfil de un usuario, incluyendo nombre, teléfono, dirección de envío y rol de administrador.
 - **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
 - **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
+- **Centro de Logs de Errores**: Una sección dedicada para visualizar errores de la aplicación en producción, incluyendo stack traces y metadatos, para un diagnóstico y resolución de problemas eficiente.
 
 ## Stack Tecnológico
 
