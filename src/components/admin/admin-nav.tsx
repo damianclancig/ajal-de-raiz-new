@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/hooks/use-language";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Package, Users2, Star, ShoppingBag } from "lucide-react";
+import { Package, Users2, Star, ShoppingBag, ShieldAlert } from "lucide-react";
 
 export default function AdminNav() {
   const { t } = useLanguage();
@@ -35,6 +36,12 @@ export default function AdminNav() {
       label: t('Orders_Admin'),
       active: pathname.startsWith(`/admin/orders`),
       icon: ShoppingBag
+    },
+    {
+      href: `/admin/logs`,
+      label: "Logs",
+      active: pathname.startsWith(`/admin/logs`),
+      icon: ShieldAlert
     },
   ];
 

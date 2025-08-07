@@ -147,3 +147,15 @@ export interface Service {
   price: string;
   note?: string;
 }
+
+export interface AppErrorLog {
+    id: string;
+    _id?: ObjectId;
+    timestamp: string;
+    path: string;
+    functionName: string;
+    errorMessage: string;
+    stackTrace?: string;
+    metadata?: Record<string, any>;
+    isResolved: boolean;
+}
