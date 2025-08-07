@@ -1,125 +1,116 @@
 
 "use client";
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import type { Product } from '@/lib/types';
 import { useLanguage } from '@/hooks/use-language';
 import ProductCard from '@/components/products/product-card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { LayoutGrid, Grid3x3, List, SlidersHorizontal } from 'lucide-react';
+import { LayoutGrid, Grid3x3, List, SlidersHorizontal, Loader2, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import ProductListItem from './product-list-item';
 import { Skeleton } from '../ui/skeleton';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useInView } from 'react-intersection-observer';
+import { getPaginatedProducts } from '@/lib/actions';
+
+const PRODUCTS_PER_PAGE = 12;
 
 interface ProductListProps {
   products: Product[];
+  initialCategories: string[];
 }
 
 type ViewMode = 'grid-lg' | 'grid-sm' | 'list';
 
 const SESSION_STORAGE_KEY = 'productListState';
 
-export default function ProductList({ products }: ProductListProps) {
+export default function ProductList({ products: initialProducts, initialCategories }: ProductListProps) {
   const { t } = useLanguage();
   
-  const [isInitialising, setIsInitialising] = useState(true);
+  const [products, setProducts] = useState<Product[]>(initialProducts);
+  const [offset, setOffset] = useState(initialProducts.length);
+  const [hasMore, setHasMore] = useState(initialProducts.length === PRODUCTS_PER_PAGE);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('All');
   const [sortOrder, setSortOrder] = useState('name_asc');
   const [viewMode, setViewMode] = useState<ViewMode>('grid-lg');
 
+  const { ref: loadMoreRef, inView } = useInView();
   const listRef = useRef<HTMLDivElement>(null);
 
-  // Effect to load state from sessionStorage after initial render
+  // Restore state from sessionStorage on component mount
   useEffect(() => {
     try {
-        const savedSearchTerm = sessionStorage.getItem(`${SESSION_STORAGE_KEY}_searchTerm`) || '';
-        const savedCategory = sessionStorage.getItem(`${SESSION_STORAGE_KEY}_category`) || 'All';
-        const savedSortOrder = sessionStorage.getItem(`${SESSION_STORAGE_KEY}_sortOrder`) || 'name_asc';
-        const savedViewMode = (sessionStorage.getItem(`${SESSION_STORAGE_KEY}_viewMode`) as ViewMode) || 'grid-lg';
-
-        setSearchTerm(savedSearchTerm);
-        setCategory(savedCategory);
-        setSortOrder(savedSortOrder);
-        setViewMode(savedViewMode);
-    } catch (error) {
-        console.error("Could not access session storage:", error);
-    } finally {
-        setIsInitialising(false); // End initialisation
+      const savedState = sessionStorage.getItem(SESSION_STORAGE_KEY);
+      if (savedState) {
+        const { searchTerm, category, sortOrder, viewMode } = JSON.parse(savedState);
+        setSearchTerm(searchTerm || '');
+        setCategory(category || 'All');
+        setSortOrder(sortOrder || 'name_asc');
+        setViewMode(viewMode || 'grid-lg');
+      }
+    } catch (e) {
+      console.error("Failed to parse session storage state", e);
     }
   }, []);
 
-  // Effect to save state changes to sessionStorage
+  // Save state to sessionStorage whenever it changes
   useEffect(() => {
-    if (isInitialising) return; // Don't save initial state until it's loaded
     try {
-        sessionStorage.setItem(`${SESSION_STORAGE_KEY}_searchTerm`, searchTerm);
-        sessionStorage.setItem(`${SESSION_STORAGE_KEY}_category`, category);
-        sessionStorage.setItem(`${SESSION_STORAGE_KEY}_sortOrder`, sortOrder);
-        sessionStorage.setItem(`${SESSION_STORAGE_KEY}_viewMode`, viewMode);
-    } catch (error) {
-        console.error("Could not access session storage:", error);
+      const stateToSave = { searchTerm, category, sortOrder, viewMode };
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(stateToSave));
+    } catch (e) {
+      console.error("Failed to set session storage state", e);
     }
-  }, [searchTerm, category, sortOrder, viewMode, isInitialising]);
-  
-  // Effect to restore scroll position
-  useEffect(() => {
-    if (!isInitialising) {
-        try {
-            const scrollPosition = sessionStorage.getItem(`${SESSION_STORAGE_KEY}_scrollPos`);
-            if (scrollPosition) {
-                window.scrollTo(0, parseInt(scrollPosition, 10));
-                sessionStorage.removeItem(`${SESSION_STORAGE_KEY}_scrollPos`);
-            }
-        } catch (error) {
-            console.error("Could not access session storage:", error);
-        }
-    }
-  }, [isInitialising]);
+  }, [searchTerm, category, sortOrder, viewMode]);
 
 
-  const categories = useMemo(() => {
-    const uniqueCategories = [...new Set(products.map(p => p.category))];
-    return ['All', ...uniqueCategories];
-  }, [products]);
-
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = products;
-
-    if (category !== 'All') {
-      filtered = filtered.filter(p => p.category === category);
-    }
-
-    if (searchTerm) {
-      filtered = filtered.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+  const loadProducts = useCallback(async (isNewSearch = false) => {
+    setIsLoading(true);
+    const currentOffset = isNewSearch ? 0 : offset;
     
-    return filtered.sort((a, b) => {
-      switch (sortOrder) {
-        case 'price_asc':
-          return a.price - b.price;
-        case 'price_desc':
-          return b.price - a.price;
-        case 'name_asc':
-          return a.name.localeCompare(b.name);
-        case 'name_desc':
-          return b.name.localeCompare(a.name);
-        default:
-          return 0;
-      }
+    const result = await getPaginatedProducts({
+      limit: PRODUCTS_PER_PAGE,
+      offset: currentOffset,
+      searchTerm,
+      category,
+      sortOrder
     });
 
-  }, [products, category, searchTerm, sortOrder]);
+    if (result.success && result.products) {
+      if (isNewSearch) {
+        setProducts(result.products);
+      } else {
+        setProducts(prev => [...prev, ...result.products!]);
+      }
+      setOffset(currentOffset + result.products.length);
+      setHasMore(result.products.length === PRODUCTS_PER_PAGE);
+    }
+    setIsLoading(false);
+  }, [offset, searchTerm, category, sortOrder]);
+
+
+  // Effect to load more products when the sentinel is in view
+  useEffect(() => {
+    if (inView && !isLoading && hasMore) {
+      loadProducts();
+    }
+  }, [inView, isLoading, hasMore, loadProducts]);
+
+
+  // Effect to handle new searches when filters change
+  useEffect(() => {
+    const handler = setTimeout(() => {
+        loadProducts(true);
+    }, 300); // Debounce
+    return () => clearTimeout(handler);
+  }, [searchTerm, category, sortOrder]);
+
 
   const handleProductClick = () => {
     try {
@@ -154,12 +145,15 @@ export default function ProductList({ products }: ProductListProps) {
       </div>
 
       <div className="space-y-4">
-        <Input
-          placeholder={t('Search_products')}
-          value={searchTerm}
-          onChange={e => setSearchTerm(e.target.value)}
-          className="flex-grow"
-        />
+        <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder={t('Search_products')}
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+        </div>
         <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="filters">
                  <AccordionTrigger>
@@ -169,13 +163,13 @@ export default function ProductList({ products }: ProductListProps) {
                     </div>
                  </AccordionTrigger>
                  <AccordionContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 p-2">
                         <Select value={category} onValueChange={setCategory}>
                             <SelectTrigger className="w-full">
                             <SelectValue placeholder={t('Filter_by_category')} />
                             </SelectTrigger>
                             <SelectContent>
-                            {categories.map(cat => (
+                            {initialCategories.map(cat => (
                                 <SelectItem key={cat} value={cat}>
                                 {cat === 'All' ? t(cat as 'All') : cat}
                                 </SelectItem>
@@ -210,15 +204,12 @@ export default function ProductList({ products }: ProductListProps) {
         </Accordion>
       </div>
       
-      {isInitialising ? (
-         <ProductListSkeleton />
-      ) : (
         <div ref={listRef} className={cn({
             'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8': viewMode === 'grid-lg',
             'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4': viewMode === 'grid-sm',
             'flex flex-col gap-4': viewMode === 'list',
         })}>
-          {filteredAndSortedProducts.map(product => 
+          {products.map(product => 
               viewMode === 'list' ? (
                 <ProductListItem key={product.id} product={product} onProductClick={handleProductClick} />
               ) : (
@@ -226,7 +217,18 @@ export default function ProductList({ products }: ProductListProps) {
               )
           )}
         </div>
-      )}
+     
+        {isLoading && <ProductListSkeleton />}
+
+        <div ref={loadMoreRef} className="h-10" />
+        
+        {!hasMore && !isLoading && products.length > 0 && (
+          <p className="text-center text-muted-foreground text-sm">Fin de los resultados.</p>
+        )}
+
+        {!isLoading && products.length === 0 && (
+             <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos.</p>
+        )}
     </div>
   );
 }

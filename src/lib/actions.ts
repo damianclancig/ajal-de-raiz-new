@@ -1,5 +1,6 @@
 
 
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -8,7 +9,7 @@ import { Product, ProductState, User, HeroSlide, SlideState, Cart, CartItem, Pop
 import { ObjectId } from 'mongodb';
 import { redirect } from 'next/navigation';
 import { hash } from 'bcryptjs';
-import { getDb, getProductById } from './product-service';
+import { getDb, getProductById, getPaginatedProducts as getPaginatedProductsService } from './product-service';
 import crypto from 'crypto';
 import { sendPasswordResetEmail, sendContactRequestEmail, sendNewOrderNotification, sendReceiptSubmittedNotification } from './email-service';
 import { auth, signIn } from '@/auth';
@@ -20,6 +21,7 @@ type ActionResponse = {
   success: boolean;
   message: string;
   product?: Product | null;
+  products?: Product[] | null;
   user?: User | null;
   slide?: HeroSlide | null;
   cart?: PopulatedCart | null;
@@ -213,6 +215,23 @@ export async function physicallyDeleteProduct(productId: string): Promise<Action
   revalidatePath('/products');
   revalidatePath('/');
   redirect('/admin/products');
+}
+
+export async function getPaginatedProducts(params: {
+    offset: number;
+    limit: number;
+    searchTerm?: string;
+    category?: string;
+    sortOrder?: string;
+    state?: ProductState;
+}): Promise<ActionResponse> {
+    try {
+        const products = await getPaginatedProductsService(params);
+        return { success: true, message: 'Products fetched', products };
+    } catch (error) {
+        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        return { success: false, message: `Failed to fetch products: ${message}` };
+    }
 }
 
 
