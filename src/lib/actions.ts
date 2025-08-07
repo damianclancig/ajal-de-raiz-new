@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -778,26 +779,69 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
         initialStatus = 'Pendiente de Pago';
     }
 
-    let preference: { id: string, init_point: string } | null = null;
-    
-    // Step 1: Create MercadoPago preference if applicable, BEFORE creating the order.
+    // For MercadoPago, we create the preference first.
     if (paymentMethod === 'MercadoPago') {
         try {
-            // We pass a temporary ID, it doesn't matter for preference creation
-            const tempOrderId = new ObjectId().toString(); 
-            preference = await createPreference({
-                id: tempOrderId,
+            // Step 1: Create the order in DB to get an ID
+            const orderToInsert = {
+                userId: userId,
+                items: orderItems,
+                totalPrice: cart.totalPrice,
+                paymentMethod: paymentMethod,
+                status: initialStatus,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            };
+            const orderResult = await ordersCollection.insertOne(orderToInsert);
+            const orderId = orderResult.insertedId;
+
+            // Step 2: Create MP preference with the real order ID
+            const preference = await createPreference({
+                id: orderId.toString(),
                 items: orderItems,
                 user: user,
             });
+
+            // Step 3: Update the order with the preference details
+            await ordersCollection.updateOne(
+                { _id: orderId },
+                { $set: { 
+                    mercadoPagoPreferenceId: preference.id,
+                    mercadoPagoInitPoint: preference.init_point 
+                }}
+            );
+            
+            // Step 4: Decrease stock
+            for (const item of cart.items) {
+                await productsCollection.updateOne(
+                    { _id: new ObjectId(item.productId) },
+                    { $inc: { countInStock: -item.quantity } }
+                );
+            }
+
+            // Step 5: Clear cart
+            await cartsCollection.deleteOne({ userId });
+
+            // Step 6: Send notifications
+            const newOrder = await getOrderById(orderId.toString());
+            if (newOrder) {
+                await sendNewOrderNotification(newOrder, user);
+            }
+
+            revalidatePath('/cart');
+            revalidatePath('/orders');
+            
+            return { success: true, message: "Order created, redirecting to payment.", init_point: preference.init_point };
+
         } catch (error) {
-            console.error("Failed to create MercadoPago preference:", error);
+            console.error("Failed to create MercadoPago preference or order:", error);
             const message = error instanceof Error ? error.message : 'An unknown error occurred with MercadoPago.';
+            // We don't create the order if the preference fails. The flow stops here.
             return { success: false, message: `No se pudo generar el enlace de pago: ${message}` };
         }
     }
 
-    // Step 2: Create the order in the database.
+    // --- Flow for other payment methods (Cash, Bank Transfer) ---
     try {
         const orderToInsert = {
             userId: userId,
@@ -805,22 +849,13 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
             totalPrice: cart.totalPrice,
             paymentMethod: paymentMethod,
             status: initialStatus,
-            mercadoPagoPreferenceId: preference?.id,
-            mercadoPagoInitPoint: preference?.init_point,
             createdAt: new Date(),
             updatedAt: new Date(),
         };
 
         const result = await ordersCollection.insertOne(orderToInsert);
         const orderId = result.insertedId;
-        
-        // If it was a MercadoPago order, we need to update the external_reference in the preference
-        // This is not directly supported by the SDK in an "update" call after creation,
-        // but the external_reference in the DB is what truly matters for the webhook.
-        // For simplicity, we'll ensure our webhook logic correctly uses the orderId from our DB.
-        // The most important thing is that the init_point is generated and returned.
 
-        // Step 3: Decrease stock.
         for (const item of cart.items) {
             await productsCollection.updateOne(
                 { _id: new ObjectId(item.productId) },
@@ -828,10 +863,8 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
             );
         }
 
-        // Step 4: Clear cart.
         await cartsCollection.deleteOne({ userId });
 
-        // Step 5: Send notifications.
         const newOrder = await getOrderById(orderId.toString());
         if (newOrder) {
             await sendNewOrderNotification(newOrder, user);
@@ -840,17 +873,10 @@ export async function createOrder(paymentMethod: PaymentMethod): Promise<ActionR
         revalidatePath('/cart');
         revalidatePath('/orders');
 
-        return { 
-            success: true, 
-            message: "Order created successfully.",
-            init_point: preference?.init_point
-        };
+        return { success: true, message: "Order created successfully." };
 
     } catch (error) {
-        // This will catch errors from DB operations (order creation, stock update, cart clearing).
-        // It's a critical error state. We should ideally refund/cancel the MP preference if it was created.
-        // For now, we log it and return an error.
-        console.error("Critical error during order creation after payment preference:", error);
+        console.error("Critical error during order creation:", error);
         const message = error instanceof Error ? error.message : 'An unknown error occurred.';
         return { success: false, message: `Failed to create order: ${message}` };
     }

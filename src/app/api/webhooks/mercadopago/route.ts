@@ -1,10 +1,12 @@
 
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getPaymentWithClient } from '@/lib/mercadopago-service';
 import { getDb } from '@/lib/product-service';
 import { ObjectId } from 'mongodb';
 import type { MercadoPagoPaymentDetails } from '@/lib/types';
 import { sendMercadoPagoPaymentSuccessNotification } from '@/lib/email-service';
+import { logError } from '@/lib/log-service';
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,41 +16,20 @@ export async function POST(req: NextRequest) {
     if (topic === 'payment') {
       const paymentId = body.data.id;
       
-      // La validación de la firma es crucial en producción para la seguridad.
-      // En desarrollo, puede ser más fácil probar sin ella si se presentan problemas
-      // con ngrok o proxies inversos.
-      // DESCOMENTAR LA VALIDACIÓN ANTES DE PASAR A PRODUCCIÓN.
-      /*
-      const signature = req.headers.get('x-signature');
-      const requestId = req.headers.get('x-request-id');
-
-      if (!process.env.MERCADOPAGO_WEBHOOK_SECRET) {
-        throw new Error('MercadoPago webhook secret is not configured.');
-      }
-      
-      const { client } = await getPaymentWithClient(paymentId);
-      
-      const isValidSignature = await client.utils.validateWebhookSignature({
-          signature,
-          requestId,
-          secret: process.env.MERCADOPAGO_WEBHOOK_SECRET,
-          body: JSON.stringify(body)
-      });
-      
-      if (!isValidSignature) {
-         console.warn('Invalid webhook signature received.');
-         return NextResponse.json({ success: false, message: 'Invalid signature' }, { status: 403 });
-      }
-      */
-      
       const { payment } = await getPaymentWithClient(paymentId);
 
       if (payment && payment.status === 'approved') {
         const orderId = payment.external_reference;
         
         if (!orderId || !ObjectId.isValid(orderId)) {
-          console.error(`Invalid order ID in webhook: ${orderId}`);
-          return NextResponse.json({ success: false, message: 'Invalid order ID in webhook' }, { status: 400 });
+          const errorMessage = `Invalid or missing external_reference (order ID) in webhook: ${orderId}`;
+          await logError({
+            path: '/api/webhooks/mercadopago',
+            functionName: 'POST',
+            errorMessage: errorMessage,
+            metadata: { webhookBody: body, paymentDetails: payment }
+          });
+          return NextResponse.json({ success: false, message: errorMessage }, { status: 400 });
         }
         
         const db = await getDb();
@@ -74,18 +55,30 @@ export async function POST(req: NextRequest) {
 
         if (updateResult.matchedCount > 0) {
             console.log(`Order ${orderId} confirmed via webhook.`);
-            // Send admin notification
             await sendMercadoPagoPaymentSuccessNotification(orderId, paymentId.toString());
         } else {
-            console.warn(`Webhook received for order ${orderId}, but no matching order was found to update.`);
+            const warnMessage = `Webhook received for order ${orderId}, but no matching order was found to update.`;
+            console.warn(warnMessage);
+            await logError({
+              path: '/api/webhooks/mercadopago',
+              functionName: 'POST',
+              errorMessage: warnMessage,
+              metadata: { webhookBody: body, paymentDetails: payment }
+            });
         }
       }
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('MercadoPago webhook error:', error);
     const message = error instanceof Error ? error.message : 'Unknown error';
+    await logError({
+        path: '/api/webhooks/mercadopago',
+        functionName: 'POST',
+        errorMessage: message,
+        stackTrace: error instanceof Error ? error.stack : undefined,
+        metadata: { body: await req.text().catch(() => 'Could not parse body') }
+    });
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }
 }
