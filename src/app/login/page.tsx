@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import { Button } from "@/components/ui/button";
@@ -12,14 +13,15 @@ import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-/*
 import type { Metadata } from 'next';
 
+/*
 export const metadata: Metadata = {
   title: 'Iniciar Sesión',
-  description: 'Inicia sesión en tu cuenta de Ajal de Raiz para acceder a tu perfil y pedidos.',
+  description: 'Inicia sesión en tu cuenta de Ajal de Raiz para acceder a tu perfil, historial de pedidos y gestionar tu carrito de compras.',
 };
 */
+
 function LoginButton() {
   const { pending } = useFormStatus();
   const { t } = useLanguage();

@@ -1,4 +1,5 @@
 
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { translations } from "@/lib/translations";
@@ -9,7 +10,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
     title: "Crear Cuenta",
-    description: "Regístrate en Ajal de Raiz para empezar a comprar y guardar tus productos favoritos.",
+    description: "Regístrate gratis en Ajal de Raiz para empezar a comprar, guardar tus productos favoritos y gestionar tus pedidos fácilmente.",
 };
 
 const getLanguage = () => {
