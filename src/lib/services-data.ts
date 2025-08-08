@@ -27,7 +27,7 @@ export const servicesData: Service[] = [
       'Supervisión semanal y fotos de seguimiento',
       'Ambiente controlado para su bienestar'
     ],
-    price: 'Desde $60.000 por semana',
+    price: 'Desde $180.000 por semana',
     note: 'Precio base para hasta 3 plantas. Consultar por más cantidad.'
   },
   {
