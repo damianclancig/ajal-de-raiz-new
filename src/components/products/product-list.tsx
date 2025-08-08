@@ -79,7 +79,8 @@ export default function ProductList({ products: initialProducts, initialCategori
       offset: currentOffset,
       searchTerm,
       category,
-      sortOrder
+      sortOrder,
+      state: 'activo'
     });
 
     if (result.success && result.products) {
@@ -163,7 +164,7 @@ export default function ProductList({ products: initialProducts, initialCategori
                     </div>
                  </AccordionTrigger>
                  <AccordionContent>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 p-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-2">
                         <Select value={category} onValueChange={setCategory}>
                             <SelectTrigger className="w-full">
                             <SelectValue placeholder={t('Filter_by_category')} />
