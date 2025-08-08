@@ -1,6 +1,7 @@
+
 import clientPromise from '@/lib/mongodb';
-import type { Product } from './types';
-import { ObjectId } from 'mongodb';
+import type { Product, ProductState } from './types';
+import { ObjectId, Filter } from 'mongodb';
 import { NO_IMAGE_URL } from './utils';
 
 export const getDb = async () => {
@@ -33,6 +34,74 @@ const productFromDoc = (doc: any): Product | null => {
     updatedAt: doc.updatedAt?.toString(),
   };
 };
+
+export const getPaginatedProducts = async (params: {
+    offset?: number;
+    limit?: number;
+    searchTerm?: string;
+    category?: string;
+    sortOrder?: string;
+    state?: ProductState;
+}): Promise<Product[]> => {
+    const { 
+        offset = 0, 
+        limit = 12, 
+        searchTerm, 
+        category, 
+        sortOrder = 'name_asc', 
+        state 
+    } = params;
+    
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+
+    const query: Filter<Product> = {};
+
+    if (state) {
+        query.state = state;
+    }
+
+    if (searchTerm) {
+        query.name = { $regex: searchTerm, $options: 'i' };
+    }
+    if (category && category !== 'All') {
+        query.category = category;
+    }
+
+    let sort: any = {};
+    switch (sortOrder) {
+        case 'price_asc':
+            sort = { price: 1 };
+            break;
+        case 'price_desc':
+            sort = { price: -1 };
+            break;
+        case 'name_asc':
+            sort = { name: 1 };
+            break;
+        case 'name_desc':
+            sort = { name: -1 };
+            break;
+        default:
+            sort = { name: 1 };
+    }
+
+    const products = await productsCollection
+        .find(query)
+        .sort(sort)
+        .skip(offset)
+        .limit(limit)
+        .toArray();
+    
+    return products.map(doc => productFromDoc(doc)).filter(p => p !== null) as Product[];
+};
+
+export const getUniqueCategories = async (): Promise<string[]> => {
+    const db = await getDb();
+    const productsCollection = db.collection('products');
+    const categories = await productsCollection.distinct('category', { state: 'activo' });
+    return ['All', ...categories];
+}
 
 export const getAllProducts = async (): Promise<Product[]> => {
   const db = await getDb();

@@ -19,8 +19,8 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 ### Para Usuarios
 
-- **Catálogo de Productos**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo que soporta tanto imágenes como videos por producto.
-- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre).
+- **Catálogo de Productos con Carga Infinita**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo. Los productos se cargan a medida que el usuario hace scroll, garantizando un rendimiento óptimo incluso con catálogos muy grandes.
+- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente.
 - **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y disponibilidad de stock.
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
@@ -33,12 +33,11 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
-- **Página "Sobre Nosotros"**: Una sección dedicada para contar la historia y la misión de Ajal de Raíz.
 
 ### Para Administradores
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
-- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye gestión de stock y carga de videos.
+- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye un buscador de productos y carga infinita (scroll-driven) en la tabla para manejar grandes volúmenes de datos de forma eficiente.
 - **Gestión de Órdenes**:
   - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
   - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, montos y el ID de pago de MercadoPago.

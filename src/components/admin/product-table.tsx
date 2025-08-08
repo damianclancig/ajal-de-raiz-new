@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useTransition } from 'react';
+import React, { useState, useTransition, useEffect, useRef, useCallback } from 'react';
 import type { Product } from '@/lib/types';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
@@ -24,28 +24,79 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Edit, Trash2, CheckCircle, XCircle, Loader2 } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
-import { deleteProduct } from '@/lib/actions';
+import { deleteProduct, getPaginatedProducts } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { NO_IMAGE_URL } from '@/lib/utils';
+import { useInView } from 'react-intersection-observer';
+
+const PRODUCTS_PER_PAGE = 20;
 
 interface ProductTableProps {
   initialProducts: Product[];
+  searchTerm: string;
 }
 
-export default function ProductTable({ initialProducts }: ProductTableProps) {
+export default function ProductTable({ initialProducts, searchTerm }: ProductTableProps) {
   const { t, language } = useLanguage();
   const [products, setProducts] = useState<Product[]>(initialProducts);
-  const [isPending, startTransition] = useTransition();
+  const [offset, setOffset] = useState(initialProducts.length);
+  const [hasMore, setHasMore] = useState(initialProducts.length === PRODUCTS_PER_PAGE);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, startDeleteTransition] = useTransition();
   const { toast } = useToast();
 
+  const { ref: loadMoreRef, inView } = useInView();
+
+  const loadMoreProducts = useCallback(async () => {
+    setIsLoading(true);
+    const result = await getPaginatedProducts({ 
+      offset, 
+      limit: PRODUCTS_PER_PAGE, 
+      searchTerm 
+    });
+    
+    if (result.success && result.products) {
+      setProducts(prev => [...prev, ...result.products!]);
+      setOffset(prev => prev + result.products!.length);
+      setHasMore(result.products!.length === PRODUCTS_PER_PAGE);
+    }
+    setIsLoading(false);
+  }, [offset, searchTerm]);
+
+  useEffect(() => {
+    if (inView && !isLoading && hasMore) {
+      loadMoreProducts();
+    }
+  }, [inView, isLoading, hasMore, loadMoreProducts]);
+
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      setIsLoading(true);
+      setOffset(0);
+      const result = await getPaginatedProducts({
+        offset: 0,
+        limit: PRODUCTS_PER_PAGE,
+        searchTerm,
+      });
+      if (result.success && result.products) {
+        setProducts(result.products);
+        setOffset(result.products.length);
+        setHasMore(result.products.length === PRODUCTS_PER_PAGE);
+      }
+      setIsLoading(false);
+    }, 500); // Debounce search
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   const handleDelete = async (productId: string) => {
-    startTransition(async () => {
+    startDeleteTransition(async () => {
       const result = await deleteProduct(productId);
       if (result.success && result.product) {
         setProducts(products.map(p => p.id === productId ? result.product! : p));
@@ -124,7 +175,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isPending}>
+                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isDeleting}>
                               <Trash2 className="h-4 w-4" />
                             </Button>
                           </AlertDialogTrigger>
@@ -169,7 +220,7 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
                                 </Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isPending}>
+                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isDeleting}>
                                             <Trash2 className="h-4 w-4" />
                                         </Button>
                                     </AlertDialogTrigger>
@@ -215,6 +266,23 @@ export default function ProductTable({ initialProducts }: ProductTableProps) {
             })}
           </TableBody>
         </Table>
+
+        {isLoading && (
+            <div className="flex justify-center items-center p-4">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+            </div>
+        )}
+
+        {!isLoading && hasMore && <div ref={loadMoreRef} className="h-10" />}
+
+        {!hasMore && !isLoading && products.length > 0 && (
+          <p className="text-center text-muted-foreground text-sm p-4">Fin de los resultados.</p>
+        )}
+
+        {!isLoading && products.length === 0 && (
+             <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos.</p>
+        )}
+
       </CardContent>
     </Card>
   );
