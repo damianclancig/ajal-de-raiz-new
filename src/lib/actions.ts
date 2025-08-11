@@ -1,6 +1,5 @@
 
 
-
 'use server';
 
 import { revalidatePath } from 'next/cache';
@@ -123,7 +122,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       return { success: false, message: 'Invalid state value.' };
     }
 
-    const updateData: Partial<Omit<Product, 'id'>> & { $unset?: { oldPrice?: number } } = {
+    const updateFields: Partial<Omit<Product, 'id'>> = {
       name: name,
       slug: createSlug(name),
       description: formData.get('description') as string,
@@ -137,16 +136,19 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       updatedAt: new Date().toISOString(),
     };
     
-    if (!isNaN(oldPrice) && oldPrice > 0) {
-        updateData.oldPrice = oldPrice;
-    } else {
-        updateData.$unset = { oldPrice: 1 };
-    }
+    const updateOperation: { $set: Partial<Omit<Product, 'id'>>; $unset?: { oldPrice?: number } } = {
+        $set: updateFields,
+    };
 
+    if (!isNaN(oldPrice) && oldPrice > 0) {
+        updateFields.oldPrice = oldPrice;
+    } else {
+        updateOperation.$unset = { oldPrice: 1 };
+    }
 
     const result = await productsCollection.updateOne(
       { _id: new ObjectId(productId) },
-      { $set: updateData }
+      updateOperation
     );
 
     if (result.matchedCount === 0) {
@@ -185,7 +187,7 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
     
     const updatedProductDoc = await productsCollection.findOne({_id: new ObjectId(productId)});
     const productFromDoc = (doc: any): Product => ({
-        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(),
+        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(), oldPrice: doc.oldPrice,
     });
     const updatedProduct = productFromDoc(updatedProductDoc);
 

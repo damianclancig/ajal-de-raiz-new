@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useTransition, useState } from 'react';
@@ -174,7 +175,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                 <Input id="brand" name="brand" defaultValue={product?.brand || ''} />
               </div>
               <div>
-                <Label htmlFor="price">Precio Anterior (Opcional)</Label>
+                <Label htmlFor="oldPrice">Precio Anterior (Opcional)</Label>
                 <Input
                   id="formattedOldPrice"
                   value={formatPrice(rawOldPrice)}
