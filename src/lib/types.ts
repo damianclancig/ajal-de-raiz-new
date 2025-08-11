@@ -13,6 +13,7 @@ export interface Product {
   category: string;
   images: string[];
   price: number;
+  oldPrice?: number;
   brand: string;
   rating: number;
   numReviews: number;
@@ -131,9 +132,9 @@ export interface Order {
     status: OrderStatus;
     receiptUrl?: string;
     mercadoPagoPreferenceId?: string;
+    mercadoPagoInitPoint?: string;
     mercadoPagoPaymentId?: string;
     mercadoPagoPaymentDetails?: MercadoPagoPaymentDetails;
-    mercadoPagoInitPoint?: string;
     createdAt: string;
     updatedAt: string;
 }

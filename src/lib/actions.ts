@@ -55,6 +55,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
     
     const name = formData.get('name') as string;
     const price = parseFloat(formData.get('price') as string);
+    const oldPrice = parseFloat(formData.get('oldPrice') as string);
     const countInStock = parseInt(formData.get('countInStock') as string, 10);
     const images = getImagesFromFormData(formData);
     
@@ -62,12 +63,13 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
       return { success: false, message: "Name and Price are required." };
     }
 
-    const newProductData = {
+    const newProductData: Omit<Product, 'id'> = {
       name: name,
       slug: createSlug(name),
       description: formData.get('description') as string || '',
       category: formData.get('category') as string || 'Uncategorized',
       price: price,
+      oldPrice: !isNaN(oldPrice) && oldPrice > 0 ? oldPrice : undefined,
       images: images,
       brand: formData.get('brand') as string || 'Ajal',
       isFeatured: formData.get('isFeatured') === 'on',
@@ -75,8 +77,9 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
       rating: 0,
       numReviews: 0,
       countInStock: isNaN(countInStock) ? 0 : countInStock,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      dataAiHint: '',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
     const result = await productsCollection.insertOne(newProductData);
@@ -107,6 +110,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
     
     const name = formData.get('name') as string;
     const price = parseFloat(formData.get('price') as string);
+    const oldPrice = parseFloat(formData.get('oldPrice') as string);
     const countInStock = parseInt(formData.get('countInStock') as string, 10);
     const state = formData.get('state') as ProductState;
     const images = getImagesFromFormData(formData);
@@ -119,7 +123,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       return { success: false, message: 'Invalid state value.' };
     }
 
-    const updateData = {
+    const updateData: Partial<Omit<Product, 'id'>> & { $unset?: { oldPrice?: number } } = {
       name: name,
       slug: createSlug(name),
       description: formData.get('description') as string,
@@ -130,8 +134,15 @@ export async function updateProduct(productId: string, formData: FormData): Prom
       isFeatured: formData.get('isFeatured') === 'on',
       state: state,
       countInStock: isNaN(countInStock) ? 0 : countInStock,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     };
+    
+    if (!isNaN(oldPrice) && oldPrice > 0) {
+        updateData.oldPrice = oldPrice;
+    } else {
+        updateData.$unset = { oldPrice: 1 };
+    }
+
 
     const result = await productsCollection.updateOne(
       { _id: new ObjectId(productId) },
@@ -165,7 +176,7 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
     
     const result = await productsCollection.updateOne(
       { _id: new ObjectId(productId) },
-      { $set: { state: 'inactivo' as ProductState, updatedAt: new Date() } }
+      { $set: { state: 'inactivo' as ProductState, updatedAt: new Date().toISOString() } }
     );
 
     if (result.matchedCount === 0) {

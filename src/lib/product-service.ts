@@ -22,6 +22,7 @@ const productFromDoc = (doc: any): Product | null => {
     category: doc.category,
     images: images,
     price: doc.price,
+    oldPrice: doc.oldPrice,
     brand: doc.brand,
     rating: doc.rating,
     numReviews: doc.numReviews,

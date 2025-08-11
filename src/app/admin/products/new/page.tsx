@@ -1,12 +1,13 @@
 
 import ProductForm from '@/components/admin/product-form';
-import { useLanguage } from '@/hooks/use-language';
+import { getUniqueCategories } from '@/lib/product-service';
 
-export default function NewProductPage() {
+export default async function NewProductPage() {
+  const categories = await getUniqueCategories();
   
   return (
     <div className="py-8">
-      <ProductForm />
+      <ProductForm categories={categories} />
     </div>
   );
 }

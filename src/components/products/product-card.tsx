@@ -71,7 +71,14 @@ export default function ProductCard({ product, size = 'lg', onProductClick }: Pr
       <CardFooter className={cn("pt-0", 
         size === 'lg' ? 'p-4 flex justify-between items-center' : 'p-3 flex flex-col items-start gap-2'
       )}>
-        <p className={cn("font-bold text-primary", size === 'lg' ? 'text-lg' : 'text-base')}>${formatPrice(product.price)}</p>
+        <div className="flex flex-col">
+            {product.oldPrice && product.oldPrice > 0 && (
+                <span className={cn("text-muted-foreground line-through", size === 'lg' ? 'text-sm' : 'text-xs')}>
+                    ${formatPrice(product.oldPrice)}
+                </span>
+            )}
+            <p className={cn("font-bold text-primary", size === 'lg' ? 'text-lg' : 'text-base')}>${formatPrice(product.price)}</p>
+        </div>
         <Button asChild size="sm" variant="outline" className={cn(size === 'sm' && 'w-full')}>
           <div>{t('View_Details')}</div>
         </Button>

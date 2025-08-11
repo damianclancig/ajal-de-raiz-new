@@ -31,16 +31,19 @@ import Link from 'next/link';
 
 interface ProductFormProps {
   product?: Product | null;
+  categories: string[];
 }
 
-export default function ProductForm({ product }: ProductFormProps) {
+export default function ProductForm({ product, categories }: ProductFormProps) {
   const { t, language } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [isDeleting, startDeleteTransition] = useTransition();
   const { toast } = useToast();
   
   const initialPrice = product?.price ?? 0;
+  const initialOldPrice = product?.oldPrice ?? 0;
   const [rawPrice, setRawPrice] = useState(Math.round(initialPrice * 100).toString());
+  const [rawOldPrice, setRawOldPrice] = useState(Math.round(initialOldPrice * 100).toString());
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
   const getLocale = () => {
@@ -69,9 +72,10 @@ export default function ProductForm({ product }: ProductFormProps) {
     }).format(numericValue);
   };
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, isOldPrice = false) => {
     const digits = e.target.value.replace(/[^\d]/g, '');
-    setRawPrice(digits || "0");
+    const setter = isOldPrice ? setRawOldPrice : setRawPrice;
+    setter(digits || "0");
   };
 
   const handlePriceClick = (e: React.MouseEvent<HTMLInputElement>) => {
@@ -83,6 +87,9 @@ export default function ProductForm({ product }: ProductFormProps) {
   const handleSubmit = (formData: FormData) => {
     const numericPrice = parseFloat(rawPrice) / 100;
     formData.set('price', numericPrice.toString());
+
+    const numericOldPrice = parseFloat(rawOldPrice) / 100;
+    formData.set('oldPrice', numericOldPrice.toString());
     
     startTransition(async () => {
       const action = product 
@@ -147,21 +154,43 @@ export default function ProductForm({ product }: ProductFormProps) {
               </div>
             </div>
           
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
               <div>
                 <Label htmlFor="category">{t('Category')}</Label>
-                <Input id="category" name="category" defaultValue={product?.category || ''} />
+                <Input 
+                  id="category" 
+                  name="category" 
+                  defaultValue={product?.category || ''} 
+                  list="category-list" 
+                />
+                <datalist id="category-list">
+                  {categories.filter(cat => cat !== 'All').map(cat => (
+                    <option key={cat} value={cat} />
+                  ))}
+                </datalist>
               </div>
               <div>
                 <Label htmlFor="brand">{t('Brand')}</Label>
                 <Input id="brand" name="brand" defaultValue={product?.brand || ''} />
               </div>
               <div>
+                <Label htmlFor="price">Precio Anterior (Opcional)</Label>
+                <Input
+                  id="formattedOldPrice"
+                  value={formatPrice(rawOldPrice)}
+                  onChange={(e) => handlePriceChange(e, true)}
+                  onClick={handlePriceClick}
+                  inputMode="numeric"
+                  className="text-right"
+                />
+                 <input type="hidden" name="oldPrice" value={parseFloat(rawOldPrice) / 100} />
+              </div>
+              <div>
                 <Label htmlFor="price">{t('Price')}</Label>
                 <Input
                   id="formattedPrice"
                   value={formatPrice(rawPrice)}
-                  onChange={handlePriceChange}
+                  onChange={(e) => handlePriceChange(e)}
                   onClick={handlePriceClick}
                   inputMode="numeric"
                   className="text-right"

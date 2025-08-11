@@ -130,8 +130,15 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                 <CardContent className="space-y-6">
                     <p className="text-lg text-muted-foreground">{product.description}</p>
                     
-                    <div className="text-4xl font-bold text-primary">
-                        ${formatPrice(product.price)}
+                    <div className="flex flex-col items-end">
+                      {product.oldPrice && product.oldPrice > 0 && (
+                        <span className="text-2xl text-muted-foreground line-through">
+                          ${formatPrice(product.oldPrice)}
+                        </span>
+                      )}
+                      <div className="text-4xl font-bold text-primary">
+                          ${formatPrice(product.price)}
+                      </div>
                     </div>
 
                     { isSoldOut ? (

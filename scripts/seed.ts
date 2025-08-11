@@ -1,3 +1,4 @@
+
 // scripts/seed.ts
 import dotenv from 'dotenv';
 // Load environment variables from .env.local BEFORE anything else.
@@ -20,6 +21,13 @@ const getRandomElement = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr
 const getRandomPrice = () => Math.floor(Math.random() * (50000 - 1000 + 1)) + 1000;
 const getRandomStock = () => Math.floor(Math.random() * 101);
 const getRandomBoolean = () => Math.random() < 0.2; // 20% chance of being true
+const getOldPrice = (currentPrice: number) => {
+    if (Math.random() < 0.3) { // 30% chance of having an old price
+        return currentPrice + Math.floor(Math.random() * (5000 - 500 + 1)) + 500;
+    }
+    return undefined;
+};
+
 
 const categories = ['Plantas de Interior', 'Plantas de Exterior', 'Macetas', 'Herramientas', 'Fertilizantes', 'Sustratos'];
 const brands = ['Ajal', 'VerdeVida', 'TerraFirma', 'JardinPro'];
@@ -47,6 +55,7 @@ async function seedDatabase() {
         for (let i = 1; i <= 100; i++) {
             const name = `Producto de Prueba ${i}`;
             const category = getRandomElement(categories);
+            const price = getRandomPrice();
             
             const product: Omit<Product, 'id'> = {
                 _id: new ObjectId(),
@@ -54,7 +63,8 @@ async function seedDatabase() {
                 slug: createSlug(name),
                 category,
                 images: imagePlaceholders.map(url => url + `?text=Producto\\n${i}`),
-                price: getRandomPrice(),
+                price: price,
+                oldPrice: getOldPrice(price),
                 brand: getRandomElement(brands),
                 rating: parseFloat((Math.random() * 5).toFixed(1)),
                 numReviews: Math.floor(Math.random() * 100),
