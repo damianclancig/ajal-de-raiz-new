@@ -26,10 +26,10 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
   const isVideo = (url: string) => /\.(mp4|webm|mov|avi)$/i.test(url);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    if (mediaUrls.length >= MAX_MEDIA) {
+    if (mediaUrls.length + files.length > MAX_MEDIA) {
       toast({
         variant: 'destructive',
         title: t('Image_Limit_Title'),
@@ -41,67 +41,75 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
     setLoading(true);
     toast({
       title: t('Uploading_Image_Title'),
-      description: t('Uploading_Image_Desc'),
+      description: `Subiendo ${files.length} archivo(s)...`,
     });
 
-    try {
-      const resSign = await fetch('/api/sign-cloudinary-params', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ folder: UPLOAD_FOLDER }),
-      });
+    const uploadedUrls: string[] = [];
 
-      if (!resSign.ok) {
-        throw new Error('Failed to get signature from server.');
-      }
-      
-      const { signature, timestamp } = await resSign.json();
-
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
-      formData.append('signature', signature);
-      formData.append('timestamp', timestamp);
-      formData.append('folder', UPLOAD_FOLDER);
-      
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
-        {
+    for (const file of Array.from(files)) {
+      try {
+        const resSign = await fetch('/api/sign-cloudinary-params', {
           method: 'POST',
-          body: formData,
-        }
-      );
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error.message || 'Cloudinary upload failed.');
-      }
-      
-      const data = await res.json();
-      
-      setMediaUrls(prev => [...prev, data.secure_url]);
-
-      toast({
-        title: t('Image_upload_success_title'),
-        description: t('Image_upload_success_desc'),
-      });
-
-    } catch (err: any) {
-        console.error("Media upload error:", err);
-        let description = t('Upload_Error_Desc');
-        if (err?.message?.includes('File size too large')) {
-          description = t('Upload_Error_File_Too_Large_Desc');
-        }
-
-        toast({
-            variant: 'destructive',
-            title: t('Upload_Error_Title'),
-            description: description,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ folder: UPLOAD_FOLDER }),
         });
-    } finally {
-        setLoading(false);
-        e.target.value = '';
+
+        if (!resSign.ok) {
+          throw new Error('Failed to get signature from server.');
+        }
+        
+        const { signature, timestamp } = await resSign.json();
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
+        formData.append('signature', signature);
+        formData.append('timestamp', timestamp);
+        formData.append('folder', UPLOAD_FOLDER);
+        
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          }
+        );
+        
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.error.message || `Fallo al subir ${file.name}`);
+        }
+        
+        const data = await res.json();
+        uploadedUrls.push(data.secure_url);
+
+      } catch (err: any) {
+          console.error("Media upload error:", err);
+          let description = t('Upload_Error_Desc');
+          if (err?.message?.includes('File size too large')) {
+            description = `${t('Upload_Error_File_Too_Large_Desc')} (${file.name})`;
+          } else {
+            description = err.message;
+          }
+
+          toast({
+              variant: 'destructive',
+              title: t('Upload_Error_Title'),
+              description: description,
+          });
+          setLoading(false);
+          return; // Stop on first error
+      }
     }
+
+    setMediaUrls(prev => [...prev, ...uploadedUrls]);
+    setLoading(false);
+    toast({
+      title: t('Image_upload_success_title'),
+      description: `${uploadedUrls.length} archivo(s) subido(s) correctamente.`,
+    });
+
+    e.target.value = ''; // Reset file input
   };
 
   const handleRemoveMedia = (urlToRemove: string) => {
@@ -174,7 +182,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
                        <UploadCloud className="h-4 w-4" />
                        <span>Añadir</span>
                     </label>
-                    <Input id="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/*,video/*" disabled={loading} />
+                    <Input id="file-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/*,video/*" disabled={loading} multiple />
                     <p className="text-xs text-muted-foreground mt-1">
                         {mediaUrls.length} / {MAX_MEDIA}
                     </p>
