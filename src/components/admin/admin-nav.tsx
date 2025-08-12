@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useLanguage } from "@/hooks/use-language";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Package, Users2, Star, ShoppingBag, ShieldAlert } from "lucide-react";
+import { Package, Users2, Star, ShoppingBag, ShieldAlert, HeartHandshake } from "lucide-react";
 
 export default function AdminNav() {
   const { t } = useLanguage();
@@ -20,12 +20,6 @@ export default function AdminNav() {
       icon: Package
     },
     {
-      href: `/admin/users`,
-      label: t('Users'),
-      active: pathname.startsWith(`/admin/users`),
-      icon: Users2
-    },
-    {
       href: `/admin/slides`,
       label: t('Slides'),
       active: pathname.startsWith(`/admin/slides`),
@@ -36,6 +30,18 @@ export default function AdminNav() {
       label: t('Orders_Admin'),
       active: pathname.startsWith(`/admin/orders`),
       icon: ShoppingBag
+    },
+    {
+      href: `/admin/services`,
+      label: t('Services'),
+      active: pathname.startsWith(`/admin/services`),
+      icon: HeartHandshake
+    },
+    {
+      href: `/admin/users`,
+      label: t('Users'),
+      active: pathname.startsWith(`/admin/users`),
+      icon: Users2
     },
     {
       href: `/admin/logs`,

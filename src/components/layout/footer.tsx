@@ -13,6 +13,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import Link from "next/link";
+import { Separator } from "../ui/separator";
+import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -93,6 +96,24 @@ export default function Footer() {
                 </div>
             </TooltipProvider>
           </div>
+        </div>
+
+        <div className="mt-8 border-t pt-6 grid grid-cols-1 md:grid-cols-3 text-center md:text-left gap-8">
+            <div className="flex-1">
+                <h4 className="font-semibold mb-1">Horarios de atención</h4>
+                <p className="text-sm text-muted-foreground">Lunes a Viernes de 09:00hs a 18:00hs</p>
+                <p className="text-sm text-muted-foreground">Sábados de 09:00hs a 13:00hs</p>
+            </div>
+            <div className="flex-1 md:text-center">
+                <h4 className="font-semibold mb-1">Legal</h4>
+                <Button variant="link" asChild className="p-0 h-auto text-sm text-muted-foreground">
+                    <Link href="/terms">Términos y Condiciones</Link>
+                </Button>
+            </div>
+             <div className="flex-1 md:text-right">
+                <h4 className="font-semibold mb-1">Lugar</h4>
+                <p className="text-sm text-muted-foreground">Bernal, Argentina</p>
+            </div>
         </div>
 
         <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">

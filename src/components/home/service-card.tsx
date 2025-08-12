@@ -1,15 +1,17 @@
+
 'use client';
 
 import type { Service } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { CheckCircle } from 'lucide-react';
+import * as Icons from 'lucide-react';
 
 interface ServiceCardProps {
     service: Service;
 }
 
 export default function ServiceCard({ service }: ServiceCardProps) {
-    const Icon = service.icon;
+    const Icon = (Icons as any)[service.icon] || Icons.Sprout;
 
     return (
         <Card className="flex flex-col h-full">

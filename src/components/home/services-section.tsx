@@ -2,13 +2,14 @@
 "use client"
 
 import { useLanguage } from "@/hooks/use-language";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Leaf, SprayCan, HandCoins, Sprout } from "lucide-react";
-import Image from "next/image";
-import { servicesData } from "@/lib/services-data";
 import ServiceCard from "./service-card";
+import { Service } from "@/lib/types";
 
-export default function ServicesSection() {
+interface ServicesSectionProps {
+  services: Service[];
+}
+
+export default function ServicesSection({ services }: ServicesSectionProps) {
   const { t } = useLanguage();
 
   return (
@@ -22,7 +23,7 @@ export default function ServicesSection() {
         </p>
       </div>
       <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-        {servicesData.map((service) => (
+        {services.map((service) => (
           <ServiceCard key={service.id} service={service} />
         ))}
       </div>

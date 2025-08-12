@@ -40,9 +40,10 @@ const PRODUCTS_PER_PAGE = 20;
 interface ProductTableProps {
   initialProducts: Product[];
   searchTerm: string;
+  category: string;
 }
 
-export default function ProductTable({ initialProducts, searchTerm }: ProductTableProps) {
+export default function ProductTable({ initialProducts, searchTerm, category }: ProductTableProps) {
   const { t, language } = useLanguage();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [offset, setOffset] = useState(initialProducts.length);
@@ -58,7 +59,8 @@ export default function ProductTable({ initialProducts, searchTerm }: ProductTab
     const result = await getPaginatedProducts({ 
       offset, 
       limit: PRODUCTS_PER_PAGE, 
-      searchTerm 
+      searchTerm,
+      category,
     });
     
     if (result.success && result.products) {
@@ -67,7 +69,7 @@ export default function ProductTable({ initialProducts, searchTerm }: ProductTab
       setHasMore(result.products!.length === PRODUCTS_PER_PAGE);
     }
     setIsLoading(false);
-  }, [offset, searchTerm]);
+  }, [offset, searchTerm, category]);
 
   useEffect(() => {
     if (inView && !isLoading && hasMore) {
@@ -83,6 +85,7 @@ export default function ProductTable({ initialProducts, searchTerm }: ProductTab
         offset: 0,
         limit: PRODUCTS_PER_PAGE,
         searchTerm,
+        category,
       });
       if (result.success && result.products) {
         setProducts(result.products);
@@ -93,7 +96,7 @@ export default function ProductTable({ initialProducts, searchTerm }: ProductTab
     }, 500); // Debounce search
 
     return () => clearTimeout(timer);
-  }, [searchTerm]);
+  }, [searchTerm, category]);
 
   const handleDelete = async (productId: string) => {
     startDeleteTransition(async () => {

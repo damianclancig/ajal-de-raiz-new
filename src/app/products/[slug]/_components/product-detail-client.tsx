@@ -132,8 +132,8 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     
                     <div className="flex flex-col items-end">
                       {product.oldPrice && product.oldPrice > 0 && (
-                        <span className="text-2xl text-muted-foreground line-through">
-                          ${formatPrice(product.oldPrice)}
+                        <span className="text-2xl text-muted-foreground">
+                          Antes: <span className="line-through">${formatPrice(product.oldPrice)}</span>
                         </span>
                       )}
                       <div className="text-4xl font-bold text-primary">

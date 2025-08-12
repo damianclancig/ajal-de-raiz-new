@@ -141,12 +141,15 @@ export interface Order {
 
 export interface Service {
   id: string;
+  _id?: ObjectId;
+  icon: string;
   title: string;
   description: string;
-  icon: React.ElementType;
   details: string[];
   price: string;
   note?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface AppErrorLog {

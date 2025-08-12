@@ -4,6 +4,7 @@ import HeroBanner from "@/components/home/hero-banner";
 import ServicesSection from "@/components/home/services-section";
 import { getFeaturedProducts } from "@/lib/product-service";
 import { getActiveSlides } from "@/lib/slide-service";
+import { getAllServices } from "@/lib/service-service";
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,14 +13,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const featuredProducts = await getFeaturedProducts();
-  const slides = await getActiveSlides();
+  const [featuredProducts, slides, services] = await Promise.all([
+    getFeaturedProducts(),
+    getActiveSlides(),
+    getAllServices()
+  ]);
   
   return (
     <div className="space-y-12 md:space-y-16 lg:space-y-20">
       <HeroBanner slides={slides} />
       <FeaturedProducts products={featuredProducts} />
-      <ServicesSection />
+      <ServicesSection services={services} />
       <ContactSection />
     </div>
   );

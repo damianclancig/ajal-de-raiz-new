@@ -34,8 +34,8 @@ export default function ProductCard({ product, size = 'lg', onProductClick }: Pr
 
   const cardContent = (
     <>
-      <CardHeader className="p-0 relative">
-        <div className={cn("relative aspect-square w-full", isSoldOut && "opacity-50")}>
+       <CardHeader className="p-0">
+        <div className={cn("relative aspect-square w-full", isSoldOut && "opacity-60")}>
            {isSoldOut && (
             <Badge variant="destructive" className="absolute top-2 left-2 z-10">
               {t('Sold_Out')}
@@ -73,14 +73,14 @@ export default function ProductCard({ product, size = 'lg', onProductClick }: Pr
       )}>
         <div className="flex flex-col">
             {product.oldPrice && product.oldPrice > 0 && (
-                <span className={cn("text-muted-foreground line-through", size === 'lg' ? 'text-sm' : 'text-xs')}>
-                    ${formatPrice(product.oldPrice)}
+                <span className={cn("text-muted-foreground", size === 'lg' ? 'text-sm' : 'text-xs')}>
+                    Antes: <span className="line-through">${formatPrice(product.oldPrice)}</span>
                 </span>
             )}
             <p className={cn("font-bold text-primary", size === 'lg' ? 'text-lg' : 'text-base')}>${formatPrice(product.price)}</p>
         </div>
-        <Button asChild size="sm" variant="outline" className={cn(size === 'sm' && 'w-full')}>
-          <div>{t('View_Details')}</div>
+        <Button size="sm" variant="outline" className={cn(size === 'sm' && 'w-full')} tabIndex={-1}>
+            {t('View_Details')}
         </Button>
       </CardFooter>
     </>
@@ -90,9 +90,9 @@ export default function ProductCard({ product, size = 'lg', onProductClick }: Pr
     <Card className={cn(
       "flex flex-col overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
     )}>
-      <Link href={`/products/${product.slug}`} aria-label={`View details for ${product.name}`} onClick={onProductClick} className="flex flex-col flex-grow">
-        {cardContent}
-      </Link>
+        <Link href={`/products/${product.slug}`} aria-label={`View details for ${product.name}`} onClick={onProductClick} className="flex flex-col flex-grow">
+            {cardContent}
+        </Link>
     </Card>
   );
 }
