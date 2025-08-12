@@ -11,7 +11,7 @@
 
 ## Descripción
 
-**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
+**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
 
 La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
@@ -38,6 +38,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye un buscador de productos y carga infinita (scroll-driven) en la tabla para manejar grandes volúmenes de datos de forma eficiente.
+- **Gestión de Servicios (CRUD)**: Crea, edita y elimina los servicios ofrecidos en la página de inicio, incluyendo íconos, precios, descripciones y una lista de detalles.
 - **Gestión de Órdenes**:
   - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
   - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, montos y el ID de pago de MercadoPago.
