@@ -1,13 +1,13 @@
 
 'use client';
 
-import { useTransition, useState } from 'react';
+import { useTransition, useState, useEffect } from 'react';
 import { useCart } from '@/contexts/cart-context';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Loader2, Trash2, Wallet, Landmark, CreditCard, Building } from 'lucide-react';
+import { Loader2, Trash2, Wallet, Landmark, CreditCard, Building, Truck } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -21,12 +21,15 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
-import { createOrder } from '@/lib/actions';
+import { createOrder, calculateShipping } from '@/lib/actions';
 import { NO_IMAGE_URL } from '@/lib/utils';
 import type { PaymentMethod, User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import CompleteProfileForm from '@/components/auth/complete-profile-form';
 import { useNotification } from '@/contexts/notification-context';
+import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { cn } from '@/lib/utils';
 
 interface CartClientProps {
   user: User | null;
@@ -35,11 +38,24 @@ interface CartClientProps {
 export default function CartClient({ user }: CartClientProps) {
   const { cart, loading, updateQuantity, removeFromCart, clearCart } = useCart();
   const { t, language } = useLanguage();
-  const [isPending, startTransition] = useTransition();
+  const [isCheckoutPending, startCheckoutTransition] = useTransition();
+  const [isCalculatingShipping, startShippingTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
   const { refreshPendingCount } = useNotification();
+  
+  const [postalCode, setPostalCode] = useState(user?.address?.zipCode || '');
+  const [shippingCost, setShippingCost] = useState<number | null>(null);
+  const [shippingMessage, setShippingMessage] = useState<string>('');
+  const [shippingZone, setShippingZone] = useState<string>('');
+
+
+  useEffect(() => {
+    if (user?.address?.zipCode) {
+      setPostalCode(user.address.zipCode);
+    }
+  }, [user]);
 
   const formatPrice = (price: number) => {
     const locale = language === 'es' ? 'es-AR' : language;
@@ -51,7 +67,7 @@ export default function CartClient({ user }: CartClientProps) {
   };
 
   const handleCreateOrder = (paymentMethod: PaymentMethod) => {
-    startTransition(async () => {
+    startCheckoutTransition(async () => {
       const result = await createOrder(paymentMethod);
       if(result.success) {
         if(result.init_point) {
@@ -74,6 +90,26 @@ export default function CartClient({ user }: CartClientProps) {
       }
     });
   };
+  
+  const handleShippingCalculation = () => {
+    if (!postalCode) {
+        toast({ title: "Error", description: "Por favor, ingresa un código postal.", variant: "destructive" });
+        return;
+    }
+    startShippingTransition(async () => {
+        const result = await calculateShipping(postalCode, cart?.totalPrice || 0);
+        if (result.cost >= 0) {
+            setShippingCost(result.cost);
+            setShippingMessage(result.message);
+            setShippingZone(result.zoneName);
+        } else {
+            setShippingCost(null);
+            setShippingMessage(result.message);
+            setShippingZone('');
+            toast({ title: "Error de Envío", description: result.message, variant: "destructive" });
+        }
+    });
+  };
 
   const isAddressComplete = (user: User | null): boolean => {
     if (!user || !user.address) return false;
@@ -87,6 +123,8 @@ export default function CartClient({ user }: CartClientProps) {
       setIsAddressModalOpen(true);
     }
   }
+  
+  const finalTotal = (cart?.totalPrice || 0) + (shippingCost || 0);
 
   if (loading) {
     return (
@@ -185,13 +223,43 @@ export default function CartClient({ user }: CartClientProps) {
                 <span>{t('Subtotal')}</span>
                 <span>${formatPrice(cart.totalPrice)}</span>
               </div>
+               <div className="flex justify-between">
+                <span>Envío</span>
+                <span>{shippingCost !== null ? `$${formatPrice(shippingCost)}` : 'A calcular'}</span>
+              </div>
+               <Separator />
               <div className="flex justify-between font-bold text-lg">
                 <span>{t('Total')}</span>
-                <span>${formatPrice(cart.totalPrice)}</span>
+                <span>${formatPrice(finalTotal)}</span>
               </div>
+            </CardContent>
+             <CardFooter className="flex-col gap-4">
+                <div className="w-full space-y-2">
+                  <div className="flex gap-2">
+                    <Input 
+                      placeholder="Código Postal"
+                      value={postalCode}
+                      onChange={(e) => setPostalCode(e.target.value)}
+                      disabled={isCalculatingShipping}
+                    />
+                    <Button onClick={handleShippingCalculation} disabled={isCalculatingShipping}>
+                      {isCalculatingShipping ? <Loader2 className="animate-spin" /> : 'Calcular'}
+                    </Button>
+                  </div>
+                  {shippingMessage && (
+                    <Alert variant={shippingCost === 0 ? "default" : "destructive"} className={cn(
+                        shippingCost === 0 && 'border-green-500 bg-green-500/10 text-green-700',
+                        shippingZone.includes('Zona 2') && shippingCost > 0 && 'border-amber-500 bg-amber-500/10 text-amber-700 dark:text-amber-400'
+                    )}>
+                        <Truck className="h-4 w-4" />
+                        <AlertDescription className="text-xs">{shippingMessage}</AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+                 <Separator />
                <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button size="lg" className="w-full mt-4" onClick={handleCheckoutClick}>{t('Proceed_to_Checkout')}</Button>
+                    <Button size="lg" className="w-full" onClick={handleCheckoutClick}>{t('Proceed_to_Checkout')}</Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>
@@ -205,9 +273,9 @@ export default function CartClient({ user }: CartClientProps) {
                             variant="outline" 
                             className="w-full justify-start"
                             onClick={() => handleCreateOrder('Efectivo')}
-                            disabled={isPending}
+                            disabled={isCheckoutPending}
                         >
-                           {isPending ? (
+                           {isCheckoutPending ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                             <Wallet className="mr-2 h-4 w-4" />
@@ -218,9 +286,9 @@ export default function CartClient({ user }: CartClientProps) {
                             variant="outline" 
                             className="w-full justify-start"
                             onClick={() => handleCreateOrder('Transferencia Bancaria')}
-                            disabled={isPending}
+                            disabled={isCheckoutPending}
                         >
-                           {isPending ? (
+                           {isCheckoutPending ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                             <Landmark className="mr-2 h-4 w-4" />
@@ -231,9 +299,9 @@ export default function CartClient({ user }: CartClientProps) {
                             variant="outline" 
                             className="w-full justify-start"
                             onClick={() => handleCreateOrder('MercadoPago')}
-                            disabled={isPending}
+                            disabled={isCheckoutPending}
                         >
-                           {isPending ? (
+                           {isCheckoutPending ? (
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             ) : (
                             <CreditCard className="mr-2 h-4 w-4" />
@@ -271,7 +339,7 @@ export default function CartClient({ user }: CartClientProps) {
                     </div>
                   </AlertDialogContent>
                 </AlertDialog>
-            </CardContent>
+            </CardFooter>
           </Card>
         </div>
       </div>

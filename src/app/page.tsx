@@ -1,7 +1,9 @@
+
 import ContactSection from "@/components/home/contact-section";
 import FeaturedProducts from "@/components/home/featured-products";
 import HeroBanner from "@/components/home/hero-banner";
 import ServicesSection from "@/components/home/services-section";
+import ShippingZonesSection from "@/components/home/shipping-zones-section";
 import { getFeaturedProducts } from "@/lib/product-service";
 import { getActiveSlides } from "@/lib/slide-service";
 import { getAllServices } from "@/lib/service-service";
@@ -25,6 +27,7 @@ export default async function Home() {
       <FeaturedProducts products={featuredProducts} />
       <ServicesSection services={services} />
       <ContactSection />
+      <ShippingZonesSection />
     </div>
   );
 }

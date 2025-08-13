@@ -15,6 +15,7 @@ import { auth, signIn } from '@/auth';
 import { getOrderById, getPendingPaymentOrdersCount } from './order-service';
 import { createPreference } from './mercadopago-service';
 import { getCurrentUser } from './user-service';
+import { zones } from './shipping-zones';
 
 type ActionResponse = {
   success: boolean;
@@ -1173,4 +1174,63 @@ export async function cancelOrder(orderId: string): Promise<ActionResponse> {
     return { success: true, message: 'El pedido ha sido cancelado exitosamente.' };
 }
 
+const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: 'ARS',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    }).format(amount);
+};
+
+
+// SHIPPING ACTIONS
+export async function calculateShipping(
+    postalCode: string, 
+    cartTotal: number
+): Promise<{cost: number; message: string, zoneName: string}> {
+
+    const numericPostalCode = parseInt(postalCode, 10);
+    if (isNaN(numericPostalCode)) {
+        return { cost: -1, message: 'Código postal inválido.', zoneName: '' };
+    }
+
+    const zone = zones.find(z => z.cps.includes(numericPostalCode));
+
+    if (!zone) {
+        // For now, return a default for zones not explicitly listed, like Zona 4
+        const defaultZone = zones.find(z => z.zona === 4);
+        if (defaultZone) {
+            // Logic for a zone based on weight, assuming a default weight for now.
+            // This part can be expanded later.
+             if (cartTotal >= defaultZone.gratisDesde) {
+                return { cost: 0, message: `¡Felicidades! Tu envío a ${defaultZone.nombre} es gratis.`, zoneName: defaultZone.nombre };
+            }
+            const calculatedCost = defaultZone.precioPorKg * defaultZone.minKg;
+            return { cost: calculatedCost, message: `Envío a ${defaultZone.nombre}`, zoneName: defaultZone.nombre };
+        }
+        return { cost: -1, message: 'No se pudo calcular el envío para este código postal.', zoneName: '' };
+    }
+
+    if (zone.gratisDesde > 0 && cartTotal >= zone.gratisDesde) {
+        return { cost: 0, message: `¡Felicidades! Tu envío a ${zone.nombre} es gratis.`, zoneName: zone.nombre };
+    }
     
+    if (zone.precio !== undefined) {
+         const remainingForFreeShipping = zone.gratisDesde - cartTotal;
+         const message = zone.gratisDesde > 0 ? `Costo de envío a ${zone.nombre}. ¡Agregá ${formatCurrency(remainingForFreeShipping)} más para obtener envío gratis!` : `Envío a ${zone.nombre}`;
+        return { cost: zone.precio, message, zoneName: zone.nombre };
+    }
+    
+    // Placeholder for weight-based calculation. For now, we use the minimum.
+    if (zone.precioPorKg && zone.minKg) {
+         const remainingForFreeShipping = zone.gratisDesde - cartTotal;
+         const message = `Costo de envío a ${zone.nombre}. ¡Agregá ${formatCurrency(remainingForFreeShipping)} más para obtener envío gratis!`;
+        const calculatedCost = zone.precioPorKg * zone.minKg;
+        return { cost: calculatedCost, message, zoneName: zone.nombre };
+    }
+
+    return { cost: -1, message: 'No se pudo determinar el costo de envío.', zoneName: '' };
+}
+    
+
