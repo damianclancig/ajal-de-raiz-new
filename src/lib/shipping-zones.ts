@@ -15,14 +15,15 @@ export interface ShippingZone {
 export const zones: ShippingZone[] = [
   {
     zona: 1,
-    nombre: "Zona 1 – Local",
+    nombre: "Zona 1 – Partido de Quilmes",
     precio: 0,
     gratisDesde: 0,
-    cps: [1876, 1878, 1879, 1882], // Bernal, Don Bosco, Quilmes, Ezpeleta
+    cps: [1876, 1878, 1879, 1881, 1882], // Bernal, Don Bosco, Quilmes, Solano, Ezpeleta
     cobertura: [
         "Bernal (1876)",
         "Don Bosco (1878)",
         "Quilmes (1879)",
+        "San Fco. Solano (1881)",
         "Ezpeleta (1882)"
     ],
     priceDetails: [
