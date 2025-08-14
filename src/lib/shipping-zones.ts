@@ -36,30 +36,49 @@ export const zones: ShippingZone[] = [
     precio: 16400,
     gratisDesde: 30000,
     cps: [
-        1875, // Wilde
-        1872, // Sarandí
+        // Avellaneda
         1870, // Avellaneda Centro
-        1874, // Piñeyro (Avellaneda)
+        1871, // Dock Sud
+        1872, // Sarandí
+        1874, // Piñeyro
+        1875, // Wilde
+        // Lanús
+        1822, // Valentín Alsina
+        1823, // Gerli
         1824, // Lanús Oeste
+        1825, // Remedios de Escalada
         1826, // Lanús Este
-        1825, // Monte Chingolo
+        // Lomas de Zamora
+        1828, // Banfield
         1832, // Lomas de Zamora
         1834, // Temperley
-        1846, // San José (Almirante Brown)
+        1836, // Llavallol
+        1838, // Turdera
+        // Almirante Brown
+        1846, // Adrogué, San José
         1847, // Rafael Calzada
+        1849, // Claypole
+        1850, // Don Orione
+        1852, // Burzaco
+        // Florencio Varela
         1888, // Florencio Varela
-        1889, // Ing. Allan (Florencio Varela)
+        1889, // Bosques
+        1890, // Cruce Varela
+        // Berazategui
         1884, // Berazategui
-        1885, // G.E. Hudson (Berazategui)
-        1886, // Plátanos (Berazategui)
+        1885, // G.E. Hudson
+        1886, // Plátanos
+        1891, // Villa España
+        1893, // Ranelagh
+        1894, // Sourigues
     ],
     cobertura: [
-        "Avellaneda (Wilde, Sarandí)",
-        "Lanús (Lanús, Monte Chingolo)",
-        "Lomas de Zamora (Lomas, Temperley)",
-        "Almirante Brown (San José, R. Calzada)",
-        "Berazategui (Berazategui, Hudson)",
-        "Florencio Varela",
+        "Avellaneda (Completo)",
+        "Lanús (Completo)",
+        "Lomas de Zamora (Completo)",
+        "Alte. Brown (Adrogué, Burzaco, Calzada, etc.)",
+        "Berazategui (Centro, Hudson, Plátanos, etc.)",
+        "Florencio Varela (Centro, Bosques, etc.)",
     ],
     priceDetails: [
         "Costo fijo de $16.400 (hasta 5 kg).",
