@@ -225,7 +225,13 @@ export default function CartClient({ user }: CartClientProps) {
               </div>
                <div className="flex justify-between">
                 <span>Envío</span>
-                <span>{shippingCost !== null ? `$${formatPrice(shippingCost)}` : 'A calcular'}</span>
+                <span>
+                  {shippingCost !== null
+                    ? shippingCost === 0
+                      ? 'Gratis!'
+                      : `$${formatPrice(shippingCost)}`
+                    : 'A calcular'}
+                </span>
               </div>
                <Separator />
               <div className="flex justify-between font-bold text-lg">
