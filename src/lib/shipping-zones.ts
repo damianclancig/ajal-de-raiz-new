@@ -35,13 +35,31 @@ export const zones: ShippingZone[] = [
     nombre: "Zona 2 – GBA cercano",
     precio: 16400,
     gratisDesde: 30000,
-    cps: [1875, 1870, 1872, 1874, 1824, 1884, 1886, 1888, 1889], // Wilde, Avellaneda, Lanús, Berazategui, F. Varela
+    cps: [
+        1875, // Wilde
+        1872, // Sarandí
+        1870, // Avellaneda Centro
+        1874, // Piñeyro (Avellaneda)
+        1824, // Lanús Oeste
+        1826, // Lanús Este
+        1825, // Monte Chingolo
+        1832, // Lomas de Zamora
+        1834, // Temperley
+        1846, // San José (Almirante Brown)
+        1847, // Rafael Calzada
+        1888, // Florencio Varela
+        1889, // Ing. Allan (Florencio Varela)
+        1884, // Berazategui
+        1885, // G.E. Hudson (Berazategui)
+        1886, // Plátanos (Berazategui)
+    ],
     cobertura: [
-        "Wilde (1875)",
-        "Avellaneda (1870, 1872, 1874)",
-        "Lanús (1824)",
-        "Berazategui (1884, 1886, 1888)",
-        "Florencio Varela (1888, 1889)",
+        "Avellaneda (Wilde, Sarandí)",
+        "Lanús (Lanús, Monte Chingolo)",
+        "Lomas de Zamora (Lomas, Temperley)",
+        "Almirante Brown (San José, R. Calzada)",
+        "Berazategui (Berazategui, Hudson)",
+        "Florencio Varela",
     ],
     priceDetails: [
         "Costo fijo de $16.400 (hasta 5 kg).",
