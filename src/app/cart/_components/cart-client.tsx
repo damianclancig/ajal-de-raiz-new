@@ -111,6 +111,13 @@ export default function CartClient({ user }: CartClientProps) {
     });
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent form submission if it's inside a form
+      handleShippingCalculation();
+    }
+  };
+
   const isAddressComplete = (user: User | null): boolean => {
     if (!user || !user.address) return false;
     const { street, city, province, country } = user.address;
@@ -226,11 +233,15 @@ export default function CartClient({ user }: CartClientProps) {
                <div className="flex justify-between">
                 <span>Envío</span>
                 <span>
-                  {shippingCost !== null
-                    ? shippingCost === 0
-                      ? 'Gratis!'
-                      : `$${formatPrice(shippingCost)}`
-                    : 'A calcular'}
+                  {shippingCost !== null ? (
+                    shippingCost === 0 ? (
+                      <span className="font-bold text-green-600 dark:text-green-500">Gratis!</span>
+                    ) : (
+                      `$${formatPrice(shippingCost)}`
+                    )
+                  ) : (
+                    'A calcular'
+                  )}
                 </span>
               </div>
                <Separator />
@@ -246,6 +257,7 @@ export default function CartClient({ user }: CartClientProps) {
                       placeholder="Código Postal"
                       value={postalCode}
                       onChange={(e) => setPostalCode(e.target.value)}
+                      onKeyDown={handleKeyDown}
                       disabled={isCalculatingShipping}
                     />
                     <Button onClick={handleShippingCalculation} disabled={isCalculatingShipping}>
