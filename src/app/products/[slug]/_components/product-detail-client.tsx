@@ -14,6 +14,8 @@ import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import CareInstructions from '@/components/products/care-instructions';
 
 export default function ProductDetailClient({ product }: { product: Product }) {
   const [selectedMedia, setSelectedMedia] = useState<string>(product.images[0]);
@@ -114,7 +116,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           )}
         </div>
 
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-col justify-start gap-6">
             <Card>
                 <CardHeader>
                     <div className="flex justify-between items-start">
@@ -128,7 +130,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <p className="text-lg text-muted-foreground">{product.description}</p>
+                    <p className="text-lg text-muted-foreground whitespace-pre-line">{product.description}</p>
                     
                     <div className="flex flex-col items-end">
                       {product.oldPrice && product.oldPrice > 0 && (
@@ -164,6 +166,16 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                     )}
                 </CardContent>
             </Card>
+            {product.care && (
+              <Accordion type="single" collapsible className="w-full" defaultValue="item-1">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger className="text-xl font-headline">Cuidados Esenciales</AccordionTrigger>
+                  <AccordionContent>
+                    <CareInstructions text={product.care} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            )}
         </div>
       </div>
     </div>

@@ -15,6 +15,7 @@ import { auth, signIn } from '@/auth';
 import { getOrderById, getPendingPaymentOrdersCount } from './order-service';
 import { createPreference } from './mercadopago-service';
 import { getCurrentUser } from './user-service';
+import { shippingZones } from './shipping-zones';
 
 type ActionResponse = {
   success: boolean;
@@ -26,6 +27,9 @@ type ActionResponse = {
   cart?: PopulatedCart | null;
   order?: Order | null;
   init_point?: string;
+  shippingCost?: number;
+  shippingMessage?: string;
+  zone?: number;
 };
 
 // Helper function to create a URL-friendly slug
@@ -73,6 +77,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
       name: name,
       slug: slug,
       description: formData.get('description') as string || '',
+      care: formData.get('care') as string || '',
       category: formData.get('category') as string || 'Uncategorized',
       price: price,
       oldPrice: !isNaN(oldPrice) && oldPrice > 0 ? oldPrice : undefined,
@@ -132,6 +137,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
     const updateFields: { [key: string]: any } = {
       name: name,
       description: formData.get('description') as string,
+      care: formData.get('care') as string || '',
       category: formData.get('category') as string,
       price: price,
       images: images,
@@ -193,7 +199,7 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
     
     const updatedProductDoc = await productsCollection.findOne({_id: new ObjectId(productId)});
     const productFromDoc = (doc: any): Product => ({
-        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(), oldPrice: doc.oldPrice,
+        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, care: doc.care, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(), oldPrice: doc.oldPrice,
     });
     const updatedProduct = productFromDoc(updatedProductDoc);
 
@@ -342,7 +348,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
         }
 
     } catch (error) {
-        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        const message = error instanceof Error ? error.message : 'Failed to update profile: ${message}';
         return { success: false, message: `Failed to update profile: ${message}` };
     }
 
@@ -1173,4 +1179,53 @@ export async function cancelOrder(orderId: string): Promise<ActionResponse> {
     return { success: true, message: 'El pedido ha sido cancelado exitosamente.' };
 }
 
+
+// SHIPPING CALCULATION
+export async function calculateShipping(zipCode: string, cartTotal: number): Promise<ActionResponse> {
+    if (!zipCode || zipCode.length < 4) {
+        return { success: false, message: "Por favor, ingresa un código postal válido." };
+    }
+    const cp = parseInt(zipCode, 10);
+    if (isNaN(cp)) {
+        return { success: false, message: "El código postal debe ser numérico." };
+    }
+
+    const zone = shippingZones.find(z => z.cps.includes(cp));
+
+    if (!zone) {
+        // Default to Zona 4 if not found in specific zones 1-3
+        const zone4 = shippingZones.find(z => z.zona === 4);
+        if (zone4) {
+            return { 
+                success: true, 
+                message: "Envío al resto del país. El costo se calculará al finalizar la compra.", 
+                shippingCost: 0, // Cannot calculate automatically yet
+                zone: 4
+            };
+        }
+        return { success: false, message: "No se encontró una zona de envío para este código postal." };
+    }
+
+    let shippingCost = 0;
+    let shippingMessage = "";
+
+    if (zone.gratisDesde && cartTotal >= zone.gratisDesde) {
+        shippingCost = 0;
+        shippingMessage = "¡Felicidades! Tu envío es gratis.";
+    } else {
+        shippingCost = zone.precio || 0;
+        if (zone.gratisDesde) {
+            const remainingForFreeShipping = zone.gratisDesde - cartTotal;
+            const formattedRemaining = new Intl.NumberFormat('es-AR', {
+                style: 'currency',
+                currency: 'ARS',
+            }).format(remainingForFreeShipping);
+            shippingMessage = `Costo de envío para Zona ${zone.zona}: $${shippingCost.toFixed(2)}. ¡Agrega ${formattedRemaining} más para obtener envío gratis!`;
+        } else {
+            shippingMessage = `Envío para Zona ${zone.zona} (Local): ¡Gratis!`;
+        }
+    }
+    
+    return { success: true, message: shippingMessage, shippingCost, zone: zone.zona };
+}
     

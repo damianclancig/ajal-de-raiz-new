@@ -19,6 +19,7 @@ export interface Product {
   numReviews: number;
   countInStock: number;
   description: string;
+  care?: string;
   isFeatured: boolean;
   state: ProductState;
   dataAiHint: string;
