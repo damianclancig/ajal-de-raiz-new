@@ -20,11 +20,12 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 ### Para Usuarios
 
 - **Catálogo de Productos con Carga Infinita**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo. Los productos se cargan a medida que el usuario hace scroll, garantizando un rendimiento óptimo incluso con catálogos muy grandes.
-- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente.
-- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y disponibilidad de stock.
+- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente y **los filtros se reflejan en la URL**, permitiendo compartir vistas específicas.
+- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y una sección dedicada de **"Cuidados Esenciales"** con formato enriquecido para una fácil lectura.
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
+  - **Cálculo de Envío por Zonas**: El sistema calcula automáticamente el costo de envío basado en el código postal, cubriendo CABA, GBA (Norte, Oeste, Sur) y La Plata, con opciones de envío gratuito según el monto de la compra.
   - **Proceso de Pedido Inteligente**: Al finalizar la compra, si los datos de domicilio están incompletos, el sistema solicitará la información necesaria para continuar con el pago. Elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
   - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción. Para pagos con MercadoPago, puedes reintentar un pago si falló y, una vez aprobado, ver los detalles de la transacción (método de pago, cuotas, etc.).
 - **Autenticación y Perfil Completo**:
@@ -38,6 +39,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye un buscador de productos y carga infinita (scroll-driven) en la tabla para manejar grandes volúmenes de datos de forma eficiente.
+- **Campo de "Cuidados del Producto"**: Un campo de texto multilínea dedicado para añadir instrucciones de cuidado. Utiliza símbolos (`*`, `-`, `+`) que se convierten automáticamente en íconos y viñetas en la página del producto para una presentación clara y atractiva.
 - **Gestión de Servicios (CRUD)**: Crea, edita y elimina los servicios ofrecidos en la página de inicio, incluyendo íconos, precios, descripciones y una lista de detalles.
 - **Gestión de Órdenes**:
   - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
@@ -48,7 +50,10 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
     - **Vista Desplegable**: Visualiza todos los usuarios registrados en una lista interactiva. Cada usuario se puede expandir para mostrar sus datos de contacto y dirección completa.
     - **Edición Total**: Edita toda la información del perfil de un usuario, incluyendo nombre, teléfono, dirección de envío y rol de administrador.
 - **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
-- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
+- **Gestión de Novedades (Slides) Avanzada**: Administra el carrusel de la página de inicio para destacar promociones.
+    - **Contenido Separado**: Gestiona el título y el subtítulo como texto independiente de la imagen de fondo.
+    - **Formato de Texto**: Utiliza símbolos (`*`, `_`, `-`) en el subtítulo para aplicar negrita, subrayado o tachado automáticamente.
+    - **Enlace de Botón Personalizable**: Define un enlace específico para el botón de cada slide, dirigiendo a los usuarios a un producto o categoría en particular.
 - **Centro de Logs de Errores**: Una sección dedicada para visualizar errores de la aplicación en producción, incluyendo stack traces y metadatos, para un diagnóstico y resolución de problemas eficiente.
 
 ## Stack Tecnológico
@@ -180,3 +185,5 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+    

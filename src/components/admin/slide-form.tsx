@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useTransition } from 'react';
@@ -12,7 +13,7 @@ import { Loader2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { createSlide, updateSlide } from '@/lib/actions';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import Link from 'next/link';
 import SingleImageUploader from './single-image-uploader';
 
@@ -60,7 +61,17 @@ export default function SlideForm({ slide }: SlideFormProps) {
             </div>
             <div>
               <Label htmlFor="subtext">{t('Subtext')}</Label>
-              <Textarea id="subtext" name="subtext" defaultValue={slide?.subtext || ''} />
+              <Textarea id="subtext" name="subtext" defaultValue={slide?.subtext || ''} rows={4} />
+              <p className="text-xs text-muted-foreground pt-1">
+                Para dar formato: usa *texto* para <b>negrita</b>, _texto_ para <u>subrayar</u>, y -texto- para <span className="line-through">tachar</span>.
+              </p>
+            </div>
+             <div>
+                <Label htmlFor="buttonLink">Enlace del Botón (Opcional)</Label>
+                <Input id="buttonLink" name="buttonLink" defaultValue={slide?.buttonLink || ''} placeholder="/products/nombre-del-producto" />
+                <p className="text-xs text-muted-foreground pt-1">
+                    Si se deja vacío, el botón enlazará al catálogo general de productos.
+                </p>
             </div>
             <div>
               <Label htmlFor="state">{t('State')}</Label>
@@ -79,6 +90,9 @@ export default function SlideForm({ slide }: SlideFormProps) {
             <Label htmlFor="image">{t('Image')}</Label>
             <div className="max-w-sm mx-auto">
               <SingleImageUploader name="image" defaultValue={slide?.image} folder={UPLOAD_FOLDER} />
+              <p className="text-xs text-muted-foreground pt-2 text-center">
+                Se recomienda subir una imagen con una resolución de 1920x1080 píxeles para una visualización óptima en pantallas grandes.
+              </p>
             </div>
           </div>
         </CardContent>

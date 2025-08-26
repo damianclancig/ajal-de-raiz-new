@@ -1,7 +1,7 @@
 import { getAvailableProducts } from '@/lib/product-service';
 import { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://www.ajalderaiz.com';
+const BASE_URL = 'https://www.ajalderaiz.com.ar';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all products
