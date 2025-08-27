@@ -1,5 +1,5 @@
 
-# Ajal de Raiz - Vivero & Jardinería E-commerce
+# Ajal de Raíz - Vivero & Jardinería E-commerce
 
 <p align="center">
   <img src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754490326/ajal-de-raiz/logo-min_ycwot1.png" alt="Ajal de Raiz Logo" width="150">
@@ -31,6 +31,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Autenticación y Perfil Completo**:
   - **Registro en Dos Pasos**: Un sistema de registro que primero captura los datos básicos y luego ofrece completar el perfil con información de envío.
   - **Gestión de Perfil ("Mi Perfil")**: Los usuarios pueden editar su nombre, teléfono, dirección de envío y subir una foto de perfil personalizada, optimizada para un rendimiento eficiente.
+- **Página "Sobre Nosotros"**: Una sección dedicada a contar la historia de la marca, conectando emocionalmente con los visitantes e invitándolos a explorar los productos.
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
@@ -185,5 +186,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
     
