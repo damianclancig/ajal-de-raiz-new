@@ -76,7 +76,7 @@ export const translations = {
   'Send_Message': { en: 'Send Message', es: 'Enviar Mensaje', pt: 'Enviar Mensagem' },
   'Lets_Talk': { en: "Let's talk?", es: "¿Hablamos?", pt: "Vamos conversar?" },
   'Web_design_and_development_by': { en: 'Web design and development by', es: 'Diseño y desarrollo web por', pt: 'Design e desenvolvimento web por' },
-  'Our_Social_Networks': { en: 'Our Social Networks', es: 'Nuestras Redes Sociais', pt: 'Nossas Redes Sociais' },
+  'Our_Social_Networks': { en: 'Our Social Networks', es: 'Nuestras Redes Sociales', pt: 'Nossas Redes Sociais' },
   
   // Products Page
   'Our_Collection': { en: 'Our Collection', es: 'Nuestra Colección', pt: 'Nossa Coleção' },

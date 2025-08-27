@@ -45,7 +45,7 @@ export default function AboutPage() {
               </div>
             </AnimatedContent>
           </div>
-          <div className="w-full md:w-3/5 font-headline text-lg md:text-xl text-foreground/80 space-y-4">
+          <div className="w-full md:w-3/5 font-story text-lg md:text-xl text-foreground/80 space-y-4">
             <AnimatedContent>
               <p>
                 Ajal de Raíz es más que una tienda de plantas; es un proyecto que
@@ -81,7 +81,7 @@ export default function AboutPage() {
               </div>
             </AnimatedContent>
           </div>
-          <div className="w-full md:w-3/5 font-headline text-lg md:text-xl text-foreground/80 space-y-4">
+          <div className="w-full md:w-3/5 font-story text-lg md:text-xl text-foreground/80 space-y-4">
             <AnimatedContent>
               <p>
                 Nos apasiona ofrecer una selección cuidada de suculentas, cactus,
@@ -110,7 +110,7 @@ export default function AboutPage() {
               </div>
             </AnimatedContent>
           </div>
-          <div className="w-full md:w-3/5 font-headline text-lg md:text-xl text-foreground/80 space-y-4">
+          <div className="w-full md:w-3/5 font-story text-lg md:text-xl text-foreground/80 space-y-4">
             <AnimatedContent>
               <p>
                 Queremos que este espacio sea una invitación a crear tu propio rincón

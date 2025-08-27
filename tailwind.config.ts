@@ -19,6 +19,7 @@ export default {
       fontFamily: {
         body: ['"PT Sans"', 'sans-serif'],
         headline: ['Belleza', 'sans-serif'],
+        story: ['"Cormorant Garamond"', 'serif'],
       },
       colors: {
         background: 'hsl(var(--background))',
