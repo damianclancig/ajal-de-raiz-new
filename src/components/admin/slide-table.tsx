@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import React, { useState, useTransition } from 'react';
@@ -24,7 +25,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Trash2, Link as LinkIcon } from 'lucide-react';
 import { Card, CardContent } from '../ui/card';
 import Image from 'next/image';
 import { deleteSlide } from '@/lib/actions';
@@ -32,6 +33,21 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { NO_IMAGE_URL } from '@/lib/utils';
+
+// Helper function to parse simple markdown-like formatting
+const parseSubtext = (text: string) => {
+    if (!text) return '';
+
+    const html = text
+        .replace(/\*(.*?)\*/g, '<strong>$1</strong>')
+        .replace(/_(.*?)_/g, '<u>$1</u>')
+        .replace(/-(.*?)-/g, '<s>$1</s>');
+
+    return React.createElement('div', {
+        className: 'whitespace-normal break-words',
+        dangerouslySetInnerHTML: { __html: html }
+    });
+};
 
 interface SlideTableProps {
   initialSlides: HeroSlide[];
@@ -64,6 +80,7 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
               <TableHead className="w-[80px]">{t('Image')}</TableHead>
               <TableHead>{t('Headline')}</TableHead>
               <TableHead className="hidden md:table-cell max-w-[300px]">{t('Subtext')}</TableHead>
+              <TableHead className="hidden md:table-cell">Enlace</TableHead>
               <TableHead>{t('State')}</TableHead>
               <TableHead className="text-center">{t('Actions')}</TableHead>
             </TableRow>
@@ -88,7 +105,17 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
                       </div>
                     </TableCell>
                     <TableCell className="hidden md:table-cell font-medium">{slide.headline}</TableCell>
-                    <TableCell className="hidden md:table-cell max-w-[300px] truncate" title={slide.subtext}>{slide.subtext}</TableCell>
+                    <TableCell className="hidden md:table-cell max-w-[300px] truncate" title={slide.subtext}>{parseSubtext(slide.subtext)}</TableCell>
+                    <TableCell className="hidden md:table-cell">
+                        {slide.buttonLink ? (
+                            <a href={slide.buttonLink} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-primary hover:underline text-sm truncate" title={slide.buttonLink}>
+                                <LinkIcon className="h-3 w-3 flex-shrink-0"/>
+                                {slide.buttonLink}
+                            </a>
+                        ) : (
+                            <span className="text-muted-foreground text-sm">/products</span>
+                        )}
+                    </TableCell>
                     <TableCell className="hidden md:table-cell">
                         <Badge variant={slide.state === 'habilitado' ? 'default' : 'secondary'}>
                           {t(slide.state as 'habilitado' | 'deshabilitado')}
@@ -136,7 +163,7 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
                             </div>
                             <div className="flex-grow pt-1 min-w-0">
                                 <div className="font-medium whitespace-normal break-words">{slide.headline}</div>
-                                <div className="text-xs text-muted-foreground whitespace-normal break-words">{slide.subtext}</div>
+                                <div className="text-xs text-muted-foreground">{parseSubtext(slide.subtext)}</div>
                                 <div className="mt-2">
                                      <Badge variant={slide.state === 'habilitado' ? 'default' : 'secondary'}>
                                         {t(slide.state as 'habilitado' | 'deshabilitado')}

@@ -10,6 +10,10 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Crear Cuenta",
     description: "Regístrate en Ajal de Raiz para empezar a comprar y guardar tus productos favoritos.",
+    robots: {
+        index: false, // No index register pages
+        follow: false,
+    }
 };
 
 const getLanguage = () => {

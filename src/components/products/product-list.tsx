@@ -15,6 +15,8 @@ import { Skeleton } from '../ui/skeleton';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { useInView } from 'react-intersection-observer';
 import { getPaginatedProducts } from '@/lib/actions';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 const PRODUCTS_PER_PAGE = 12;
 
@@ -25,49 +27,64 @@ interface ProductListProps {
 
 type ViewMode = 'grid-lg' | 'grid-sm' | 'list';
 
-const SESSION_STORAGE_KEY = 'productListState';
-
 export default function ProductList({ products: initialProducts, initialCategories }: ProductListProps) {
   const { t } = useLanguage();
-  
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [offset, setOffset] = useState(initialProducts.length);
   const [hasMore, setHasMore] = useState(initialProducts.length === PRODUCTS_PER_PAGE);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('All');
-  const [sortOrder, setSortOrder] = useState('name_asc');
-  const [viewMode, setViewMode] = useState<ViewMode>('grid-lg');
+  // Initialize state from URL or use defaults
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('q') || '');
+  const [category, setCategory] = useState(searchParams.get('category') || 'All');
+  const [sortOrder, setSortOrder] = useState(searchParams.get('sort') || 'name_asc');
+  const [viewMode, setViewMode] = useState<ViewMode>((searchParams.get('view') as ViewMode) || 'grid-lg');
 
   const { ref: loadMoreRef, inView } = useInView();
-  const listRef = useRef<HTMLDivElement>(null);
+  
+  const createQueryString = useCallback(
+    (paramsToUpdate: Record<string, string>) => {
+      const params = new URLSearchParams(searchParams.toString());
+      Object.entries(paramsToUpdate).forEach(([key, value]) => {
+          if (value) {
+            params.set(key, value);
+          } else {
+            params.delete(key);
+          }
+      });
+      return params.toString();
+    },
+    [searchParams]
+  );
+  
+  const debouncedUpdateUrl = useDebouncedCallback((params) => {
+      router.push(`${pathname}?${createQueryString(params)}`, { scroll: false });
+  }, 300);
 
-  // Restore state from sessionStorage on component mount
-  useEffect(() => {
-    try {
-      const savedState = sessionStorage.getItem(SESSION_STORAGE_KEY);
-      if (savedState) {
-        const { searchTerm, category, sortOrder, viewMode } = JSON.parse(savedState);
-        setSearchTerm(searchTerm || '');
-        setCategory(category || 'All');
-        setSortOrder(sortOrder || 'name_asc');
-        setViewMode(viewMode || 'grid-lg');
-      }
-    } catch (e) {
-      console.error("Failed to parse session storage state", e);
+  const handleFilterChange = (type: 'q' | 'category' | 'sort' | 'view', value: string) => {
+    switch(type) {
+      case 'q':
+        setSearchTerm(value);
+        debouncedUpdateUrl({ q: value });
+        break;
+      case 'category':
+        setCategory(value);
+        router.push(`${pathname}?${createQueryString({ category: value === 'All' ? '' : value })}`, { scroll: false });
+        break;
+      case 'sort':
+        setSortOrder(value);
+        router.push(`${pathname}?${createQueryString({ sort: value === 'name_asc' ? '' : value })}`, { scroll: false });
+        break;
+      case 'view':
+        setViewMode(value as ViewMode);
+        router.push(`${pathname}?${createQueryString({ view: value === 'grid-lg' ? '' : value })}`, { scroll: false });
+        break;
     }
-  }, []);
-
-  // Save state to sessionStorage whenever it changes
-  useEffect(() => {
-    try {
-      const stateToSave = { searchTerm, category, sortOrder, viewMode };
-      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(stateToSave));
-    } catch (e) {
-      console.error("Failed to set session storage state", e);
-    }
-  }, [searchTerm, category, sortOrder, viewMode]);
+  };
 
 
   const loadProducts = useCallback(async (isNewSearch = false) => {
@@ -77,9 +94,9 @@ export default function ProductList({ products: initialProducts, initialCategori
     const result = await getPaginatedProducts({
       limit: PRODUCTS_PER_PAGE,
       offset: currentOffset,
-      searchTerm,
-      category,
-      sortOrder,
+      searchTerm: searchParams.get('q') || '',
+      category: searchParams.get('category') || 'All',
+      sortOrder: searchParams.get('sort') || 'name_asc',
       state: 'activo'
     });
 
@@ -93,7 +110,7 @@ export default function ProductList({ products: initialProducts, initialCategori
       setHasMore(result.products.length === PRODUCTS_PER_PAGE);
     }
     setIsLoading(false);
-  }, [offset, searchTerm, category, sortOrder]);
+  }, [offset, searchParams]);
 
 
   // Effect to load more products when the sentinel is in view
@@ -104,22 +121,11 @@ export default function ProductList({ products: initialProducts, initialCategori
   }, [inView, isLoading, hasMore, loadProducts]);
 
 
-  // Effect to handle new searches when filters change
+  // Effect to handle new searches when URL params change
   useEffect(() => {
-    const handler = setTimeout(() => {
-        loadProducts(true);
-    }, 300); // Debounce
-    return () => clearTimeout(handler);
-  }, [searchTerm, category, sortOrder]);
+    loadProducts(true);
+  }, [searchParams]);
 
-
-  const handleProductClick = () => {
-    try {
-        sessionStorage.setItem(`${SESSION_STORAGE_KEY}_scrollPos`, window.scrollY.toString());
-    } catch (error) {
-        console.error("Could not access session storage:", error);
-    }
-  };
 
   const ProductListSkeleton = () => (
     <div className={cn({
@@ -151,7 +157,7 @@ export default function ProductList({ products: initialProducts, initialCategori
             <Input
               placeholder={t('Search_products')}
               value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
+              onChange={e => handleFilterChange('q', e.target.value)}
               className="pl-10"
             />
         </div>
@@ -165,7 +171,7 @@ export default function ProductList({ products: initialProducts, initialCategori
                  </AccordionTrigger>
                  <AccordionContent>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-2">
-                        <Select value={category} onValueChange={setCategory}>
+                        <Select value={category} onValueChange={(value) => handleFilterChange('category', value)}>
                             <SelectTrigger className="w-full">
                             <SelectValue placeholder={t('Filter_by_category')} />
                             </SelectTrigger>
@@ -177,7 +183,7 @@ export default function ProductList({ products: initialProducts, initialCategori
                             ))}
                             </SelectContent>
                         </Select>
-                        <Select value={sortOrder} onValueChange={setSortOrder}>
+                        <Select value={sortOrder} onValueChange={(value) => handleFilterChange('sort', value)}>
                             <SelectTrigger className="w-full">
                             <SelectValue placeholder={t('Sort_by')} />
                             </SelectTrigger>
@@ -189,13 +195,13 @@ export default function ProductList({ products: initialProducts, initialCategori
                             </SelectContent>
                         </Select>
                         <div className="flex items-center justify-center gap-1 bg-muted p-1 rounded-md">
-                            <Button variant={viewMode === 'grid-lg' ? 'secondary' : 'ghost'} size="icon" onClick={() => setViewMode('grid-lg')}>
+                            <Button variant={viewMode === 'grid-lg' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleFilterChange('view', 'grid-lg')}>
                             <LayoutGrid className="h-5 w-5" />
                             </Button>
-                            <Button variant={viewMode === 'grid-sm' ? 'secondary' : 'ghost'} size="icon" onClick={() => setViewMode('grid-sm')}>
+                            <Button variant={viewMode === 'grid-sm' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleFilterChange('view', 'grid-sm')}>
                             <Grid3x3 className="h-5 w-5" />
                             </Button>
-                            <Button variant={viewMode === 'list' ? 'secondary' : 'ghost'} size="icon" onClick={() => setViewMode('list')}>
+                            <Button variant={viewMode === 'list' ? 'secondary' : 'ghost'} size="icon" onClick={() => handleFilterChange('view', 'list')}>
                             <List className="h-5 w-5" />
                             </Button>
                         </div>
@@ -205,30 +211,32 @@ export default function ProductList({ products: initialProducts, initialCategori
         </Accordion>
       </div>
       
-        <div ref={listRef} className={cn({
+        <div className={cn({
             'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8': viewMode === 'grid-lg',
             'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4': viewMode === 'grid-sm',
             'flex flex-col gap-4': viewMode === 'list',
         })}>
           {products.map(product => 
               viewMode === 'list' ? (
-                <ProductListItem key={product.id} product={product} onProductClick={handleProductClick} />
+                <ProductListItem key={product.id} product={product} />
               ) : (
-                <ProductCard key={product.id} product={product} size={viewMode === 'grid-sm' ? 'sm' : 'lg'} onProductClick={handleProductClick} />
+                <ProductCard key={product.id} product={product} size={viewMode === 'grid-sm' ? 'sm' : 'lg'} />
               )
           )}
         </div>
      
-        {isLoading && <ProductListSkeleton />}
+        {isLoading && products.length > 0 && <ProductListSkeleton />}
 
-        <div ref={loadMoreRef} className="h-10" />
+        <div ref={loadMoreRef} className="h-1" />
         
         {!hasMore && !isLoading && products.length > 0 && (
-          <p className="text-center text-muted-foreground text-sm">Fin de los resultados.</p>
+          <p className="text-center text-muted-foreground text-sm p-4">Fin de los resultados.</p>
         )}
 
+        {isLoading && products.length === 0 && <ProductListSkeleton />}
+
         {!isLoading && products.length === 0 && (
-             <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos.</p>
+             <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos con esos filtros.</p>
         )}
     </div>
   );

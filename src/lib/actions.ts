@@ -421,6 +421,7 @@ export async function createSlide(formData: FormData): Promise<ActionResponse> {
     const subtext = formData.get('subtext') as string;
     const image = formData.get('image') as string;
     const state = formData.get('state') as SlideState;
+    const buttonLink = formData.get('buttonLink') as string;
 
     if (!headline || !image) {
       return { success: false, message: 'Headline and Image are required.' };
@@ -433,6 +434,7 @@ export async function createSlide(formData: FormData): Promise<ActionResponse> {
       headline,
       subtext,
       image,
+      buttonLink,
       state,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -464,6 +466,7 @@ export async function updateSlide(slideId: string, formData: FormData): Promise<
     const subtext = formData.get('subtext') as string;
     const image = formData.get('image') as string;
     const state = formData.get('state') as SlideState;
+    const buttonLink = formData.get('buttonLink') as string;
 
     if (!headline || !image) {
       return { success: false, message: 'Headline and Image are required.' };
@@ -476,6 +479,7 @@ export async function updateSlide(slideId: string, formData: FormData): Promise<
       headline,
       subtext,
       image,
+      buttonLink,
       state,
       updatedAt: new Date(),
     };

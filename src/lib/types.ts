@@ -1,4 +1,5 @@
 
+
 'use server';
 
 import type { ObjectId } from 'mongodb';
@@ -61,6 +62,7 @@ export interface HeroSlide {
     headline: string;
     subtext: string;
     image: string;
+    buttonLink?: string;
     state: SlideState;
     dataAiHint?: string;
     createdAt?: string;
