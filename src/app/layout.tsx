@@ -1,10 +1,8 @@
 
 
 import './globals.css';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Providers } from '@/components/providers/providers';
-import { Suspense } from 'react';
-
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.ajalderaiz.com.ar'),
@@ -48,6 +46,12 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#f0f1eb' },
+    { media: '(prefers-color-scheme: dark)', color: '#1b5030' },
+  ],
+}
 
 export default function RootLayout({
   children,
@@ -64,7 +68,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <Providers>
-          {children}
+           {children}
         </Providers>
       </body>
     </html>

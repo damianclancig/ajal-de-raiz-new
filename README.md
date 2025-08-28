@@ -1,9 +1,8 @@
-
-# Ajal de Raíz - Vivero & Jardinería E-commerce
-
 <p align="center">
   <img src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754490326/ajal-de-raiz/logo-min_ycwot1.png" alt="Ajal de Raiz Logo" width="150">
 </p>
+
+<h1 align="center">Ajal de Raíz - Vivero & Jardinería E-commerce</h1>
 
 <p align="center">
   <strong>Un toque verde para la vida moderna.</strong>
@@ -11,7 +10,7 @@
 
 ## Descripción
 
-**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
+**Ajal de Raíz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
 
 La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
@@ -25,7 +24,6 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Cálculo de Envío por Zonas**: El sistema calcula automáticamente el costo de envío basado en el código postal, cubriendo CABA, GBA (Norte, Oeste, Sur) y La Plata, con opciones de envío gratuito según el monto de la compra.
   - **Proceso de Pedido Inteligente**: Al finalizar la compra, si los datos de domicilio están incompletos, el sistema solicitará la información necesaria para continuar con el pago. Elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
   - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción. Para pagos con MercadoPago, puedes reintentar un pago si falló y, una vez aprobado, ver los detalles de la transacción (método de pago, cuotas, etc.).
 - **Autenticación y Perfil Completo**:
@@ -71,6 +69,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Gestión de Imágenes y Videos**: [Cloudinary](https://cloudinary.com/)
 - **Validación de Formularios**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
 - **Pagos**: [MercadoPago SDK](https://www.mercadopago.com.ar/developers/es/docs)
+- **Servicio de Email**: [Maileroo](https://maileroo.com/)
 
 ## Instalación y Desarrollo Local
 
@@ -83,6 +82,7 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina local.
 - Una base de datos MongoDB (puedes usar una instancia local o una gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
 - Una cuenta en [Cloudinary](https://cloudinary.com/) para la gestión de imágenes y videos.
 - Una cuenta en [MercadoPago](https://mercadopago.com.ar) para gestionar los pagos.
+- Una cuenta en [Maileroo](https://maileroo.com/) para el envío de emails transaccionales.
 
 ### 2. Clonar el Repositorio
 
@@ -116,7 +116,7 @@ MONGODB_URI="tu_string_de_conexion_a_mongodb"
 # NextAuth
 # Genera un secreto con: openssl rand -base64 32
 AUTH_SECRET="tu_secreto_para_nextauth"
-NEXTAUTH_URL="http://localhost:9002"
+NEXTAUTH_URL="http://localhost:3000"
 
 # Cloudinary - Para la carga de imágenes y videos
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary
@@ -150,7 +150,7 @@ MAILEROO_TO_CONTACT="email_para_recibir_contactos@dominio.com"
 npm run dev
 ```
 
-La aplicación estará disponible en [http://localhost:9002](http://localhost:9002).
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
 ### 6. Configurar Webhook de MercadoPago
 
@@ -163,27 +163,4 @@ En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-Copyright (c) 2024
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-    
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.

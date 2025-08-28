@@ -1,7 +1,7 @@
 
+
 "use client";
 
-import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,9 @@ import { User } from "@/lib/types";
 import { Separator } from "../ui/separator";
 import { CardContent, CardFooter } from "../ui/card";
 import PhoneNumberInput from "./phone-number-input";
+import { useTransition } from "react";
+import { updateUserProfile } from "@/lib/actions";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   name: z.string().min(2, 'El nombre es requerido'),
@@ -46,12 +49,12 @@ const formSchema = z.object({
 type ProfileFormValues = z.infer<typeof formSchema>;
 
 interface CompleteProfileFormProps {
-    user: User;
+    user: User | null;
     isSubmitting: boolean;
-    onFormSubmit: (formData: FormData) => void;
+    onSuccess: () => void;
 }
 
-export default function CompleteProfileForm({ user, isSubmitting, onFormSubmit }: CompleteProfileFormProps) {
+export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: CompleteProfileFormProps) {
     
     // Helper to extract country code and number from a full phone string
     const parsePhoneNumber = (fullNumber?: string) => {
@@ -80,15 +83,13 @@ export default function CompleteProfileForm({ user, isSubmitting, onFormSubmit }
         },
     });
 
-    const onSubmit = (values: ProfileFormValues) => {
+    const onSubmit = async (values: ProfileFormValues) => {
         const formData = new FormData();
         
-        // Combine country code and phone number
         const fullPhoneNumber = values.countryCode && values.phone ? `${values.countryCode}${values.phone}` : '';
 
         Object.keys(values).forEach(key => {
             const formKey = key as keyof ProfileFormValues;
-            // Handle combined phone number, skip individual parts
             if (formKey === 'phone' || formKey === 'countryCode') return;
             
             const value = values[formKey];
@@ -99,7 +100,8 @@ export default function CompleteProfileForm({ user, isSubmitting, onFormSubmit }
 
         formData.append('phone', fullPhoneNumber);
         
-        onFormSubmit(formData);
+        await updateUserProfile(formData);
+        onSuccess();
     };
 
     return (
