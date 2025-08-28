@@ -40,6 +40,12 @@ export const translations = {
 
   // Services
   'Our_Services': { en: 'Our Services', es: 'Nuestros Servicios', pt: 'Nossos Serviços' },
+  'Ajal_de_Raiz_Services': { en: 'Ajal de Raíz Services', es: 'Servicios de Ajal de Raíz', pt: 'Serviços da Ajal de Raíz' },
+  'Ajal_de_Raiz_Services_Desc': { 
+      en: 'Everything you need to care for your plants, energies, and rituals. Made with love and roots.',
+      es: 'Todo lo que necesitás para cuidar tus plantas, energías y rituales. Hecho con amor y raíces.',
+      pt: 'Tudo o que você precisa para cuidar de suas plantas, energias e rituais. Feito com amor e raízes.'
+  },
   'Expert_care_for_your_green_space': {
     en: 'Expert care for your green space',
     es: 'Cuidado experto para tu espacio verde',
@@ -49,7 +55,7 @@ export const translations = {
   'We_offer_regular_maintenance_services': {
     en: 'We offer regular maintenance services to keep your plants healthy and vibrant. Pruning, watering, and pest control included.',
     es: 'Ofrecemos servicios de mantenimiento regular para mantener tus plantas saludables y vibrantes. Incluye poda, riego y control de plagas.',
-    pt: 'Oferecemos serviços de manutenção regular para manter suas plantas saudáveis e vibrantes. Poda, rega e controle de plagas incluídos.'
+    pt: 'Oferecemos serviços de manutenção regular para manter suas plantas saudáveis e vibrantes. Poda, rega e controle de pragas incluídos.'
   },
   'Garden_Setup': { en: 'Garden Setup', es: 'Diseño de Jardines', pt: 'Montagem de Jardins' },
   'Dreaming_of_a_new_garden': {
@@ -77,6 +83,12 @@ export const translations = {
   'Lets_Talk': { en: "Let's talk?", es: "¿Hablamos?", pt: "Vamos conversar?" },
   'Web_design_and_development_by': { en: 'Web design and development by', es: 'Diseño y desarrollo web por', pt: 'Design e desenvolvimento web por' },
   'Our_Social_Networks': { en: 'Our Social Networks', es: 'Nuestras Redes Sociales', pt: 'Nossas Redes Sociais' },
+  'Opening_Hours': { en: 'Opening Hours', es: 'Horarios de atención', pt: 'Horário de funcionamento' },
+  'Monday_to_Friday': { en: 'Monday to Friday from 09:00hs to 18:00hs', es: 'Lunes a Viernes de 09:00hs a 18:00hs', pt: 'Segunda a sexta das 09:00h às 18:00h' },
+  'Saturdays': { en: 'Saturdays from 09:00hs to 13:00hs', es: 'Sábados de 09:00hs a 13:00hs', pt: 'Sábados das 09:00h às 13:00h' },
+  'Legal': { en: 'Legal', es: 'Legal', pt: 'Legal' },
+  'Terms_and_Conditions': { en: 'Terms and Conditions', es: 'Términos y Condiciones', pt: 'Termos e Condições' },
+  'Location': { en: 'Location', es: 'Lugar', pt: 'Localização' },
   
   // Products Page
   'Our_Collection': { en: 'Our Collection', es: 'Nuestra Colección', pt: 'Nossa Coleção' },
@@ -96,6 +108,9 @@ export const translations = {
   'Price_High_to_Low': { en: 'Price: High to Low', es: 'Precio: Mayor a Menor', pt: 'Preço: Maior para Menor' },
   'Name_A_Z': { en: 'Name: A-Z', es: 'Nombre: A-Z', pt: 'Nome: A-Z' },
   'Name_Z_A': { en: 'Name: Z-A', es: 'Nombre: Z-A', pt: 'Nome: Z-A' },
+  'Filters_and_View_Options': { en: 'Filters and View Options', es: 'Filtros y Opciones de Vista', pt: 'Filtros e Opções de Visualização' },
+  'End_of_results': { en: 'End of results.', es: 'Fin de los resultados.', pt: 'Fim dos resultados.' },
+  'No_products_found_with_filters': { en: 'No products were found with those filters.', es: 'No se encontraron productos con esos filtros.', pt: 'Nenhum produto foi encontrado com esses filtros.' },
   
   // Login / Auth Flow
   'Welcome_Back': { en: 'Welcome Back', es: 'Bienvenido de Nuevo', pt: 'Bem-vindo de Volta' },
@@ -107,6 +122,9 @@ export const translations = {
   'Email': { en: 'Email', es: 'Correo Electrónico', pt: 'E-mail' },
   'Password': { en: 'Password', es: 'Contraseña', pt: 'Senha' },
   'Password_Requirements': { en: 'Password must be at least 8 characters, with one number and one special character.', es: 'La contraseña debe tener al menos 8 caracteres, un número y un carácter especial.', pt: 'A senha deve ter pelo menos 8 caracteres, um número e um caractere especial.' },
+  'Password_min_8_chars': { en: 'Password must be at least 8 characters.', es: 'La contraseña debe tener al menos 8 caracteres.', pt: 'A senha deve ter pelo menos 8 caracteres.' },
+  'Password_one_number': { en: 'Password must contain at least one number.', es: 'La contraseña debe contener al menos un número.', pt: 'A senha deve conter pelo menos um número.' },
+  'Password_one_special_char': { en: 'Password must contain at least one special character.', es: 'La contraseña debe contener al menos un carácter especial.', pt: 'A senha deve conter pelo menos um caractere especial.' },
   'Confirm_Password': { en: 'Confirm Password', es: 'Confirmar Contraseña', pt: 'Confirmar Senha' },
   'Login': { en: 'Login', es: 'Iniciar Sesión', pt: 'Entrar' },
   'Logout': { en: 'Logout', es: 'Cerrar Sesión', pt: 'Sair' },
@@ -137,7 +155,20 @@ export const translations = {
   'New_Password_Success_Title': { en: 'Password Updated', es: 'Contraseña Actualizada', pt: 'Senha Atualizada' },
   'New_Password_Success_Desc': { en: 'Your password has been updated successfully. You can now log in.', es: 'Tu contraseña ha sido actualizada. Ya puedes iniciar sesión.', pt: 'Sua senha foi atualizada. Você já pode fazer login.' },
   'Login_to_Buy': { en: 'Login to Buy', es: 'Inicia Sesión para Comprar', pt: 'Faça Login para Comprar' },
+  'Passwords_do_not_match': { en: 'Passwords do not match.', es: 'Las contraseñas no coinciden.', pt: 'As senhas não correspondem.' },
 
+  // About Us Page
+  'About_Title': { en: 'Our Story', es: 'Nuestra Historia', pt: 'Nossa História' },
+  'About_Subtitle': { en: 'A project that blooms with love and deep roots.', es: 'Un proyecto que florece con amor y raíces profundas.', pt: 'Um projeto que floresce com amor e raízes profundas.' },
+  'About_P1': { en: 'Ajal de Raíz is more than a plant shop; it is a project that blossoms with love, deep roots, and a clear purpose: to reconnect with nature, even in the smallest corners.', es: 'Ajal de Raíz es más que una tienda de plantas; es un proyecto que florece con amor, raíces profundas y un propósito claro: reconectar con la naturaleza, incluso en los rincones más pequeños.', pt: 'Ajal de Raíz é mais do que uma loja de plantas; é um projeto que floresce com amor, raízes profundas e um propósito claro: reconectar com a natureza, mesmo nos menores cantos.' },
+  'About_P2': { en: 'We were born after a journey that transformed us. We learned that great things arise when we reinvent ourselves from within, from the root. Thus began our garden, which today continues to grow with each new species, each kokedama assembled with patience, each succulent chosen with intention.', es: 'Nacimos luego de un viaje que nos transformó. Aprendimos que las grandes cosas surgen cuando nos reinventamos desde adentro, desde la raíz. Así comenzó nuestro jardín, que hoy sigue creciendo con cada especie nueva, cada kokedama armada con paciencia, cada suculenta elegida con intención.', pt: 'Nascemos após uma jornada que nos transformou. Aprendemos que grandes coisas surgem quando nos reinventamos por dentro, desde a raiz. Assim começou nosso jardim, que hoje continua a crescer com cada nova espécie, cada kokedama montada com paciência, cada suculenta escolhida com intenção.' },
+  'About_P3': { en: 'We are passionate about offering a curated selection of succulents, cacti, terrariums, kokedamas, and special plants. Among our species, you can find sedum, echeverias, crassulas, haworthias, kalanchoes, sempervivum, cacti, and many more. Each one has its own story, its beauty, its unique energy.', es: 'Nos apasiona ofrecer una selección cuidada de suculentas, cactus, terrarios, kokedamas y plantas especiales. Entre nuestras especies podés encontrar sedum, echeverias, crassulas, haworthias, kalanchoes, sempervivum, cactus y muchas más. Cada una tiene su historia, su belleza, su energía única.', pt: 'Somos apaixonados por oferecer uma seleção cuidadosa de suculentas, cactos, terrários, kokedamas e plantas especiais. Entre nossas espécies, você pode encontrar sedum, echeverias, crassulas, haworthias, kalanchoes, sempervivum, cactos e muito mais. Cada uma tem sua própria história, sua beleza, sua energia única.' },
+  'About_P4': { en: 'We want this space to be an invitation to create your own green corner. You don’t need acres to have a garden: a pot, a table, a shelf… or your own hands are enough. We create living pieces so you can give yourself the gift of nature, harmony, and calm.', es: 'Queremos que este espacio sea una invitación a crear tu propio rincón verde. No se necesitan hectáreas para tener un jardín: basta con una maceta, una mesa, una repisa… o tus propias manos. Creamos piezas vivas para que puedas regalarte naturaleza, armonía y calma.', pt: 'Queremos que este espaço seja um convite para criar o seu próprio canto verde. Você não precisa de hectares para ter um jardim: um vaso, uma mesa, uma prateleira... ou suas próprias mãos são suficientes. Criamos peças vivas para que você possa se presentear com natureza, harmonia e calma.' },
+  'About_P5': { en: 'Ajal de Raíz is that: a piece of the forest in your home. Because we all deserve to coexist with nature, surround ourselves with life, and transform our spaces, no matter how small, into green shelters full of soul.', es: 'Ajal de Raíz es eso: un pedacito de bosque en tu hogar. Porque todos merecemos convivir con lo natural, rodearnos de vida y transformar nuestros espacios, por más pequeños que sean, en refugios verdes llenos de alma.', pt: 'Ajal de Raíz é isso: um pedaço da floresta em sua casa. Porque todos nós merecemos conviver com a natureza, nos cercar de vida e transformar nossos espaços, por menores que sejam, em abrigos verdes cheios de alma.' },
+  'About_CTA_Title': { en: 'Explore Our Collection', es: 'Explora Nuestra Colección', pt: 'Explore Nossa Coleção' },
+  'About_CTA_Subtitle': { en: 'Now that you know our story, we invite you to discover the plants that make it possible. Find the perfect piece of nature for your space.', es: 'Ahora que conoces nuestra historia, te invitamos a descubrir las plantas que la hacen posible. Encuentra la pieza de naturaleza perfecta para tu espacio.', pt: 'Agora que você conhece nossa história, convidamos você a descobrir as plantas que a tornam possível. Encontre o pedaço de natureza perfeito para o seu espaço.' },
+  'About_CTA_Button': { en: 'View Products', es: 'Ver Productos', pt: 'Ver Produtos' },
+  
   // Admin Page
   'Admin_Panel': { en: 'Admin Panel', es: 'Panel de Administración', pt: 'Painel Administrativo' },
   'Manage_your_products_and_store_data': {
