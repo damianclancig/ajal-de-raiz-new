@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     default: 'Ajal de Raiz - Vivero & Jardinería Online',
     template: `%s | Ajal de Raiz`,
   },
-  description: 'Un toque verde para la vida moderna. Descubre nuestra colección de plantas, kokedamas, suculentas y todo lo que necesitas para tu jardín.',
+  description: 'Un toque verde para la vida moderna. Descubre nuestra colección curada de plantas de interior, exterior, y todos los suministros de jardinería que necesitas para tu hogar.',
   openGraph: {
     title: 'Ajal de Raiz - Vivero & Jardinería Online',
     description: 'Un toque verde para la vida moderna. Plantas, herramientas y todo lo que necesitas para tu jardín.',
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Ajal de Raiz - Vivero & Jardinería Online',
     description: 'Un toque verde para la vida moderna. Plantas, kokedamas y todo lo que necesitas para tu jardín.',
-    images: ['https://res.cloudinary.com/dqh1coa3c/image/upload/v1753971387/Imagen_de_WhatsApp_2025-07-31_a_las_11.12.34_6ed49bfb_hkonqb.jpg'],
+    images: ['https://res.cloudinary.com/dqh1coa3c/image/upload/v1754482844/ajal-de-raiz/Varias_Especies_ofsqvv.jpg'],
   },
   robots: {
     index: true,
