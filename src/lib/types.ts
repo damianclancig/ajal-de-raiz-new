@@ -4,6 +4,8 @@
 
 import type { ObjectId } from 'mongodb';
 
+export type Language = 'en' | 'es' | 'pt';
+
 export type ProductState = 'activo' | 'inactivo' | 'vendido';
 
 export interface Product {

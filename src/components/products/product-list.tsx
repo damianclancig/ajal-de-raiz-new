@@ -166,7 +166,7 @@ export default function ProductList({ products: initialProducts, initialCategori
                  <AccordionTrigger>
                     <div className='flex items-center gap-2'>
                         <SlidersHorizontal className="h-4 w-4" />
-                        <span className="text-sm font-medium">Filtros y Opciones de Vista</span>
+                        <span className="text-sm font-medium">{t('Filters_and_View_Options')}</span>
                     </div>
                  </AccordionTrigger>
                  <AccordionContent>
@@ -230,13 +230,13 @@ export default function ProductList({ products: initialProducts, initialCategori
         <div ref={loadMoreRef} className="h-1" />
         
         {!hasMore && !isLoading && products.length > 0 && (
-          <p className="text-center text-muted-foreground text-sm p-4">Fin de los resultados.</p>
+          <p className="text-center text-muted-foreground text-sm p-4">{t('End_of_results')}</p>
         )}
 
         {isLoading && products.length === 0 && <ProductListSkeleton />}
 
         {!isLoading && products.length === 0 && (
-             <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos con esos filtros.</p>
+             <p className="text-center text-muted-foreground text-sm p-12">{t('No_products_found_with_filters')}</p>
         )}
     </div>
   );

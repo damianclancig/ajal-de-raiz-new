@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -7,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/use-language';
 import type { Product } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { useCart } from '@/contexts/cart-context';
 import { Input } from '@/components/ui/input';
@@ -27,15 +28,6 @@ export default function ProductDetailClient({ product }: { product: Product }) {
   const router = useRouter();
 
   const isVideo = (url: string) => /\.(mp4|webm)$/i.test(url);
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'es' ? 'es-AR' : language;
-    return new Intl.NumberFormat(locale, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
-  };
   
   const handleAddToCart = () => {
     if (!session) {

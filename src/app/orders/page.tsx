@@ -1,23 +1,23 @@
 
 
 import { getMyOrders } from '@/lib/order-service';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { cookies } from 'next/headers';
 import { translations } from '@/lib/translations';
 import Image from 'next/image';
-import { NO_IMAGE_URL } from '@/lib/utils';
+import { NO_IMAGE_URL, formatPrice, formatDate, getStatusVariant } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Info, CreditCard, CheckCircle2, AlertCircle, Wallet } from 'lucide-react';
-import type { OrderStatus, MercadoPagoPaymentDetails } from '@/lib/types';
+import type { MercadoPagoPaymentDetails } from '@/lib/types';
 import UploadReceiptButton from './_components/upload-receipt-button';
 import { Suspense } from 'react';
 import type { Metadata } from 'next';
 import CancelOrderButton from './_components/cancel-order-button';
+import { getLanguage } from '@/lib/utils-server';
 
 export const metadata: Metadata = {
   title: 'Mis Pedidos',
@@ -31,16 +31,6 @@ export const metadata: Metadata = {
 // Revalidate this page every 30 seconds to get live order status updates
 export const revalidate = 30;
 
-const getLanguage = () => {
-    const cookieStore = cookies();
-    const langCookie = cookieStore.get('language');
-    const lang = langCookie?.value;
-    if (lang === 'en' || lang === 'es' || lang === 'pt') {
-        return lang;
-    }
-    return 'es'; 
-};
-
 const bankDetails = {
     alias: process.env.BANK_ALIAS,
     cbu: process.env.BANK_CBU,
@@ -49,9 +39,6 @@ const bankDetails = {
 };
 
 function StatusAlert({ status }: { status: string | undefined }) {
-    const lang = getLanguage();
-    const t = (key: keyof typeof translations) => translations[key][lang] || key;
-
     if (status === 'success') {
         return (
             <Alert variant="default" className="bg-green-100 dark:bg-green-900 border-green-500 text-green-800 dark:text-green-200 mb-6">
@@ -92,9 +79,6 @@ function StatusAlert({ status }: { status: string | undefined }) {
 }
 
 function PaymentDetails({ details }: { details: MercadoPagoPaymentDetails }) {
-  const lang = getLanguage();
-  const t = (key: keyof typeof translations) => translations[key][lang] || key;
-
   const formatPaymentMethod = (method: string) => {
     return method.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
   }
@@ -139,38 +123,6 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
     const lang = getLanguage();
     const t = (key: keyof typeof translations) => translations[key][lang] || key;
 
-    const formatPrice = (price: number) => {
-        const locale = lang === 'es' ? 'es-AR' : lang;
-        return new Intl.NumberFormat(locale, {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(price);
-    };
-    
-    const formatDate = (dateString: string) => {
-        const locale = lang === 'es' ? 'es-AR' : lang;
-        return new Date(dateString).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    };
-    
-    const getStatusVariant = (status: OrderStatus) => {
-        switch (status) {
-            case 'Pendiente': return 'secondary';
-            case 'Pendiente de Pago': return 'destructive';
-            case 'Pendiente de Confirmación': return 'default';
-            case 'Confirmado': return 'default';
-            case 'Enviado': return 'default';
-            case 'Entregado': return 'default';
-            case 'Cancelado': return 'outline';
-            default: return 'outline';
-        }
-    }
-
-
     return (
         <div className="container py-8 md:py-12">
             <h1 className="font-headline text-4xl font-bold mb-8">{t('My_Orders')}</h1>
@@ -193,11 +145,11 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                 <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4 text-left">
                                     <div className="flex-grow">
                                         <p className="text-sm font-medium">{t('Order_ID')}: {order.id.substring(0, 8)}...</p>
-                                        <p className="text-xs text-muted-foreground">{t('Order_Date')}: {formatDate(order.createdAt)}</p>
+                                        <p className="text-xs text-muted-foreground">{t('Order_Date')}: {formatDate(order.createdAt, lang)}</p>
                                     </div>
                                     <div className="flex items-center gap-4 w-full justify-between md:w-auto md:justify-end">
                                         <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
-                                        <span className="font-bold text-lg text-right md:w-[120px]">${formatPrice(order.totalPrice)}</span>
+                                        <span className="font-bold text-lg text-right md:w-[120px]">${formatPrice(order.totalPrice, lang)}</span>
                                     </div>
                                 </div>
                             </AccordionTrigger>
@@ -221,7 +173,7 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                             <AlertDescription>
                                                    <div className="space-y-2 mt-2">
                                                         <p>{t('Transfer_Instruction')}</p>
-                                                        <p className="font-semibold">{t('Total_Amount')}: <span className="font-bold text-lg">${formatPrice(order.totalPrice)}</span></p>
+                                                        <p className="font-semibold">{t('Total_Amount')}: <span className="font-bold text-lg">${formatPrice(order.totalPrice, lang)}</span></p>
                                                         <ul className="list-disc list-inside space-y-1 text-sm bg-muted p-3 rounded-md">
                                                             {bankDetails.alias && <li><strong>{t('Alias')}:</strong> {bankDetails.alias}</li>}
                                                             {bankDetails.cbu && <li><strong>CBU/CVU:</strong> {bankDetails.cbu}</li>}
@@ -305,7 +257,7 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                                         </Link>
                                                     </TableCell>
                                                     <TableCell>{item.quantity}</TableCell>
-                                                    <TableCell className="text-right">${formatPrice(item.price)}</TableCell>
+                                                    <TableCell className="text-right">${formatPrice(item.price, lang)}</TableCell>
                                                 </TableRow>
                                             )
                                         })}

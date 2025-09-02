@@ -15,21 +15,21 @@ import { registerUser } from "@/lib/actions";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Invalid email address." }),
-  password: z
-    .string()
-    .min(8, { message: "La contraseña debe tener al menos 8 caracteres." })
-    .regex(/[0-9]/, { message: "La contraseña debe contener al menos un número." })
-    .regex(/[^a-zA-Z0-9]/, { message: "La contraseña debe contener al menos un carácter especial." }),
-});
-
 export default function RegisterForm() {
     const [isPending, startTransition] = useTransition();
     const { t } = useLanguage();
     const { toast } = useToast();
     const router = useRouter();
+
+    const formSchema = z.object({
+      name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+      email: z.string().email({ message: "Invalid email address." }),
+      password: z
+        .string()
+        .min(8, { message: t('Password_min_8_chars') })
+        .regex(/[0-9]/, { message: t('Password_one_number') })
+        .regex(/[^a-zA-Z0-9]/, { message: t('Password_one_special_char') }),
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),

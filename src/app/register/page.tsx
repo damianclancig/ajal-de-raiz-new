@@ -1,34 +1,15 @@
 
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { translations } from "@/lib/translations";
+import { useLanguage } from "@/hooks/use-language";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import RegisterForm from "@/components/auth/register-form";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-    title: "Crear Cuenta",
-    description: "Regístrate en Ajal de Raiz para empezar a comprar y guardar tus productos favoritos.",
-    robots: {
-        index: false, // No index register pages
-        follow: false,
-    }
-};
-
-const getLanguage = () => {
-    const cookieStore = cookies();
-    const langCookie = cookieStore.get('language');
-    const lang = langCookie?.value;
-    if (lang === 'en' || lang === 'es' || lang === 'pt') {
-        return lang;
-    }
-    return 'es'; // Default language
-};
-
 export default function RegisterPage() {
-    const lang = getLanguage();
-    const t = (key: keyof typeof translations) => translations[key][lang] || key;
+    const { t } = useLanguage();
 
     return (
         <div className="flex min-h-[calc(100vh-10rem)] items-center justify-center p-4">
