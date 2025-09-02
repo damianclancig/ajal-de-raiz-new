@@ -1,25 +1,17 @@
 
+
 import { getOrderById } from '@/lib/order-service';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cookies } from 'next/headers';
 import { translations } from '@/lib/translations';
 import Image from 'next/image';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import OrderStatusForm from './_components/order-status-form';
-import { OrderStatus } from '@/lib/types';
 import Link from 'next/link';
-
-const getLanguage = () => {
-    const cookieStore = cookies();
-    const langCookie = cookieStore.get('language');
-    const lang = langCookie?.value;
-    if (lang === 'en' || lang === 'es' || lang === 'pt') {
-        return lang;
-    }
-    return 'es'; 
-};
+import { formatDate, formatPrice, getStatusVariant } from '@/lib/utils';
+import { getLanguage } from '@/lib/utils-server';
 
 export default async function OrderDetailPage({ params }: { params: { id: string } }) {
     const order = await getOrderById(params.id);
@@ -30,38 +22,6 @@ export default async function OrderDetailPage({ params }: { params: { id: string
     
     const lang = getLanguage();
     const t = (key: keyof typeof translations) => translations[key][lang] || key;
-
-    const formatPrice = (price: number) => {
-        const locale = lang === 'es' ? 'es-AR' : lang;
-        return new Intl.NumberFormat(locale, {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(price);
-    };
-    
-    const formatDate = (dateString: string) => {
-        const locale = lang === 'es' ? 'es-AR' : lang;
-        return new Date(dateString).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
-     const getStatusVariant = (status: OrderStatus) => {
-        switch (status) {
-            case 'Pendiente': return 'secondary';
-            case 'Pendiente de Pago': return 'destructive';
-            case 'Pendiente de Confirmación': return 'default';
-            case 'Confirmado': return 'default';
-            case 'Enviado': return 'secondary';
-            case 'Entregado': return 'secondary';
-            case 'Cancelado': return 'outline';
-            default: return 'outline';
-        }
-    }
     
     return (
         <div className="space-y-6 px-4">
@@ -132,7 +92,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                             </div>
                              <div className="flex justify-between">
                                 <span className="text-muted-foreground">Fecha</span>
-                                <span>{formatDate(order.createdAt)}</span>
+                                <span>{formatDate(order.createdAt, lang)}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Estado</span>

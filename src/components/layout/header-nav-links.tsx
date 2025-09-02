@@ -44,8 +44,9 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
   
   const navLinks = [
     { href: "/", label: t("Home") },
-    { href: "/#services", label: t("Services") },
     { href: "/products", label: t("Products") },
+    { href: "/#services", label: t("Services") },
+    { href: "/about", label: t("About_Us") },
     { href: "/#contact", label: t("Contact") },
   ];
 

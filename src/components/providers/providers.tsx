@@ -1,3 +1,4 @@
+
 "use client";
 
 import { ThemeProvider } from '@/components/providers/theme-provider';
@@ -24,7 +25,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
             <CartProvider>
               <div className="flex min-h-screen flex-col">
                 <Header />
-                <main className="flex-grow pb-12">{children}</main>
+                <main className="flex-grow">{children}</main>
                 <Footer />
               </div>
               <WhatsAppButton />

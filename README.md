@@ -1,9 +1,8 @@
-
-# Ajal de Raiz - Vivero & Jardinería E-commerce
-
 <p align="center">
   <img src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754490326/ajal-de-raiz/logo-min_ycwot1.png" alt="Ajal de Raiz Logo" width="150">
 </p>
+
+<h1 align="center">Ajal de Raíz - Vivero & Jardinería E-commerce</h1>
 
 <p align="center">
   <strong>Un toque verde para la vida moderna.</strong>
@@ -11,7 +10,7 @@
 
 ## Descripción
 
-**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
+**Ajal de Raíz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
 
 La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
@@ -20,8 +19,8 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 ### Para Usuarios
 
 - **Catálogo de Productos con Carga Infinita**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo. Los productos se cargan a medida que el usuario hace scroll, garantizando un rendimiento óptimo incluso con catálogos muy grandes.
-- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente.
-- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y disponibilidad de stock.
+- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente y **los filtros se reflejan en la URL**, permitiendo compartir vistas específicas.
+- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y una sección dedicada de **"Cuidados Esenciales"** con formato enriquecido para una fácil lectura.
 - **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
   - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
   - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
@@ -30,6 +29,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Autenticación y Perfil Completo**:
   - **Registro en Dos Pasos**: Un sistema de registro que primero captura los datos básicos y luego ofrece completar el perfil con información de envío.
   - **Gestión de Perfil ("Mi Perfil")**: Los usuarios pueden editar su nombre, teléfono, dirección de envío y subir una foto de perfil personalizada, optimizada para un rendimiento eficiente.
+- **Página "Sobre Nosotros"**: Una sección dedicada a contar la historia de la marca, conectando emocionalmente con los visitantes e invitándolos a explorar los productos.
 - **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
 - **Multi-idioma**: Soporte para Español, Inglés y Portugués.
 - **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
@@ -38,6 +38,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 
 - **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
 - **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye un buscador de productos y carga infinita (scroll-driven) en la tabla para manejar grandes volúmenes de datos de forma eficiente.
+- **Campo de "Cuidados del Producto"**: Un campo de texto multilínea dedicado para añadir instrucciones de cuidado. Utiliza símbolos (`*`, `-`, `+`) que se convierten automáticamente en íconos y viñetas en la página del producto para una presentación clara y atractiva.
 - **Gestión de Servicios (CRUD)**: Crea, edita y elimina los servicios ofrecidos en la página de inicio, incluyendo íconos, precios, descripciones y una lista de detalles.
 - **Gestión de Órdenes**:
   - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
@@ -48,7 +49,10 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
     - **Vista Desplegable**: Visualiza todos los usuarios registrados en una lista interactiva. Cada usuario se puede expandir para mostrar sus datos de contacto y dirección completa.
     - **Edición Total**: Edita toda la información del perfil de un usuario, incluyendo nombre, teléfono, dirección de envío y rol de administrador.
 - **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
-- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
+- **Gestión de Novedades (Slides) Avanzada**: Administra el carrusel de la página de inicio para destacar promociones.
+    - **Contenido Separado**: Gestiona el título y el subtítulo como texto independiente de la imagen de fondo.
+    - **Formato de Texto**: Utiliza símbolos (`*`, `_`, `-`) en el subtítulo para aplicar negrita, subrayado o tachado automáticamente.
+    - **Enlace de Botón Personalizable**: Define un enlace específico para el botón de cada slide, dirigiendo a los usuarios a un producto o categoría en particular.
 - **Centro de Logs de Errores**: Una sección dedicada para visualizar errores de la aplicación en producción, incluyendo stack traces y metadatos, para un diagnóstico y resolución de problemas eficiente.
 
 ## Stack Tecnológico
@@ -65,6 +69,7 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
 - **Gestión de Imágenes y Videos**: [Cloudinary](https://cloudinary.com/)
 - **Validación de Formularios**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
 - **Pagos**: [MercadoPago SDK](https://www.mercadopago.com.ar/developers/es/docs)
+- **Servicio de Email**: [Maileroo](https://maileroo.com/)
 
 ## Instalación y Desarrollo Local
 
@@ -77,6 +82,7 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina local.
 - Una base de datos MongoDB (puedes usar una instancia local o una gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
 - Una cuenta en [Cloudinary](https://cloudinary.com/) para la gestión de imágenes y videos.
 - Una cuenta en [MercadoPago](https://mercadopago.com.ar) para gestionar los pagos.
+- Una cuenta en [Maileroo](https://maileroo.com/) para el envío de emails transaccionales.
 
 ### 2. Clonar el Repositorio
 
@@ -110,7 +116,7 @@ MONGODB_URI="tu_string_de_conexion_a_mongodb"
 # NextAuth
 # Genera un secreto con: openssl rand -base64 32
 AUTH_SECRET="tu_secreto_para_nextauth"
-NEXTAUTH_URL="http://localhost:9002"
+NEXTAUTH_URL="http://localhost:3000"
 
 # Cloudinary - Para la carga de imágenes y videos
 NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary
@@ -144,7 +150,7 @@ MAILEROO_TO_CONTACT="email_para_recibir_contactos@dominio.com"
 npm run dev
 ```
 
-La aplicación estará disponible en [http://localhost:9002](http://localhost:9002).
+La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
 ### 6. Configurar Webhook de MercadoPago
 
@@ -157,26 +163,4 @@ En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-Copyright (c) 2024
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.

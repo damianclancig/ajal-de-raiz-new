@@ -17,6 +17,7 @@ const slideFromDoc = (doc: any): HeroSlide | null => {
     headline: doc.headline,
     subtext: doc.subtext,
     image: doc.image,
+    buttonLink: doc.buttonLink,
     state: doc.state || 'deshabilitado',
     dataAiHint: doc.dataAiHint || 'promotional banner',
     createdAt: doc.createdAt?.toString(),

@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import React, { useState, useTransition, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useTransition } from 'react';
 import type { Product } from '@/lib/types';
 import { useLanguage } from '@/hooks/use-language';
 import { Button } from '@/components/ui/button';
@@ -32,7 +33,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
-import { NO_IMAGE_URL } from '@/lib/utils';
+import { NO_IMAGE_URL, formatPrice } from '@/lib/utils';
 import { useInView } from 'react-intersection-observer';
 
 const PRODUCTS_PER_PAGE = 20;
@@ -108,15 +109,6 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
         toast({ title: t('Error_Title'), description: result.message, variant: "destructive" });
       }
     });
-  };
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'es' ? 'es-AR' : language;
-    return new Intl.NumberFormat(locale, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
   };
   
   return (

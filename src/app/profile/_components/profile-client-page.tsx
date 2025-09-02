@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useTransition } from 'react';
@@ -117,9 +118,7 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
         router.refresh();
     };
 
-    const handleFormSubmit = async (formData: FormData) => {
-        // formData is already populated by react-hook-form
-        // We just need to add the profile image state
+    const handleFormSubmit = (formData: FormData) => {
         formData.append('profileImage', profileImage || '');
 
         startTransition(async () => {
@@ -152,7 +151,10 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
                 <CompleteProfileForm 
                     user={user} 
                     isSubmitting={isPending}
-                    onFormSubmit={handleFormSubmit}
+                    onSuccess={() => handleProfileUpdateSuccess({
+                        name: user.name,
+                        image: profileImage,
+                    })}
                 />
             </Card>
         </div>
