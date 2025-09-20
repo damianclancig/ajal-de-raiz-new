@@ -28,6 +28,7 @@ const productFromDoc = (doc: any): Product | null => {
     numReviews: doc.numReviews,
     countInStock: doc.countInStock,
     description: doc.description,
+    care: doc.care || '',
     isFeatured: doc.isFeatured || false,
     state: doc.state || 'inactivo',
     dataAiHint: doc.dataAiHint || 'product image',

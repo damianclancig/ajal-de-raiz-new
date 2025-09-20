@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import type { Product } from '@/lib/types';
@@ -7,7 +8,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 import { Badge } from '../ui/badge';
 
 interface ProductCardProps {
@@ -19,15 +20,6 @@ interface ProductCardProps {
 export default function ProductCard({ product, size = 'lg', onProductClick }: ProductCardProps) {
   const { language, t } = useLanguage();
   const isSoldOut = product.countInStock <= 0;
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'es' ? 'es-AR' : language;
-    return new Intl.NumberFormat(locale, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
-  };
 
   const mediaUrl = product.images[0].replace(/\.heic$/i, '.png');
   const isVideo = /\.(mp4|webm)$/i.test(mediaUrl);

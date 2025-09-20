@@ -1,8 +1,9 @@
 
+
 'use client';
 
 import { useLanguage } from '@/hooks/use-language';
-import { Order, OrderStatus } from '@/lib/types';
+import { Order } from '@/lib/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,6 +13,8 @@ import Link from 'next/link';
 import { translations } from '@/lib/translations';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { formatDate, formatPrice, getStatusVariant } from '@/lib/utils';
+
 
 interface OrdersTableProps {
     orders: Order[];
@@ -24,40 +27,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     useEffect(() => {
         setIsClient(true);
     }, []);
-
-    const formatDate = (dateString: string) => {
-        const locale = language === 'es' ? 'es-AR' : language;
-        return new Date(dateString).toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-    };
-
-    const formatPrice = (price: number) => {
-        const locale = language === 'es' ? 'es-AR' : language;
-        return new Intl.NumberFormat(locale, {
-            style: 'decimal',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        }).format(price);
-    };
-
-     const getStatusVariant = (status: OrderStatus) => {
-        switch (status) {
-            case 'Pendiente': return 'secondary';
-            case 'Pendiente de Pago': return 'destructive';
-            case 'Pendiente de Confirmación': return 'default';
-            case 'Confirmado': return 'default';
-            case 'Enviado': return 'secondary';
-            case 'Entregado': return 'secondary';
-            case 'Cancelado': return 'outline';
-            default: return 'outline';
-        }
-    }
-
+    
     return (
         <Card>
             <CardContent className="p-0">
@@ -93,7 +63,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                                     <div className="md:hidden text-xs text-muted-foreground mb-1">ID / Fecha</div>
                                     <div className="font-mono text-sm">{order.id.substring(0, 8)}...</div>
                                     <div className="text-xs text-muted-foreground">
-                                        {isClient ? formatDate(order.createdAt) : <Loader2 className="h-4 w-4 animate-spin" />}
+                                        {isClient ? formatDate(order.createdAt, language) : <Loader2 className="h-4 w-4 animate-spin" />}
                                     </div>
                                 </TableCell>
                                 <TableCell className="p-0 md:p-4 mt-2 md:mt-0">
@@ -106,12 +76,12 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                                         </div>
                                         <div className="text-right font-bold md:hidden">
                                             <div className="text-xs text-muted-foreground font-normal mb-1">Total</div>
-                                            {isClient ? `$${formatPrice(order.totalPrice)}` : <Loader2 className="h-4 w-4 animate-spin" />}
+                                            {isClient ? `$${formatPrice(order.totalPrice, language)}` : <Loader2 className="h-4 w-4 animate-spin" />}
                                         </div>
                                     </div>
                                 </TableCell>
                                 <TableCell className="hidden md:table-cell text-right">
-                                    {isClient ? `$${formatPrice(order.totalPrice)}` : <Loader2 className="h-4 w-4 animate-spin" />}
+                                    {isClient ? `$${formatPrice(order.totalPrice, language)}` : <Loader2 className="h-4 w-4 animate-spin" />}
                                 </TableCell>
                                 <TableCell className="hidden md:table-cell text-right">
                                     <Button asChild variant="ghost" size="icon">

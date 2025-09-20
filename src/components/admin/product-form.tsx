@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Loader2, Trash2, AlertTriangle } from 'lucide-react';
+import { Loader2, Trash2, AlertTriangle, Droplets, Sun, Sprout } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
@@ -146,7 +146,17 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                   </div>
                   <div>
                     <Label htmlFor="description">{t('Product_Description')}</Label>
-                    <Textarea id="description" name="description" defaultValue={product?.description || ''} />
+                    <Textarea id="description" name="description" defaultValue={product?.description || ''} rows={5} />
+                  </div>
+                  <div>
+                    <Label htmlFor="care">Cuidados del Producto</Label>
+                    <Textarea id="care" name="care" defaultValue={product?.care || ''} rows={5} />
+                    <p className="text-xs text-muted-foreground pt-1 flex items-center gap-4">
+                      <span>Usa los siguientes símbolos para las viñetas:</span>
+                      <span className="flex items-center gap-1"><Sprout className="h-3 w-3" /> * (General)</span>
+                      <span className="flex items-center gap-1"><Droplets className="h-3 w-3" /> - (Riego)</span>
+                      <span className="flex items-center gap-1"><Sun className="h-3 w-3" /> + (Luz)</span>
+                    </p>
                   </div>
               </div>
               <div className="space-y-4">

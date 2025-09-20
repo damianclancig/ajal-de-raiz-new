@@ -1,7 +1,10 @@
 
+
 'use server';
 
 import type { ObjectId } from 'mongodb';
+
+export type Language = 'en' | 'es' | 'pt';
 
 export type ProductState = 'activo' | 'inactivo' | 'vendido';
 
@@ -19,6 +22,7 @@ export interface Product {
   numReviews: number;
   countInStock: number;
   description: string;
+  care?: string;
   isFeatured: boolean;
   state: ProductState;
   dataAiHint: string;
@@ -60,6 +64,7 @@ export interface HeroSlide {
     headline: string;
     subtext: string;
     image: string;
+    buttonLink?: string;
     state: SlideState;
     dataAiHint?: string;
     createdAt?: string;

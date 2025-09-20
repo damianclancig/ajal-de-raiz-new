@@ -27,6 +27,9 @@ type ActionResponse = {
   cart?: PopulatedCart | null;
   order?: Order | null;
   init_point?: string;
+  shippingCost?: number;
+  shippingMessage?: string;
+  zone?: number;
 };
 
 // Helper function to create a URL-friendly slug
@@ -74,6 +77,7 @@ export async function createProduct(formData: FormData): Promise<ActionResponse>
       name: name,
       slug: slug,
       description: formData.get('description') as string || '',
+      care: formData.get('care') as string || '',
       category: formData.get('category') as string || 'Uncategorized',
       price: price,
       oldPrice: !isNaN(oldPrice) && oldPrice > 0 ? oldPrice : undefined,
@@ -133,6 +137,7 @@ export async function updateProduct(productId: string, formData: FormData): Prom
     const updateFields: { [key: string]: any } = {
       name: name,
       description: formData.get('description') as string,
+      care: formData.get('care') as string || '',
       category: formData.get('category') as string,
       price: price,
       images: images,
@@ -194,7 +199,7 @@ export async function deleteProduct(productId: string): Promise<ActionResponse> 
     
     const updatedProductDoc = await productsCollection.findOne({_id: new ObjectId(productId)});
     const productFromDoc = (doc: any): Product => ({
-        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(), oldPrice: doc.oldPrice,
+        id: doc._id.toString(), name: doc.name, slug: doc.slug, category: doc.category, images: doc.images || [], price: doc.price, brand: doc.brand, rating: doc.rating, numReviews: doc.numReviews, countInStock: doc.countInStock, description: doc.description, care: doc.care, isFeatured: doc.isFeatured || false, state: doc.state || 'inactivo', dataAiHint: doc.dataAiHint || 'product image', createdAt: doc.createdAt?.toString(), updatedAt: doc.updatedAt?.toString(), oldPrice: doc.oldPrice,
     });
     const updatedProduct = productFromDoc(updatedProductDoc);
 
@@ -343,7 +348,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
         }
 
     } catch (error) {
-        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+        const message = error instanceof Error ? error.message : 'Failed to update profile: ${message}';
         return { success: false, message: `Failed to update profile: ${message}` };
     }
 
@@ -416,6 +421,7 @@ export async function createSlide(formData: FormData): Promise<ActionResponse> {
     const subtext = formData.get('subtext') as string;
     const image = formData.get('image') as string;
     const state = formData.get('state') as SlideState;
+    const buttonLink = formData.get('buttonLink') as string;
 
     if (!headline || !image) {
       return { success: false, message: 'Headline and Image are required.' };
@@ -428,6 +434,7 @@ export async function createSlide(formData: FormData): Promise<ActionResponse> {
       headline,
       subtext,
       image,
+      buttonLink,
       state,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -459,6 +466,7 @@ export async function updateSlide(slideId: string, formData: FormData): Promise<
     const subtext = formData.get('subtext') as string;
     const image = formData.get('image') as string;
     const state = formData.get('state') as SlideState;
+    const buttonLink = formData.get('buttonLink') as string;
 
     if (!headline || !image) {
       return { success: false, message: 'Headline and Image are required.' };
@@ -471,6 +479,7 @@ export async function updateSlide(slideId: string, formData: FormData): Promise<
       headline,
       subtext,
       image,
+      buttonLink,
       state,
       updatedAt: new Date(),
     };

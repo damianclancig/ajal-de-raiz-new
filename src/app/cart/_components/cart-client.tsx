@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useTransition, useState, useEffect } from 'react';
@@ -22,7 +23,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useToast } from '@/hooks/use-toast';
 import { createOrder, calculateShipping } from '@/lib/actions';
-import { NO_IMAGE_URL } from '@/lib/utils';
+import { NO_IMAGE_URL, formatPrice } from '@/lib/utils';
 import type { PaymentMethod, User } from '@/lib/types';
 import { useRouter } from 'next/navigation';
 import CompleteProfileForm from '@/components/auth/complete-profile-form';
@@ -56,15 +57,6 @@ export default function CartClient({ user }: CartClientProps) {
       setPostalCode(user.address.zipCode);
     }
   }, [user]);
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'es' ? 'es-AR' : language;
-    return new Intl.NumberFormat(locale, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
-  };
 
   const handleCreateOrder = (paymentMethod: PaymentMethod) => {
     startCheckoutTransition(async () => {
@@ -189,7 +181,7 @@ export default function CartClient({ user }: CartClientProps) {
                                         <Link href={`/products/${item.slug}`}>
                                             <h3 className="font-semibold hover:text-primary">{item.name}</h3>
                                         </Link>
-                                        <p className="text-sm text-muted-foreground">${formatPrice(item.price)}</p>
+                                        <p className="text-sm text-muted-foreground">${formatPrice(item.price, language)}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between gap-4 w-full md:w-auto mt-4 md:mt-0">
@@ -205,7 +197,7 @@ export default function CartClient({ user }: CartClientProps) {
                                         />
                                     </div>
                                     <div className="text-right font-medium w-24">
-                                        ${formatPrice(item.price * item.quantity)}
+                                        ${formatPrice(item.price * item.quantity, language)}
                                     </div>
                                      <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.productId)}>
                                         <Trash2 className="h-4 w-4 text-destructive" />
@@ -228,7 +220,7 @@ export default function CartClient({ user }: CartClientProps) {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span>{t('Subtotal')}</span>
-                <span>${formatPrice(cart.totalPrice)}</span>
+                <span>${formatPrice(cart.totalPrice, language)}</span>
               </div>
                <div className="flex justify-between">
                 <span>Envío</span>
@@ -247,7 +239,7 @@ export default function CartClient({ user }: CartClientProps) {
                <Separator />
               <div className="flex justify-between font-bold text-lg">
                 <span>{t('Total')}</span>
-                <span>${formatPrice(finalTotal)}</span>
+                <span>${formatPrice(cart.totalPrice, language)}</span>
               </div>
             </CardContent>
              <CardFooter className="flex-col gap-4">
@@ -346,10 +338,9 @@ export default function CartClient({ user }: CartClientProps) {
                     <div className="max-h-[60vh] overflow-y-auto p-1">
                       <CompleteProfileForm 
                         user={user} 
+                        isSubmitting={false}
                         onSuccess={() => {
                           setIsAddressModalOpen(false);
-                          // Re-enable checkout button or trigger it programmatically
-                          // For simplicity, user can click again.
                           toast({ title: "Dirección guardada", description: "Ahora puedes proceder al pago."});
                           router.refresh(); // Refresh to get the new user data
                         }} 

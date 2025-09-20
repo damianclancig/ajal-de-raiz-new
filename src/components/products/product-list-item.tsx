@@ -1,4 +1,5 @@
 
+
 "use client"
 
 import type { Product } from '@/lib/types';
@@ -6,7 +7,7 @@ import { useLanguage } from '@/hooks/use-language';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { NO_IMAGE_URL } from '@/lib/utils';
+import { NO_IMAGE_URL, formatPrice } from '@/lib/utils';
 import { Card } from '../ui/card';
 import { Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -19,15 +20,6 @@ interface ProductListItemProps {
 export default function ProductListItem({ product, onProductClick }: ProductListItemProps) {
   const { language, t } = useLanguage();
   const isSoldOut = product.countInStock <= 0;
-
-  const formatPrice = (price: number) => {
-    const locale = language === 'es' ? 'es-AR' : language;
-    return new Intl.NumberFormat(locale, {
-      style: 'decimal',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(price);
-  };
 
   const imageUrl = (product.images[0] || NO_IMAGE_URL).replace(/\.(mp4|webm)$/i, '.jpg');
 
@@ -52,7 +44,7 @@ export default function ProductListItem({ product, onProductClick }: ProductList
           <h3 className="font-headline text-lg font-semibold transition-colors hover:text-primary truncate">{product.name}</h3>
         </Link>
         <div className="flex items-center justify-between">
-            <p className="text-base font-bold text-primary">${formatPrice(product.price)}</p>
+            <p className="text-base font-bold text-primary">${formatPrice(product.price, language)}</p>
             {isSoldOut ? (
                 <span className="text-sm font-semibold text-destructive">{t('Sold_Out')}</span>
             ) : (

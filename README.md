@@ -1,9 +1,8 @@
-
-# Ajal de Raiz - Vivero & Jardinería E-commerce
-
 <p align="center">
   <img src="https://res.cloudinary.com/dqh1coa3c/image/upload/v1754490326/ajal-de-raiz/logo-min_ycwot1.png" alt="Ajal de Raiz Logo" width="150">
 </p>
+
+<h1 align="center">Ajal de Raíz - Vivero & Jardinería E-commerce</h1>
 
 <p align="center">
   <strong>Un toque verde para la vida moderna.</strong>
@@ -11,45 +10,40 @@
 
 ## Descripción
 
-**Ajal de Raiz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
+**Ajal de Raíz** es una aplicación web full-stack moderna construida con Next.js y TypeScript. Funciona como una plataforma de e-commerce para un vivero, permitiendo a los usuarios explorar un catálogo de plantas y suministros de jardinería. La aplicación incluye un panel de administración seguro para gestionar productos, servicios, usuarios y contenido del sitio, así como perfiles de usuario completos con dirección de envío y fotos de perfil.
 
 La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portugués) y cuenta con temas claro y oscuro para una experiencia de usuario óptima en cualquier dispositivo.
 
-## Funcionalidades
+## Funcionalidades Clave
 
 ### Para Usuarios
+- **Catálogo de Productos con Carga Infinita**: Navegación fluida a través de una amplia gama de productos que se cargan dinámicamente al hacer scroll.
+- **Búsqueda y Filtrado Avanzado**: Búsqueda por texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). Los filtros se reflejan en la URL para compartir vistas específicas.
+- **Detalle de Producto Enriquecido**: Páginas de producto con galería de imágenes y videos, descripciones, y una sección de **"Cuidados Esenciales"** con formato claro y visual.
+- **Carrito y Proceso de Compra Robusto**:
+  - Gestión completa del carrito de compras.
+  - Múltiples métodos de pago: **Efectivo, Transferencia Bancaria y MercadoPago**.
+  - Flujo de compra inteligente que solicita completar la dirección de envío si es necesario.
+- **Gestión de Pedidos del Usuario**:
+  - Historial completo de pedidos.
+  - Para pagos por transferencia, permite **subir el comprobante de pago** para su verificación.
+  - Reintentar pagos fallidos de MercadoPago y ver detalles de transacciones aprobadas.
+- **Perfiles de Usuario Completos**: Los usuarios pueden editar su nombre, teléfono, dirección de envío y **subir una foto de perfil personalizada**.
+- **Internacionalización**: Soporte completo para Español, Inglés y Portugués.
+- **Accesibilidad**: Temas claro/oscuro y diseño 100% adaptable a cualquier dispositivo.
 
-- **Catálogo de Productos con Carga Infinita**: Explora una amplia gama de plantas y suministros con un diseño visualmente atractivo. Los productos se cargan a medida que el usuario hace scroll, garantizando un rendimiento óptimo incluso con catálogos muy grandes.
-- **Búsqueda y Filtrado Avanzado**: Encuentra productos fácilmente usando búsqueda de texto, filtrado por categoría y múltiples opciones de ordenamiento (precio, nombre). La lista de productos se actualiza dinámicamente.
-- **Páginas de Detalle**: Visualiza información completa de cada producto, incluyendo una galería de imágenes y videos, descripción, precio y disponibilidad de stock.
-- **Carrito de Compras y Pedidos**: Un sistema robusto para que los usuarios autenticados gestionen sus compras.
-  - **Añadir al Carrito**: Agrega productos al carrito desde la página de detalle, respetando el stock disponible.
-  - **Gestión del Carrito**: Visualiza todos los productos en una página dedicada, ajusta las cantidades o elimina artículos.
-  - **Proceso de Pedido Inteligente**: Al finalizar la compra, si los datos de domicilio están incompletos, el sistema solicitará la información necesaria para continuar con el pago. Elige entre "Pagar en Efectivo", "Transferencia Bancaria" o "MercadoPago".
-  - **Mis Pedidos**: Accede a un historial completo de todas tus órdenes. Para pagos por transferencia, visualiza los datos bancarios, el monto total y sube tu comprobante de pago para confirmar la transacción. Para pagos con MercadoPago, puedes reintentar un pago si falló y, una vez aprobado, ver los detalles de la transacción (método de pago, cuotas, etc.).
-- **Autenticación y Perfil Completo**:
-  - **Registro en Dos Pasos**: Un sistema de registro que primero captura los datos básicos y luego ofrece completar el perfil con información de envío.
-  - **Gestión de Perfil ("Mi Perfil")**: Los usuarios pueden editar su nombre, teléfono, dirección de envío y subir una foto de perfil personalizada, optimizada para un rendimiento eficiente.
-- **Diseño 100% Adaptable**: Experiencia de usuario optimizada para una visualización perfecta en móviles, tablets y de escritorio.
-- **Multi-idioma**: Soporte para Español, Inglés y Portugués.
-- **Contacto Directo**: Botón de WhatsApp flotante para una comunicación instantánea.
-
-### Para Administradores
-
-- **Panel de Administración Seguro**: Acceso restringido solo para usuarios con rol de administrador.
-- **Gestión Avanzada de Productos (CRUD)**: Crea, lee, actualiza, desactiva y elimina permanentemente productos del catálogo. Incluye un buscador de productos y carga infinita (scroll-driven) en la tabla para manejar grandes volúmenes de datos de forma eficiente.
-- **Gestión de Servicios (CRUD)**: Crea, edita y elimina los servicios ofrecidos en la página de inicio, incluyendo íconos, precios, descripciones y una lista de detalles.
-- **Gestión de Órdenes**:
-  - **Listado Centralizado**: Visualiza todos los pedidos realizados por los clientes en una tabla organizada, con estados destacados para una fácil identificación.
-  - **Detalle de la Orden**: Accede a una vista detallada de cada pedido, incluyendo información del cliente, productos, montos y el ID de pago de MercadoPago.
-  - **Verificación de Pagos**: Visualiza los comprobantes de transferencia subidos por los clientes directamente en el detalle del pedido. Los pagos con MercadoPago se confirman automáticamente vía webhook.
-  - **Actualización de Estado**: Modifica el estado de cada pedido (ej. de "Pendiente de Confirmación" a "Confirmado") para mantener informado al cliente y gestionar el flujo de trabajo.
-- **Gestión de Usuarios Completa**:
-    - **Vista Desplegable**: Visualiza todos los usuarios registrados en una lista interactiva. Cada usuario se puede expandir para mostrar sus datos de contacto y dirección completa.
-    - **Edición Total**: Edita toda la información del perfil de un usuario, incluyendo nombre, teléfono, dirección de envío y rol de administrador.
-- **Carga de Múltiples Imágenes y Videos**: Sube hasta 5 archivos multimedia (imágenes o videos) por producto directamente a Cloudinary.
-- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio para destacar promociones.
-- **Centro de Logs de Errores**: Una sección dedicada para visualizar errores de la aplicación en producción, incluyendo stack traces y metadatos, para un diagnóstico y resolución de problemas eficiente.
+### Para Administradores (Panel de Administración)
+- **Gestión Avanzada de Productos (CRUD)**: Creación, actualización y desactivación de productos, con un buscador integrado y carga infinita en la tabla.
+- **Editor de "Cuidados del Producto"**: Campo de texto que convierte símbolos (`*`, `-`, `+`) en íconos y viñetas para una presentación atractiva.
+- **Gestión de Órdenes Centralizada**:
+  - Visualización y filtrado de todos los pedidos.
+  - Verificación de pagos por transferencia (visualización de comprobantes).
+  - Actualización de estado de los pedidos.
+- **Gestión Completa de Usuarios**: Visualiza, edita y gestiona todos los datos del perfil y roles de los usuarios.
+- **Gestión de Novedades (Slides)**: Administra el carrusel de la página de inicio, con formato de texto enriquecido y enlaces de botón personalizables.
+- **Gestión de Servicios (CRUD)**: Crea, edita y elimina los servicios ofrecidos, incluyendo íconos, precios y detalles.
+- **Carga Multimedia**: Sube hasta 5 imágenes o videos por producto a Cloudinary.
+- **Centro de Logs de Errores**: Visualiza errores de la aplicación con detalles para un diagnóstico rápido y eficiente.
 
 ## Stack Tecnológico
 
@@ -61,10 +55,12 @@ La interfaz es completamente responsive, multi-idioma (Español, Inglés, Portug
   - [Tailwind CSS](https://tailwindcss.com/) para el diseño de la interfaz.
   - [Lucide React](https://lucide.dev/) para iconos.
 - **Autenticación**: [NextAuth.js](https://next-auth.js.org/)
-- **Base de Datos**: [MongoDB](https://www.mongodb.com/)
-- **Gestión de Imágenes y Videos**: [Cloudinary](https://cloudinary.com/)
-- **Validación de Formularios**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
-- **Pagos**: [MercadoPago SDK](https://www.mercadopago.com.ar/developers/es/docs)
+- **Base de Datos**: [MongoDB](https://www.mongodb.com/) con Mongoose.
+- **Gestión de Archivos**: [Cloudinary](https://cloudinary.com/) para imágenes y videos.
+- **Pagos**: [MercadoPago SDK](https://www.mercadopago.com.ar/developers/es/docs).
+- **Validación de Formularios**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/).
+- **Servicio de Email**: [Maileroo](https://maileroo.com/).
+- **Analíticas**: [Vercel Analytics](https://vercel.com/analytics).
 
 ## Instalación y Desarrollo Local
 
@@ -72,11 +68,10 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina local.
 
 ### 1. Prerrequisitos
 
-- [Node.js](https://nodejs.org/en/) (versión 18 o superior)
-- [npm](https://www.npmjs.com/) o [yarn](https://yarnpkg.com/)
-- Una base de datos MongoDB (puedes usar una instancia local o una gratuita en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
-- Una cuenta en [Cloudinary](https://cloudinary.com/) para la gestión de imágenes y videos.
-- Una cuenta en [MercadoPago](https://mercadopago.com.ar) para gestionar los pagos.
+- [Node.js](https://nodejs.org/en/) (versión 18 o superior).
+- [npm](https://www.npmjs.com/) o [yarn](https://yarnpkg.com/).
+- Una base de datos MongoDB (local o en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
+- Cuentas en [Cloudinary](https://cloudinary.com/), [MercadoPago](https://mercadopago.com.ar) y [Maileroo](https://maileroo.com/).
 
 ### 2. Clonar el Repositorio
 
@@ -89,8 +84,6 @@ cd ajal-de-raiz
 
 ```bash
 npm install
-# O si usas yarn:
-# yarn install
 ```
 
 ### 4. Configurar Variables de Entorno
@@ -101,44 +94,21 @@ Crea un archivo `.env.local` en la raíz del proyecto, copiando el contenido de 
 cp .env.example .env.local
 ```
 
-Ahora, edita el archivo `.env.local` con tus propias credenciales:
+Abre `.env.local` y rellena las credenciales. Para `AUTH_SECRET`, puedes generar una clave segura con el siguiente comando:
 
-```env
-# MongoDB
-MONGODB_URI="tu_string_de_conexion_a_mongodb"
-
-# NextAuth
-# Genera un secreto con: openssl rand -base64 32
-AUTH_SECRET="tu_secreto_para_nextauth"
-NEXTAUTH_URL="http://localhost:9002"
-
-# Cloudinary - Para la carga de imágenes y videos
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=tu_cloud_name_de_cloudinary
-NEXT_PUBLIC_CLOUDINARY_API_KEY=tu_api_key_de_cloudinary
-CLOUDINARY_SECRET=tu_api_secret_de_cloudinary
-
-# MercadoPago - Para procesar pagos
-MERCADOPAGO_ACCESS_TOKEN="tu_access_token_de_produccion_o_testing"
-MERCADOPAGO_WEBHOOK_SECRET="tu_secreto_para_verificar_webhooks"
-
-# Redes Sociales y Contacto
-NEXT_PUBLIC_WHATSAPP_NUMBER="54911xxxxxxxx"
-NEXT_PUBLIC_INSTAGRAM_USERNAME="tu_usuario_de_instagram"
-NEXT_PUBLIC_CONTACT_EMAIL="tu@email_de_contacto.com"
-
-# Datos Bancarios para Transferencias
-BANK_ALIAS="tu.alias.mp"
-BANK_CBU="0000003100055555555555"
-BANK_CUIT="20-12345678-9"
-BANK_ACCOUNT_NAME="Nombre del Titular"
-
-# Emailing Service (Maileroo)
-MAILEROO_API_KEY="tu_api_key_de_maileroo"
-MAILEROO_FROM_EMAIL="tu@emailverificado.com"
-MAILEROO_TO_CONTACT="email_para_recibir_contactos@dominio.com"
+```bash
+openssl rand -base64 32
 ```
 
-### 5. Iniciar el Servidor de Desarrollo
+### 5. (Opcional) Cargar Datos de Prueba
+
+Para poblar tu base de datos con productos de ejemplo, ejecuta:
+
+```bash
+npm run seed
+```
+
+### 6. Iniciar el Servidor de Desarrollo
 
 ```bash
 npm run dev
@@ -146,37 +116,15 @@ npm run dev
 
 La aplicación estará disponible en [http://localhost:9002](http://localhost:9002).
 
-### 6. Configurar Webhook de MercadoPago
+### 7. Configurar Webhook de MercadoPago
 
 Para que la confirmación de pagos funcione automáticamente, debes configurar un Webhook en tu [Panel de Desarrollador de MercadoPago](https://www.mercadopago.com.ar/developers/panel).
 
-- **URL del Webhook**: `https://tu-dominio-de-produccion.com/api/webhooks/mercadopago`
+- **URL del Webhook**: `https://<tu-dominio-de-produccion>/api/webhooks/mercadopago`
 - **Eventos**: Selecciona el evento `payment`.
 
 En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para exponer tu `localhost` a internet y recibir los webhooks.
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
-
----
-
-Copyright (c) 2024
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
