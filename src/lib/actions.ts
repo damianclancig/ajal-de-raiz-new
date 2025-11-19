@@ -711,7 +711,29 @@ export async function resetPassword(formData: FormData): Promise<ActionResponse>
 export async function handleContactForm(formData: FormData): Promise<ActionResponse> {
   const email = formData.get('email') as string;
   const message = formData.get('message') as string;
+  const token = formData.get('g-recaptcha-response') as string;
 
+  // 1. Validate reCAPTCHA token
+  if (!token) {
+    return { success: false, message: 'Verificación reCAPTCHA fallida. Por favor, inténtalo de nuevo.' };
+  }
+
+  const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${process.env.RECAPTCHA_SECRET_KEY}&response=${token}`;
+  
+  try {
+    const recaptchaRes = await fetch(verifyUrl, { method: "POST" });
+    const recaptchaData = await recaptchaRes.json();
+    
+    if (!recaptchaData.success) {
+      console.error('reCAPTCHA verification failed:', recaptchaData['error-codes']);
+      return { success: false, message: 'La verificación de reCAPTCHA falló. Eres un robot?' };
+    }
+  } catch (e) {
+    console.error('Error verifying reCAPTCHA:', e);
+    return { success: false, message: 'No se pudo verificar reCAPTCHA. Comprueba tu conexión.' };
+  }
+
+  // 2. Validate form data
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!email || !emailRegex.test(email)) {
     return { success: false, message: 'Por favor, ingresa un correo electrónico válido.' };
@@ -720,6 +742,7 @@ export async function handleContactForm(formData: FormData): Promise<ActionRespo
     return { success: false, message: 'Por favor, escribe un mensaje.' };
   }
   
+  // 3. Send email
   try {
     await sendContactRequestEmail(email, message);
     return { success: true, message: 'Email sent successfully!' };
