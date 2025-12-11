@@ -10,6 +10,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { HeroSlide } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { Pencil } from 'lucide-react';
 import React from 'react';
 
 // Helper function to parse simple markdown-like formatting
@@ -30,9 +31,10 @@ const parseSubtext = (text: string) => {
 
 interface HeroBannerProps {
   slides: HeroSlide[];
+  isAdmin?: boolean;
 }
 
-export default function HeroBanner({ slides }: HeroBannerProps) {
+export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
   const { t } = useLanguage();
 
   if (slides.length === 0) {
@@ -85,7 +87,22 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={slide.id}>
-              <div className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden bg-black/50">
+              <div className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden bg-black/50 group">
+                {/* Admin Edit Shortcut */}
+                {isAdmin && (
+                  <Button
+                    asChild
+                    size="icon"
+                    variant="secondary"
+                    className="absolute top-4 right-4 z-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+                  >
+                    <Link href={`/admin/slides/${slide.id}/edit`}>
+                      <Pencil className="w-4 h-4 text-black" />
+                      <span className="sr-only">Editar Slide</span>
+                    </Link>
+                  </Button>
+                )}
+
                 {/* Blurred Background Layer */}
                 <Image
                   src={slide.image.replace(/\.heic$/i, '.png')}
