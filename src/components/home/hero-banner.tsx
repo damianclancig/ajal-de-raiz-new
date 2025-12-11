@@ -94,10 +94,10 @@ export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
                     asChild
                     size="icon"
                     variant="secondary"
-                    className="absolute top-4 right-4 z-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+                    className="absolute top-4 right-4 z-50 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
                   >
                     <Link href={`/admin/slides/${slide.id}/edit`}>
-                      <Pencil className="w-4 h-4 text-black" />
+                      <Pencil className="w-4 h-4 stroke-2" />
                       <span className="sr-only">Editar Slide</span>
                     </Link>
                   </Button>
