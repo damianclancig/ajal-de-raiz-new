@@ -122,12 +122,12 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
                     {isAdmin && (
                       <Button
                         asChild
-                        variant="ghost"
+                        variant="secondary"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-primary"
+                        className="h-8 w-8 rounded-full transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
                       >
                         <Link href={`/admin/products/${product.id}/edit`}>
-                          <Pencil className="h-4 w-4" />
+                          <Pencil className="h-4 w-4 stroke-2" />
                           <span className="sr-only">Editar Producto</span>
                         </Link>
                       </Button>
