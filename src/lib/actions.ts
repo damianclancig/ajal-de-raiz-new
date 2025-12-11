@@ -485,9 +485,11 @@ export async function createSlide(formData: FormData): Promise<ActionResponse> {
     const state = formData.get('state') as SlideState;
     const buttonLink = formData.get('buttonLink') as string;
 
-    if (!headline || !image) {
-      return { success: false, message: 'Headline and Image are required.' };
+
+    if (!image) {
+      return { success: false, message: 'Image is required.' };
     }
+
     if (!['habilitado', 'deshabilitado'].includes(state)) {
       return { success: false, message: 'Invalid state value.' };
     }
@@ -530,9 +532,11 @@ export async function updateSlide(slideId: string, formData: FormData): Promise<
     const state = formData.get('state') as SlideState;
     const buttonLink = formData.get('buttonLink') as string;
 
-    if (!headline || !image) {
-      return { success: false, message: 'Headline and Image are required.' };
+
+    if (!image) {
+      return { success: false, message: 'Image is required.' };
     }
+
     if (!['habilitado', 'deshabilitado'].includes(state)) {
       return { success: false, message: 'Invalid state value.' };
     }

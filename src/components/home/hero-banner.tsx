@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { HeroSlide } from '@/lib/types';
+import { cn } from '@/lib/utils';
 import React from 'react';
 
 // Helper function to parse simple markdown-like formatting
@@ -107,10 +108,15 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20 pointer-events-none" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 z-30">
-                  <div className="bg-black/30 backdrop-blur-sm p-6 md:p-10 rounded-lg">
-                    <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white shadow-lg">
-                      {slide.headline}
-                    </h1>
+                  <div className={cn(
+                    "p-6 md:p-10 rounded-lg transition-all",
+                    slide.headline ? "bg-black/30 backdrop-blur-sm" : ""
+                  )}>
+                    {slide.headline && (
+                      <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white shadow-lg">
+                        {slide.headline}
+                      </h1>
+                    )}
                     {parseSubtext(slide.subtext)}
                     <Button asChild size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground">
                       <Link href={slide.buttonLink || '/products'}>{t('Shop_Now')}</Link>
@@ -127,3 +133,4 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
     </section>
   );
 }
+
