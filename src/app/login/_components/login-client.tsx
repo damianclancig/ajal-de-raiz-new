@@ -11,13 +11,18 @@ import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { useRef, useState } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useTheme } from "next-themes";
+import { verifyRecaptchaAction } from "@/lib/actions";
+import { useToast } from "@/hooks/use-toast";
 
-function LoginButton() {
+function LoginButton({ disabled }: { disabled: boolean }) {
   const { pending } = useFormStatus();
   const { t } = useLanguage();
 
   return (
-    <Button type="submit" className="w-full" aria-disabled={pending}>
+    <Button type="submit" className="w-full" aria-disabled={pending} disabled={disabled || pending}>
       {pending ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -34,14 +39,51 @@ function LoginForm() {
   const { t } = useLanguage();
   const searchParams = useSearchParams();
   const error = searchParams.get('error');
+  const { toast } = useToast();
+
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+  const [isVerified, setIsVerified] = useState(false);
+  const { theme } = useTheme();
+
+  const handleRecaptchaChange = (token: string | null) => {
+    setIsVerified(!!token);
+  };
 
   const handleSignIn = async (formData: FormData) => {
+    const token = recaptchaRef.current?.getValue();
+
+    if (!token) {
+      toast({
+        variant: "destructive",
+        title: "Verificación requerida",
+        description: "Por favor, completa el reCAPTCHA.",
+      });
+      return;
+    }
+
+    // Verify captcha server-side before attempting login
+    // Note: We are using a separate server action here because signIn is client-side.
+    // Ideally, signIn should handle this but wrapping it is safer for now.
+    const verification = await verifyRecaptchaAction(token);
+
+    if (!verification.success) {
+      toast({
+        variant: "destructive",
+        title: "Error de verificación",
+        description: verification.message || "Captcha inválido",
+      });
+      recaptchaRef.current?.reset();
+      setIsVerified(false);
+      return;
+    }
+
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
-    await signIn('credentials', { 
-        email, 
-        password, 
-        redirectTo: '/' 
+
+    await signIn('credentials', {
+      email,
+      password,
+      redirectTo: '/'
     });
   }
 
@@ -49,30 +91,43 @@ function LoginForm() {
     <form action={handleSignIn} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="email">{t('Email')}</Label>
-        <Input 
-          id="email" 
+        <Input
+          id="email"
           name="email"
-          type="email" 
-          placeholder={t('Placeholder_Email')} 
-          required 
+          type="email"
+          placeholder={t('Placeholder_Email')}
+          required
         />
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">{t('Password')}</Label>
-        <Input 
-          id="password" 
+        <Input
+          id="password"
           name="password"
-          type="password" 
-          required 
+          type="password"
+          required
         />
       </div>
-       {error === 'CredentialsSignin' && (
+      {error === 'CredentialsSignin' && (
         <div className="flex items-center gap-2 text-sm text-destructive">
           <AlertCircle className="h-4 w-4" />
           <p>{t('Login_Error_Description')}</p>
         </div>
       )}
-      <LoginButton />
+
+      <div className="flex justify-center w-full">
+        <div className="rounded-md overflow-hidden">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+            onChange={handleRecaptchaChange}
+            theme={theme === 'dark' ? 'dark' : 'light'}
+            key={theme}
+          />
+        </div>
+      </div>
+
+      <LoginButton disabled={!isVerified} />
     </form>
   )
 }
@@ -91,14 +146,14 @@ export default function LoginClientPage() {
           <LoginForm />
         </CardContent>
         <CardFooter className="flex-col items-center space-y-2 text-sm">
-           <div className="flex justify-between w-full">
+          <div className="flex justify-between w-full">
             <Button variant="link" size="sm" asChild className="p-0 h-auto">
-                <Link href="/forgot-password">{t('Forgot_Password')}</Link>
+              <Link href="/forgot-password">{t('Forgot_Password')}</Link>
             </Button>
             <Button variant="link" size="sm" asChild className="p-0 h-auto">
-                <Link href="/register">{t('Create_Account')}</Link>
+              <Link href="/register">{t('Create_Account')}</Link>
             </Button>
-           </div>
+          </div>
         </CardFooter>
       </Card>
     </div>

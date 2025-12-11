@@ -3,6 +3,7 @@ export const translations = {
   // Header
   'Ajal': { en: 'Ajal', es: 'Ajal', pt: 'Ajal' },
   'de_Raiz': { en: 'de Raiz', es: 'de Raiz', pt: 'de Raiz' },
+  'Ajal_de_Raiz': { en: 'Ajal de Raíz', es: 'Ajal de Raíz', pt: 'Ajal de Raíz' },
   'Home': { en: 'Home', es: 'Inicio', pt: 'Início' },
   'Products': { en: 'Products', es: 'Productos', pt: 'Produtos' },
   'Services': { en: 'Services', es: 'Servicios', pt: 'Serviços' },
