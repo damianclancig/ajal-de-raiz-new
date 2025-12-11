@@ -9,9 +9,10 @@ import type { Product } from '@/lib/types';
 
 interface FeaturedProductsProps {
   products: Product[];
+  isAdmin?: boolean;
 }
 
-export default function FeaturedProducts({ products }: FeaturedProductsProps) {
+export default function FeaturedProducts({ products, isAdmin }: FeaturedProductsProps) {
   const { t } = useLanguage();
 
   return (
@@ -26,7 +27,7 @@ export default function FeaturedProducts({ products }: FeaturedProductsProps) {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
         {products.map(product => (
-          <ProductCard key={product.id} product={product} />
+          <ProductCard key={product.id} product={product} isAdmin={isAdmin} />
         ))}
       </div>
       <div className="text-center mt-12">

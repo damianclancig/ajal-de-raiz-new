@@ -16,7 +16,7 @@ const PRODUCTS_PER_PAGE = 12;
 function ProductListSkeleton() {
   return (
     <div className="space-y-8">
-       <div className="space-y-4">
+      <div className="space-y-4">
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-10 w-full" />
       </div>
@@ -28,8 +28,10 @@ function ProductListSkeleton() {
     </div>
   )
 }
+import { auth } from "@/auth";
 
 export default async function ProductsPage() {
+  const session = await auth();
   // We fetch initial data to pass to the component.
   // The component itself will re-fetch based on URL params on the client side.
   const result = await getPaginatedProducts({ offset: 0, limit: PRODUCTS_PER_PAGE, state: 'activo' });
@@ -38,9 +40,9 @@ export default async function ProductsPage() {
 
   return (
     <div className="container py-8">
-       <Suspense fallback={<ProductListSkeleton />}>
-        <ProductList products={products} initialCategories={categories} />
-       </Suspense>
+      <Suspense fallback={<ProductListSkeleton />}>
+        <ProductList products={products} initialCategories={categories} isAdmin={session?.user?.isAdmin} />
+      </Suspense>
     </div>
   );
 }

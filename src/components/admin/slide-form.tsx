@@ -30,23 +30,23 @@ export default function SlideForm({ slide }: SlideFormProps) {
 
   const handleSubmit = (formData: FormData) => {
     startTransition(async () => {
-      const action = slide 
+      const action = slide
         ? updateSlide.bind(null, slide.id)
         : createSlide;
-        
+
       const result = await action(formData);
 
       if (result?.success === false) {
         toast({ title: t('Error_Title'), description: result.message, variant: "destructive" });
       } else {
-         toast({ 
-          title: slide ? t('Slide_Updated_Title') : t('Slide_Created_Title'), 
-          description: t('Slide_Saved_Desc') 
+        toast({
+          title: slide ? t('Slide_Updated_Title') : t('Slide_Created_Title'),
+          description: t('Slide_Saved_Desc')
         });
       }
     });
   };
-  
+
   return (
     <form action={handleSubmit}>
       <Card>
@@ -57,7 +57,7 @@ export default function SlideForm({ slide }: SlideFormProps) {
           <div className="space-y-4">
             <div>
               <Label htmlFor="headline">{t('Headline')}</Label>
-              <Input id="headline" name="headline" defaultValue={slide?.headline || ''} required />
+              <Input id="headline" name="headline" defaultValue={slide?.headline || ''} />
             </div>
             <div>
               <Label htmlFor="subtext">{t('Subtext')}</Label>
@@ -66,12 +66,12 @@ export default function SlideForm({ slide }: SlideFormProps) {
                 Para dar formato: usa *texto* para <b>negrita</b>, _texto_ para <u>subrayar</u>, y -texto- para <span className="line-through">tachar</span>.
               </p>
             </div>
-             <div>
-                <Label htmlFor="buttonLink">Enlace del Botón (Opcional)</Label>
-                <Input id="buttonLink" name="buttonLink" defaultValue={slide?.buttonLink || ''} placeholder="/products/nombre-del-producto" />
-                <p className="text-xs text-muted-foreground pt-1">
-                    Si se deja vacío, el botón enlazará al catálogo general de productos.
-                </p>
+            <div>
+              <Label htmlFor="buttonLink">Enlace del Botón (Opcional)</Label>
+              <Input id="buttonLink" name="buttonLink" defaultValue={slide?.buttonLink || ''} placeholder="/products/nombre-del-producto" />
+              <p className="text-xs text-muted-foreground pt-1">
+                Si se deja vacío, el botón enlazará al catálogo general de productos.
+              </p>
             </div>
             <div>
               <Label htmlFor="state">{t('State')}</Label>
@@ -97,12 +97,12 @@ export default function SlideForm({ slide }: SlideFormProps) {
           </div>
         </CardContent>
         <CardFooter className="flex justify-end gap-2">
-            <Button asChild variant="secondary" disabled={isPending}>
-              <Link href="/admin/slides">{t('Cancel')}</Link>
-            </Button>
-            <Button type="submit" disabled={isPending}>
-              {isPending ? <Loader2 className="animate-spin" /> : t('Save')}
-            </Button>
+          <Button asChild variant="secondary" disabled={isPending}>
+            <Link href="/admin/slides">{t('Cancel')}</Link>
+          </Button>
+          <Button type="submit" disabled={isPending}>
+            {isPending ? <Loader2 className="animate-spin" /> : t('Save')}
+          </Button>
         </CardFooter>
       </Card>
     </form>

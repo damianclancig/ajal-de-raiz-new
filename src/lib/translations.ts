@@ -28,7 +28,7 @@ export const translations = {
   'Find_best_tools_supplies': { en: 'Find the best tools and supplies to make your garden thrive.', es: 'Encuentra las mejores herramientas y suministros para que tu jardín prospere.', pt: 'Encontre as melhores ferramentas e suprimentos para fazer seu jardim prosperar.' },
   'Expert_Plant_Care_Services': { en: 'Expert Plant Care Services', es: 'Servicios Expertos de Cuidado de Plantas', pt: 'Serviços Especializados de Cuidados com Plantas' },
   'Let_us_help_you': { en: 'Let us help you keep your green friends happy and healthy.', es: 'Déjanos ayudarte a mantener a tus amigos verdes felices y saludables.', pt: 'Deixe-nos ajudar a manter seus amigos verdes felizes e saudáveis.' },
-  
+
   // Featured Products
   'Featured_Products': { en: 'Featured Products', es: 'Productos Destacados', pt: 'Produtos em Destaque' },
   'Hand_picked_for_your_home_and_garden': {
@@ -42,10 +42,10 @@ export const translations = {
   // Services
   'Our_Services': { en: 'Our Services', es: 'Nuestros Servicios', pt: 'Nossos Serviços' },
   'Ajal_de_Raiz_Services': { en: 'Ajal de Raíz Services', es: 'Servicios de Ajal de Raíz', pt: 'Serviços da Ajal de Raíz' },
-  'Ajal_de_Raiz_Services_Desc': { 
-      en: 'Everything you need to care for your plants, energies, and rituals. Made with love and roots.',
-      es: 'Todo lo que necesitás para cuidar tus plantas, energías y rituales. Hecho con amor y raíces.',
-      pt: 'Tudo o que você precisa para cuidar de suas plantas, energias e rituais. Feito com amor e raízes.'
+  'Ajal_de_Raiz_Services_Desc': {
+    en: 'Everything you need to care for your plants, energies, and rituals. Made with love and roots.',
+    es: 'Todo lo que necesitás para cuidar tus plantas, energías y rituales. Hecho con amor y raíces.',
+    pt: 'Tudo o que você precisa para cuidar de suas plantas, energias e rituais. Feito com amor e raízes.'
   },
   'Expert_care_for_your_green_space': {
     en: 'Expert care for your green space',
@@ -64,7 +64,7 @@ export const translations = {
     es: '¿Sueñas con un nuevo jardín? Nuestros expertos pueden ayudarte a diseñar y crear el jardín perfecto para tu espacio, desde balcones hasta patios.',
     pt: 'Sonhando com um novo jardim? Nossos especialistas podem ajudar a projetar e montar o jardim perfeito para seu espaço, de varandas a quintais.'
   },
-  
+
   // Footer
   'Contact_Us': { en: 'Contact Us', es: 'Contáctanos', pt: 'Fale Conosco' },
   'A_green_touch_for_modern_living': {
@@ -90,7 +90,7 @@ export const translations = {
   'Legal': { en: 'Legal', es: 'Legal', pt: 'Legal' },
   'Terms_and_Conditions': { en: 'Terms and Conditions', es: 'Términos y Condiciones', pt: 'Termos e Condições' },
   'Location': { en: 'Location', es: 'Lugar', pt: 'Localização' },
-  
+
   // Products Page
   'Our_Collection': { en: 'Our Collection', es: 'Nuestra Colección', pt: 'Nossa Coleção' },
   'Browse_our_wide_selection_of_plants_and_supplies': {
@@ -112,7 +112,7 @@ export const translations = {
   'Filters_and_View_Options': { en: 'Filters and View Options', es: 'Filtros y Opciones de Vista', pt: 'Filtros e Opções de Visualização' },
   'End_of_results': { en: 'End of results.', es: 'Fin de los resultados.', pt: 'Fim dos resultados.' },
   'No_products_found_with_filters': { en: 'No products were found with those filters.', es: 'No se encontraron productos con esos filtros.', pt: 'Nenhum produto foi encontrado com esses filtros.' },
-  
+
   // Login / Auth Flow
   'Welcome_Back': { en: 'Welcome Back', es: 'Bienvenido de Nuevo', pt: 'Bem-vindo de Volta' },
   'Enter_your_credentials_to_log_in': {
@@ -169,7 +169,7 @@ export const translations = {
   'About_CTA_Title': { en: 'Explore Our Collection', es: 'Explora Nuestra Colección', pt: 'Explore Nossa Coleção' },
   'About_CTA_Subtitle': { en: 'Now that you know our story, we invite you to discover the plants that make it possible. Find the perfect piece of nature for your space.', es: 'Ahora que conoces nuestra historia, te invitamos a descubrir las plantas que la hacen posible. Encuentra la pieza de naturaleza perfecta para tu espacio.', pt: 'Agora que você conhece nossa história, convidamos você a descobrir as plantas que a tornam possível. Encontre o pedaço de natureza perfeito para o seu espaço.' },
   'About_CTA_Button': { en: 'View Products', es: 'Ver Productos', pt: 'Ver Produtos' },
-  
+
   // Admin Page
   'Admin_Panel': { en: 'Admin Panel', es: 'Panel de Administración', pt: 'Painel Administrativo' },
   'Manage_your_products_and_store_data': {
@@ -208,7 +208,7 @@ export const translations = {
     es: 'Esta acción no se puede deshacer. Esto eliminará permanentemente el elemento.',
     pt: 'Esta ação não pode ser desfeita. Isso excluirá permanentemente o item.'
   },
-   'This_action_cannot_be_undone_inactive': {
+  'This_action_cannot_be_undone_inactive': {
     en: 'This action will set the product as inactive and it will not be visible in the public store.',
     es: 'Esta acción marcará el producto como inactivo y no será visible en la tienda pública.',
     pt: 'Esta ação definirá o produto como inativo e ele não será visível na loja pública.'
@@ -259,6 +259,8 @@ export const translations = {
   'Image_Limit_Desc': { en: 'You cannot upload more than {max} images.', es: 'No puedes subir más de {max} imágenes.', pt: 'Você não pode carregar mais de {max} imagens.' },
   'User_Updated_Title': { en: 'User Updated', es: 'Usuario Actualizado', pt: 'Usuário Atualizado' },
   'User_Saved_Desc': { en: 'The user has been saved successfully.', es: 'El usuario se ha guardado correctamente.', pt: 'O usuário foi salvo com sucesso.' },
+  'User_deleted_successfully': { en: 'The user has been deleted successfully.', es: 'El usuario ha sido eliminado correctamente.', pt: 'O usuário foi excluído com sucesso.' },
+  'Success': { en: 'Success', es: 'Éxito', pt: 'Sucesso' },
   'Uploading_Image_Title': { en: 'Uploading Image...', es: 'Subiendo imagen...', pt: 'Enviando imagem...' },
   'Uploading_Image_Desc': { en: 'Please wait while the image is being uploaded.', es: 'Por favor, espera mientras se sube la imagen.', pt: 'Por favor, aguarde enquanto a imagem está sendo enviada.' },
   'Upload_Error_Title': { en: 'Upload Error', es: 'Error al Subir', pt: 'Erro de Upload' },
@@ -332,5 +334,5 @@ export const translations = {
   'Account_Holder': { en: 'Account Holder', es: 'Titular de la Cuenta', pt: 'Titular da Conta' },
   'After_payment_instruction': { en: 'Once the payment is made, upload the receipt to speed up the confirmation process.', es: 'Una vez realizado el pago, sube el comprobante para agilizar el proceso de confirmación.', pt: 'Após o pagamento ser efetuado, carregue o comprovante para agilizar o processo de confirmação.' },
   'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' }
-  
+
 };

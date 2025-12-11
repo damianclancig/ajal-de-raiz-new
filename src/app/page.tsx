@@ -12,17 +12,20 @@ export const metadata: Metadata = {
   description: 'Un toque verde para la vida moderna. Descubre nuestra colección curada de plantas de interior, exterior, y todos los suministros de jardinería que necesitas para tu hogar.',
 };
 
+import { auth } from "@/auth";
+
 export default async function Home() {
+  const session = await auth();
   const [featuredProducts, slides, services] = await Promise.all([
     getFeaturedProducts(),
     getActiveSlides(),
     getAllServices()
   ]);
-  
+
   return (
     <div className="space-y-12 md:space-y-16 lg:space-y-20">
-      <HeroBanner slides={slides} />
-      <FeaturedProducts products={featuredProducts} />
+      <HeroBanner slides={slides} isAdmin={session?.user?.isAdmin} />
+      <FeaturedProducts products={featuredProducts} isAdmin={session?.user?.isAdmin} />
       <ServicesSection services={services} />
       <ContactSection />
     </div>

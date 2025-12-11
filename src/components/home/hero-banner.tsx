@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { HeroSlide } from '@/lib/types';
+import { cn } from '@/lib/utils';
+import { Pencil } from 'lucide-react';
 import React from 'react';
 
 // Helper function to parse simple markdown-like formatting
@@ -29,9 +31,10 @@ const parseSubtext = (text: string) => {
 
 interface HeroBannerProps {
   slides: HeroSlide[];
+  isAdmin?: boolean;
 }
 
-export default function HeroBanner({ slides }: HeroBannerProps) {
+export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
   const { t } = useLanguage();
 
   if (slides.length === 0) {
@@ -84,7 +87,22 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
         <CarouselContent>
           {slides.map((slide, index) => (
             <CarouselItem key={slide.id}>
-              <div className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden bg-black/50">
+              <div className="relative h-[40vh] md:h-[70vh] w-full overflow-hidden bg-black/50 group">
+                {/* Admin Edit Shortcut */}
+                {isAdmin && (
+                  <Button
+                    asChild
+                    size="icon"
+                    variant="secondary"
+                    className="absolute top-4 right-4 z-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+                  >
+                    <Link href={`/admin/slides/${slide.id}/edit`}>
+                      <Pencil className="w-4 h-4 text-black" />
+                      <span className="sr-only">Editar Slide</span>
+                    </Link>
+                  </Button>
+                )}
+
                 {/* Blurred Background Layer */}
                 <Image
                   src={slide.image.replace(/\.heic$/i, '.png')}
@@ -107,10 +125,15 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20 pointer-events-none" />
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 z-30">
-                  <div className="bg-black/30 backdrop-blur-sm p-6 md:p-10 rounded-lg">
-                    <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white shadow-lg">
-                      {slide.headline}
-                    </h1>
+                  <div className={cn(
+                    "p-6 md:p-10 rounded-lg transition-all",
+                    slide.headline ? "bg-black/30 backdrop-blur-sm" : ""
+                  )}>
+                    {slide.headline && (
+                      <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white shadow-lg">
+                        {slide.headline}
+                      </h1>
+                    )}
                     {parseSubtext(slide.subtext)}
                     <Button asChild size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground">
                       <Link href={slide.buttonLink || '/products'}>{t('Shop_Now')}</Link>
@@ -127,3 +150,4 @@ export default function HeroBanner({ slides }: HeroBannerProps) {
     </section>
   );
 }
+
