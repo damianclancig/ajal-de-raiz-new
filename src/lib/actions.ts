@@ -394,6 +394,7 @@ export async function updateUserProfile(formData: FormData): Promise<ActionRespo
 }
 
 
+
 export async function updateUser(userId: string, formData: FormData): Promise<ActionResponse> {
   try {
     if (!ObjectId.isValid(userId)) {
@@ -444,6 +445,31 @@ export async function updateUser(userId: string, formData: FormData): Promise<Ac
   revalidatePath(`/admin/users/${userId}/edit`);
   redirect('/admin/users');
 }
+
+export async function deleteUser(userId: string): Promise<ActionResponse> {
+  try {
+    if (!ObjectId.isValid(userId)) {
+      return { success: false, message: 'Invalid user ID.' };
+    }
+    const db = await getDb();
+    const usersCollection = db.collection('users');
+
+    const result = await usersCollection.deleteOne({ _id: new ObjectId(userId) });
+
+    if (result.deletedCount === 0) {
+      return { success: false, message: 'User not found.' };
+    }
+
+    revalidatePath('/admin/users');
+    return { success: true, message: 'User deleted successfully.' };
+
+  } catch (error) {
+    console.error(error);
+    const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+    return { success: false, message: `Failed to delete user: ${message}` };
+  }
+}
+
 
 
 // SLIDE ACTIONS
