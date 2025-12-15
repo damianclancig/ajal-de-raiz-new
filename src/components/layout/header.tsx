@@ -35,7 +35,7 @@ export default function Header() {
       refreshPendingCount();
     }
   }, [status, refreshPendingCount]);
-  
+
   const cartItemCount = cart?.items.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   // Placeholder to prevent layout shift before client-side rendering
@@ -57,7 +57,7 @@ export default function Header() {
         {/* Center Section: Desktop Nav */}
         <nav className="hidden md:flex flex-1 justify-center">
           <div className="flex gap-4">
-            <HeaderNavLinks />
+            <HeaderNavLinks isDesktop={true} />
           </div>
         </nav>
 
@@ -90,35 +90,35 @@ export default function Header() {
               <Link href="/login">{t('Login')}</Link>
             </Button>
           )}
-          
+
           {/* Mobile Menu */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <div className="md:hidden flex items-center">
-                {isClient && !session && (
-                    <Button asChild variant="ghost" size="sm">
-                        <Link href="/login">{t('Login')}</Link>
-                    </Button>
-                )}
-                <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                        <Menu className="h-6 w-6" />
-                        <span className="sr-only">{t('Mobile_Menu')}</span>
-                    </Button>
-                </SheetTrigger>
+              {isClient && !session && (
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/login">{t('Login')}</Link>
+                </Button>
+              )}
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">{t('Mobile_Menu')}</span>
+                </Button>
+              </SheetTrigger>
             </div>
             <SheetContent side="left" className="flex flex-col p-0">
               <SheetHeader className="p-4 border-b">
-                 <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Logo size={48} />
-                    <span className="font-headline text-2xl font-bold">
-                      {t("Ajal")} {t("de_Raiz")}
-                    </span>
-                  </Link>
-                  <SheetTitle className="sr-only">Menu Principal</SheetTitle>
+                <Link href="/" className="flex items-center space-x-2" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Logo size={48} />
+                  <span className="font-headline text-2xl font-bold">
+                    {t("Ajal")} {t("de_Raiz")}
+                  </span>
+                </Link>
+                <SheetTitle className="sr-only">Menu Principal</SheetTitle>
               </SheetHeader>
               <div className="p-4 flex-grow">
                 <nav className="flex flex-col gap-4">
-                  <HeaderNavLinks onLinkClick={() => setIsMobileMenuOpen(false)}/>
+                  <HeaderNavLinks onLinkClick={() => setIsMobileMenuOpen(false)} />
                 </nav>
               </div>
               <Separator />

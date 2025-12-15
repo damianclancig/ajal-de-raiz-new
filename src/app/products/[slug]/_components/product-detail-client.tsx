@@ -20,6 +20,7 @@ import CareInstructions from '@/components/products/care-instructions';
 
 import { Pencil } from 'lucide-react';
 import Link from 'next/link';
+import ProductBreadcrumb from '@/components/products/product-breadcrumb';
 
 export default function ProductDetailClient({ product, isAdmin }: { product: Product, isAdmin?: boolean }) {
   const [selectedMedia, setSelectedMedia] = useState<string>(product.images[0]);
@@ -54,9 +55,25 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
 
   return (
     <div className="px-4 py-8 md:py-12">
+      <div className="max-w-6xl mx-auto">
+        <ProductBreadcrumb category={product.category} />
+      </div>
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
         <div className="flex flex-col gap-4">
           <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg bg-muted/20">
+            {isAdmin && (
+              <Button
+                asChild
+                variant="secondary"
+                size="icon"
+                className="absolute top-4 right-4 z-10 h-8 w-8 rounded-full transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
+              >
+                <Link href={`/admin/products/${product.id}/edit`}>
+                  <Pencil className="h-4 w-4 stroke-2" />
+                  <span className="sr-only">Editar Producto</span>
+                </Link>
+              </Button>
+            )}
             {isVideo(selectedMedia) ? (
               <video
                 key={selectedMedia}
@@ -120,17 +137,7 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
                   <div className="flex items-center gap-2">
                     <CardTitle className="font-headline text-4xl md:text-5xl">{product.name}</CardTitle>
                     {isAdmin && (
-                      <Button
-                        asChild
-                        variant="secondary"
-                        size="icon"
-                        className="h-8 w-8 rounded-full transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
-                      >
-                        <Link href={`/admin/products/${product.id}/edit`}>
-                          <Pencil className="h-4 w-4 stroke-2" />
-                          <span className="sr-only">Editar Producto</span>
-                        </Link>
-                      </Button>
+                      <></>
                     )}
                   </div>
                 </div>
