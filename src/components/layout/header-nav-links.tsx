@@ -9,13 +9,14 @@ import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const NavLink = ({ href, children, onLinkClick }: { href: string; children: React.ReactNode, onLinkClick?: () => void }) => {
+const NavLink = ({ href, children, onLinkClick, isDesktop }: { href: string; children: React.ReactNode, onLinkClick?: () => void, isDesktop?: boolean }) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
   return (
     <Button asChild variant="ghost" className={cn(
-      "justify-start text-base transition-colors hover:text-primary",
+      "justify-start text-base transition-colors",
+      isDesktop ? "hover:text-white" : "hover:text-primary",
       isActive ? "font-bold text-primary" : "text-muted-foreground",
     )}>
       <Link href={href} onClick={onLinkClick}>{children}</Link>
@@ -24,10 +25,11 @@ const NavLink = ({ href, children, onLinkClick }: { href: string; children: Reac
 };
 
 interface HeaderNavLinksProps {
-    onLinkClick?: () => void;
+  onLinkClick?: () => void;
+  isDesktop?: boolean;
 }
 
-export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
+export default function HeaderNavLinks({ onLinkClick, isDesktop }: HeaderNavLinksProps) {
   const { t } = useLanguage();
   const { data: session, status } = useSession();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -41,7 +43,7 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
       setIsAdmin(false);
     }
   }, [session, status]);
-  
+
   const navLinks = [
     { href: "/", label: t("Home") },
     { href: "/products", label: t("Products") },
@@ -57,7 +59,7 @@ export default function HeaderNavLinks({ onLinkClick }: HeaderNavLinksProps) {
   return (
     <>
       {navLinks.map((link) => (
-        <NavLink key={link.href} href={link.href} onLinkClick={onLinkClick}>
+        <NavLink key={link.href} href={link.href} onLinkClick={onLinkClick} isDesktop={isDesktop}>
           {link.label}
         </NavLink>
       ))}
