@@ -4,12 +4,12 @@ import { getMyOrders } from '@/lib/order-service';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { translations } from '@/lib/translations';
 import Image from 'next/image';
-import { NO_IMAGE_URL, formatPrice, formatDate, getStatusVariant } from '@/lib/utils';
+import { NO_IMAGE_URL, formatPrice, formatDate } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Info, CreditCard, CheckCircle2, AlertCircle, Wallet } from 'lucide-react';
 import type { MercadoPagoPaymentDetails } from '@/lib/types';
@@ -20,12 +20,12 @@ import CancelOrderButton from './_components/cancel-order-button';
 import { getLanguage } from '@/lib/utils-server';
 
 export const metadata: Metadata = {
-  title: 'Mis Pedidos',
-  description: 'Consulta el historial y el estado de todos tus pedidos en Ajal de Raiz.',
-  robots: {
-    index: false,
-    follow: false,
-  }
+    title: 'Mis Pedidos',
+    description: 'Consulta el historial y el estado de todos tus pedidos en Ajal de Raiz.',
+    robots: {
+        index: false,
+        follow: false,
+    }
 };
 
 // Revalidate this page every 30 seconds to get live order status updates
@@ -62,14 +62,14 @@ function StatusAlert({ status }: { status: string | undefined }) {
             </Alert>
         );
     }
-    
+
     if (status === 'pending') {
-         return (
+        return (
             <Alert className="mb-6">
                 <Info className="h-4 w-4" />
                 <AlertTitle>Pago Pendiente</AlertTitle>
                 <AlertDescription>
-                   Tu pago está pendiente de procesamiento. Te notificaremos cuando se complete.
+                    Tu pago está pendiente de procesamiento. Te notificaremos cuando se complete.
                 </AlertDescription>
             </Alert>
         );
@@ -79,54 +79,54 @@ function StatusAlert({ status }: { status: string | undefined }) {
 }
 
 function PaymentDetails({ details }: { details: MercadoPagoPaymentDetails }) {
-  const formatPaymentMethod = (method: string) => {
-    return method.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  }
+    const formatPaymentMethod = (method: string) => {
+        return method.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
 
-  return (
-    <Card className="mb-6 bg-muted/50">
-      <CardHeader>
-        <CardTitle className="text-lg flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
-            Pago Confirmado
-        </CardTitle>
-        <CardDescription>Detalles de tu pago con MercadoPago.</CardDescription>
-      </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-4 text-sm">
-        <div>
-          <p className="font-semibold">Método</p>
-          <p className="capitalize">{formatPaymentMethod(details.paymentMethodId)}</p>
-        </div>
-        <div>
-          <p className="font-semibold">Tipo</p>
-          <p className="capitalize">{formatPaymentMethod(details.paymentTypeId)}</p>
-        </div>
-        {details.lastFourDigits && (
-          <div>
-            <p className="font-semibold">Tarjeta</p>
-            <p>•••• {details.lastFourDigits}</p>
-          </div>
-        )}
-        {details.installments && (
-          <div>
-            <p className="font-semibold">Cuotas</p>
-            <p>{details.installments}</p>
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  )
+    return (
+        <Card className="mb-6 bg-muted/50">
+            <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                    Pago Confirmado
+                </CardTitle>
+                <CardDescription>Detalles de tu pago con MercadoPago.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p className="font-semibold">Método</p>
+                    <p className="capitalize">{formatPaymentMethod(details.paymentMethodId)}</p>
+                </div>
+                <div>
+                    <p className="font-semibold">Tipo</p>
+                    <p className="capitalize">{formatPaymentMethod(details.paymentTypeId)}</p>
+                </div>
+                {details.lastFourDigits && (
+                    <div>
+                        <p className="font-semibold">Tarjeta</p>
+                        <p>•••• {details.lastFourDigits}</p>
+                    </div>
+                )}
+                {details.installments && (
+                    <div>
+                        <p className="font-semibold">Cuotas</p>
+                        <p>{details.installments}</p>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    )
 }
 
 async function OrdersContent({ searchParams }: { searchParams: { status?: string } }) {
     const orders = await getMyOrders();
-    const lang = getLanguage();
+    const lang = await getLanguage();
     const t = (key: keyof typeof translations) => translations[key][lang] || key;
 
     return (
         <div className="container py-8 md:py-12">
             <h1 className="font-headline text-4xl font-bold mb-8">{t('My_Orders')}</h1>
-            
+
             <StatusAlert status={searchParams.status} />
 
             {orders.length === 0 ? (
@@ -141,37 +141,37 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                 <Accordion type="multiple" className="space-y-4">
                     {orders.map((order) => (
                         <AccordionItem key={order.id} value={order.id} className="border rounded-lg bg-card shadow-sm">
-                           <AccordionTrigger className="p-4 hover:no-underline">
+                            <AccordionTrigger className="p-4 hover:no-underline">
                                 <div className="flex flex-col md:flex-row md:items-center justify-between w-full gap-4 text-left">
                                     <div className="flex-grow">
                                         <p className="text-sm font-medium">{t('Order_ID')}: {order.id.substring(0, 8)}...</p>
                                         <p className="text-xs text-muted-foreground">{t('Order_Date')}: {formatDate(order.createdAt, lang)}</p>
                                     </div>
                                     <div className="flex items-center gap-4 w-full justify-between md:w-auto md:justify-end">
-                                        <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
+                                        <StatusBadge status={order.status} />
                                         <span className="font-bold text-lg text-right md:w-[120px]">${formatPrice(order.totalPrice, lang)}</span>
                                     </div>
                                 </div>
                             </AccordionTrigger>
                             <AccordionContent className="p-4 pt-0">
-                               <div className="border-t pt-4">
-                                
-                                <div className="mb-6 space-y-4">
-                                     {order.paymentMethod === 'Efectivo' && order.status === 'Pendiente' && (
-                                         <Alert>
-                                           <Wallet className="h-4 w-4" />
-                                           <AlertTitle>Pago en Efectivo</AlertTitle>
-                                           <AlertDescription>
-                                             Nos pondremos en contacto contigo a la brevedad para coordinar la entrega y el pago.
-                                           </AlertDescription>
-                                         </Alert>
-                                     )}
-                                    {order.status === 'Pendiente de Pago' && order.paymentMethod === 'Transferencia Bancaria' && (
-                                       <Alert>
-                                           <Info className="h-4 w-4" />
-                                           <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
-                                            <AlertDescription>
-                                                   <div className="space-y-2 mt-2">
+                                <div className="border-t pt-4">
+
+                                    <div className="mb-6 space-y-4">
+                                        {order.paymentMethod === 'Efectivo' && order.status === 'Pendiente' && (
+                                            <Alert>
+                                                <Wallet className="h-4 w-4" />
+                                                <AlertTitle>Pago en Efectivo</AlertTitle>
+                                                <AlertDescription>
+                                                    Nos pondremos en contacto contigo a la brevedad para coordinar la entrega y el pago.
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                        {order.status === 'Pendiente de Pago' && order.paymentMethod === 'Transferencia Bancaria' && (
+                                            <Alert>
+                                                <Info className="h-4 w-4" />
+                                                <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
+                                                <AlertDescription>
+                                                    <div className="space-y-2 mt-2">
                                                         <p>{t('Transfer_Instruction')}</p>
                                                         <p className="font-semibold">{t('Total_Amount')}: <span className="font-bold text-lg">${formatPrice(order.totalPrice, lang)}</span></p>
                                                         <ul className="list-disc list-inside space-y-1 text-sm bg-muted p-3 rounded-md">
@@ -180,104 +180,104 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                                             {bankDetails.cuit && <li><strong>CUIT:</strong> {bankDetails.cuit}</li>}
                                                             {bankDetails.accountName && <li><strong>{t('Account_Holder')}:</strong> {bankDetails.accountName}</li>}
                                                         </ul>
-                                                   </div>
-                                            </AlertDescription>
-                                       </Alert>
-                                    )}
-                                    {order.status === 'Pendiente de Pago' && order.paymentMethod === 'MercadoPago' && (
-                                        <Alert>
-                                            <Info className="h-4 w-4" />
-                                            <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
-                                            <AlertDescription>
-                                                <div className="space-y-2 mt-2">
-                                                    <p>{t('MercadoPago_Instruction')}</p>
-                                                    {order.mercadoPagoInitPoint && (
-                                                        <Button asChild className="mt-2">
-                                                            <Link href={order.mercadoPagoInitPoint}>
-                                                                <CreditCard className="mr-2 h-4 w-4" />
-                                                                {t('Pay_Now')}
-                                                            </Link>
-                                                        </Button>
-                                                    )}
-                                                </div>
-                                            </AlertDescription>
-                                        </Alert>
-                                    )}
-                                    {order.status === 'Pendiente de Confirmación' && order.receiptUrl && (
-                                        <Card className="bg-muted/50">
-                                            <CardHeader>
-                                                <CardTitle className="text-lg">Comprobante Enviado</CardTitle>
-                                                <CardDescription>Recibimos tu comprobante. Lo verificaremos a la brevedad.</CardDescription>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <Link href={order.receiptUrl} target="_blank" rel="noopener noreferrer">
-                                                    <div className="relative aspect-video w-full max-w-xs mx-auto rounded-md overflow-hidden border">
-                                                        <Image src={order.receiptUrl} alt="Comprobante de pago" fill className="object-contain" />
                                                     </div>
-                                                </Link>
-                                            </CardContent>
-                                        </Card>
-                                    )}
-                                     {order.paymentMethod === 'MercadoPago' && order.mercadoPagoPaymentDetails && order.status !== 'Pendiente de Pago' && (
-                                        <PaymentDetails details={order.mercadoPagoPaymentDetails} />
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                        {order.status === 'Pendiente de Pago' && order.paymentMethod === 'MercadoPago' && (
+                                            <Alert>
+                                                <Info className="h-4 w-4" />
+                                                <AlertTitle>{t('Complete_your_Payment')}</AlertTitle>
+                                                <AlertDescription>
+                                                    <div className="space-y-2 mt-2">
+                                                        <p>{t('MercadoPago_Instruction')}</p>
+                                                        {order.mercadoPagoInitPoint && (
+                                                            <Button asChild className="mt-2">
+                                                                <Link href={order.mercadoPagoInitPoint}>
+                                                                    <CreditCard className="mr-2 h-4 w-4" />
+                                                                    {t('Pay_Now')}
+                                                                </Link>
+                                                            </Button>
+                                                        )}
+                                                    </div>
+                                                </AlertDescription>
+                                            </Alert>
+                                        )}
+                                        {order.status === 'Pendiente de Confirmación' && order.receiptUrl && (
+                                            <Card className="bg-muted/50">
+                                                <CardHeader>
+                                                    <CardTitle className="text-lg">Comprobante Enviado</CardTitle>
+                                                    <CardDescription>Recibimos tu comprobante. Lo verificaremos a la brevedad.</CardDescription>
+                                                </CardHeader>
+                                                <CardContent>
+                                                    <Link href={order.receiptUrl} target="_blank" rel="noopener noreferrer">
+                                                        <div className="relative aspect-video w-full max-w-xs mx-auto rounded-md overflow-hidden border">
+                                                            <Image src={order.receiptUrl} alt="Comprobante de pago" fill className="object-contain" />
+                                                        </div>
+                                                    </Link>
+                                                </CardContent>
+                                            </Card>
+                                        )}
+                                        {order.paymentMethod === 'MercadoPago' && order.mercadoPagoPaymentDetails && order.status !== 'Pendiente de Pago' && (
+                                            <PaymentDetails details={order.mercadoPagoPaymentDetails} />
+                                        )}
+                                    </div>
+
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="w-[80px] hidden md:table-cell">Imagen</TableHead>
+                                                <TableHead>Producto</TableHead>
+                                                <TableHead>Cantidad</TableHead>
+                                                <TableHead className="text-right">Precio</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {order.items.map(item => {
+                                                const imageUrl = item.image
+                                                    ? (item.image || NO_IMAGE_URL).replace(/\.(mp4|webm)$/i, '.jpg')
+                                                    : NO_IMAGE_URL;
+
+                                                return (
+                                                    <TableRow key={item.productId}>
+                                                        <TableCell className="hidden md:table-cell">
+                                                            <div className="relative aspect-square w-16 h-16">
+                                                                <Image
+                                                                    src={imageUrl}
+                                                                    alt={item.name}
+                                                                    fill
+                                                                    className="rounded-md object-cover"
+                                                                    sizes="64px"
+                                                                />
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell>
+                                                            <Link href={`/products/${item.slug}`} className="font-medium hover:text-primary">
+                                                                {item.name}
+                                                            </Link>
+                                                        </TableCell>
+                                                        <TableCell>{item.quantity}</TableCell>
+                                                        <TableCell className="text-right">${formatPrice(item.price, lang)}</TableCell>
+                                                    </TableRow>
+                                                )
+                                            })}
+                                        </TableBody>
+                                    </Table>
+
+                                    {order.status === 'Pendiente de Pago' && (
+                                        <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t pt-6">
+                                            <div className='flex flex-col md:flex-row items-center gap-4'>
+                                                {order.paymentMethod === 'Transferencia Bancaria' && (
+                                                    <>
+                                                        <p className="text-sm text-muted-foreground">{t('After_payment_instruction')}</p>
+                                                        <UploadReceiptButton orderId={order.id} />
+                                                    </>
+                                                )}
+                                            </div>
+                                            <CancelOrderButton orderId={order.id} />
+                                        </div>
                                     )}
                                 </div>
-                               
-                               <Table>
-                                    <TableHeader>
-                                        <TableRow>
-                                            <TableHead className="w-[80px] hidden md:table-cell">Imagen</TableHead>
-                                            <TableHead>Producto</TableHead>
-                                            <TableHead>Cantidad</TableHead>
-                                            <TableHead className="text-right">Precio</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody>
-                                        {order.items.map(item => {
-                                            const imageUrl = item.image 
-                                                ? (item.image || NO_IMAGE_URL).replace(/\.(mp4|webm)$/i, '.jpg')
-                                                : NO_IMAGE_URL;
-
-                                            return (
-                                                <TableRow key={item.productId}>
-                                                    <TableCell className="hidden md:table-cell">
-                                                        <div className="relative aspect-square w-16 h-16">
-                                                          <Image
-                                                              src={imageUrl}
-                                                              alt={item.name}
-                                                              fill
-                                                              className="rounded-md object-cover"
-                                                              sizes="64px"
-                                                          />
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <Link href={`/products/${item.slug}`} className="font-medium hover:text-primary">
-                                                            {item.name}
-                                                        </Link>
-                                                    </TableCell>
-                                                    <TableCell>{item.quantity}</TableCell>
-                                                    <TableCell className="text-right">${formatPrice(item.price, lang)}</TableCell>
-                                                </TableRow>
-                                            )
-                                        })}
-                                    </TableBody>
-                               </Table>
-                               
-                                {order.status === 'Pendiente de Pago' && (
-                                    <div className="mt-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t pt-6">
-                                         <div className='flex flex-col md:flex-row items-center gap-4'>
-                                            {order.paymentMethod === 'Transferencia Bancaria' && (
-                                                <>
-                                                    <p className="text-sm text-muted-foreground">{t('After_payment_instruction')}</p>
-                                                    <UploadReceiptButton orderId={order.id} />
-                                                </>
-                                             )}
-                                         </div>
-                                         <CancelOrderButton orderId={order.id} />
-                                    </div>
-                                 )}
-                               </div>
                             </AccordionContent>
                         </AccordionItem>
                     ))}
@@ -287,7 +287,8 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
     );
 }
 
-export default function OrdersPage({ searchParams }: { searchParams: { status?: string } }) {
+export default async function OrdersPage(props: { searchParams: Promise<{ status?: string }> }) {
+    const searchParams = await props.searchParams;
     return (
         <Suspense fallback={<div>Loading orders...</div>}>
             <OrdersContent searchParams={searchParams} />

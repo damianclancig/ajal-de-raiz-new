@@ -59,16 +59,16 @@ export interface User {
 export type SlideState = 'habilitado' | 'deshabilitado';
 
 export interface HeroSlide {
-    id: string;
-    _id?: ObjectId;
-    headline: string;
-    subtext: string;
-    image: string;
-    buttonLink?: string;
-    state: SlideState;
-    dataAiHint?: string;
-    createdAt?: string;
-    updatedAt?: string;
+  id: string;
+  _id?: ObjectId;
+  headline: string;
+  subtext: string;
+  image: string;
+  buttonLink?: string;
+  state: SlideState;
+  dataAiHint?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CartItem {
@@ -99,55 +99,55 @@ export interface PopulatedCart {
   totalPrice: number;
 }
 
-export type OrderStatus = 
-    | 'Pendiente' 
-    | 'Pendiente de Pago'
-    | 'Pendiente de Confirmación'
-    | 'Confirmado' 
-    | 'Enviado' 
-    | 'Entregado' 
-    | 'Cancelado';
+export type OrderStatus =
+  | 'Pendiente'
+  | 'Pendiente de Pago'
+  | 'Pendiente de Confirmación'
+  | 'Confirmado'
+  | 'Enviado'
+  | 'Entregado'
+  | 'Cancelado';
 
 export type PaymentMethod = 'Efectivo' | 'Transferencia Bancaria' | 'MercadoPago';
 
 export interface OrderItem {
-    productId: string;
-    name: string;
-    slug: string;
-    quantity: number;
-    price: number;
-    image: string;
+  productId: string;
+  name: string;
+  slug: string;
+  quantity: number;
+  price: number;
+  image: string;
 }
 
 export interface MercadoPagoPaymentDetails {
-    paymentMethodId: string; // e.g., 'visa'
-    paymentTypeId: string;   // e.g., 'credit_card'
-    lastFourDigits?: string;
-    installments?: number;
+  paymentMethodId: string; // e.g., 'visa'
+  paymentTypeId: string;   // e.g., 'credit_card'
+  lastFourDigits?: string;
+  installments?: number;
 }
 
 export interface Order {
-    id: string;
-    _id?: ObjectId;
-    userId: string;
-    user?: User;
-    items: OrderItem[];
-    totalPrice: number;
-    paymentMethod: PaymentMethod;
-    status: OrderStatus;
-    receiptUrl?: string;
-    mercadoPagoPreferenceId?: string;
-    mercadoPagoInitPoint?: string;
-    mercadoPagoPaymentId?: string;
-    mercadoPagoPaymentDetails?: MercadoPagoPaymentDetails;
-    createdAt: string;
-    updatedAt: string;
+  id: string;
+  _id?: ObjectId;
+  userId: string;
+  user?: User;
+  items: OrderItem[];
+  totalPrice: number;
+  paymentMethod: PaymentMethod;
+  status: OrderStatus;
+  receiptUrl?: string;
+  mercadoPagoPreferenceId?: string;
+  mercadoPagoInitPoint?: string;
+  mercadoPagoPaymentId?: string;
+  mercadoPagoPaymentDetails?: MercadoPagoPaymentDetails;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Service {
   id: string;
   _id?: ObjectId;
-  icon: string;
+  icon: any;
   title: string;
   description: string;
   details: string[];
@@ -158,13 +158,28 @@ export interface Service {
 }
 
 export interface AppErrorLog {
-    id: string;
-    _id?: ObjectId;
-    timestamp: string;
-    path: string;
-    functionName: string;
-    errorMessage: string;
-    stackTrace?: string;
-    metadata?: Record<string, any>;
-    isResolved: boolean;
+  id: string;
+  _id?: ObjectId;
+  timestamp: string;
+  path: string;
+  functionName: string;
+  errorMessage: string;
+  stackTrace?: string;
+  metadata?: Record<string, any>;
+  isResolved: boolean;
 }
+
+export type ActionResponse = {
+  success: boolean;
+  message: string;
+  product?: Product | null;
+  products?: Product[] | null;
+  user?: User | null;
+  slide?: HeroSlide | null;
+  cart?: PopulatedCart | null;
+  order?: Order | null;
+  init_point?: string;
+  shippingCost?: number;
+  shippingMessage?: string;
+  zone?: number;
+};

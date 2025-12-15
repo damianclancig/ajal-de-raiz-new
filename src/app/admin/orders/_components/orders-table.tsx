@@ -13,7 +13,8 @@ import Link from 'next/link';
 import { translations } from '@/lib/translations';
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { formatDate, formatPrice, getStatusVariant } from '@/lib/utils';
+import { formatDate, formatPrice } from '@/lib/utils';
+import { StatusBadge } from '@/components/ui/status-badge';
 
 
 interface OrdersTableProps {
@@ -27,7 +28,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
     useEffect(() => {
         setIsClient(true);
     }, []);
-    
+
     return (
         <Card>
             <CardContent className="p-0">
@@ -70,9 +71,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <div className="md:hidden text-xs text-muted-foreground mb-1">Estado</div>
-                                            <Badge variant={getStatusVariant(order.status)}>
-                                                {t(order.status as keyof typeof translations)}
-                                            </Badge>
+                                            <StatusBadge status={order.status} />
                                         </div>
                                         <div className="text-right font-bold md:hidden">
                                             <div className="text-xs text-muted-foreground font-normal mb-1">Total</div>
