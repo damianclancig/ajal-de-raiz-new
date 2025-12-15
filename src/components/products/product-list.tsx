@@ -105,7 +105,12 @@ export default function ProductList({ products: initialProducts, initialCategori
       if (isNewSearch) {
         setProducts(result.products);
       } else {
-        setProducts(prev => [...prev, ...result.products!]);
+        setProducts(prev => {
+          const newProducts = result.products!.filter(
+            p => !prev.some(prevP => prevP.id === p.id)
+          );
+          return [...prev, ...newProducts];
+        });
       }
       setOffset(currentOffset + result.products.length);
       setHasMore(result.products.length === PRODUCTS_PER_PAGE);

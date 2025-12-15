@@ -7,26 +7,27 @@ import { cookies } from 'next/headers';
 import { translations } from '@/lib/translations';
 import Image from 'next/image';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
+import { StatusBadge } from '@/components/ui/status-badge';
 import OrderStatusForm from './_components/order-status-form';
 import Link from 'next/link';
-import { formatDate, formatPrice, getStatusVariant } from '@/lib/utils';
+import { NO_IMAGE_URL, formatDate, formatPrice } from '@/lib/utils';
 import { getLanguage } from '@/lib/utils-server';
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
+export default async function OrderDetailPage(props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const order = await getOrderById(params.id);
 
     if (!order) {
         notFound();
     }
-    
-    const lang = getLanguage();
+
+    const lang = await getLanguage();
     const t = (key: keyof typeof translations) => translations[key][lang] || key;
-    
+
     return (
         <div className="space-y-6 px-4">
             <h1 className="font-headline text-4xl font-bold">Detalle de la Orden</h1>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="md:col-span-2 space-y-6">
                     {order.receiptUrl && (
@@ -49,7 +50,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                             <CardTitle>Productos</CardTitle>
                         </CardHeader>
                         <CardContent>
-                             <Table>
+                            <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead className="w-[80px] hidden md:table-cell">Imagen</TableHead>
@@ -80,23 +81,23 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                         </CardContent>
                     </Card>
                 </div>
-                 <div className="space-y-6">
+                <div className="space-y-6">
                     <Card>
                         <CardHeader>
-                           <CardTitle>Resumen del Pedido</CardTitle>
+                            <CardTitle>Resumen del Pedido</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">ID Pedido</span>
                                 <span className="font-mono text-sm">{order.id.substring(0, 8)}...</span>
                             </div>
-                             <div className="flex justify-between">
+                            <div className="flex justify-between">
                                 <span className="text-muted-foreground">Fecha</span>
                                 <span>{formatDate(order.createdAt, lang)}</span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Estado</span>
-                                <Badge variant={getStatusVariant(order.status)}>{t(order.status as keyof typeof translations)}</Badge>
+                                <StatusBadge status={order.status} className="text-sm px-3 py-1" />
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Método de Pago</span>
@@ -108,16 +109,16 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                                     <span className="font-mono text-sm">{order.mercadoPagoPaymentId}</span>
                                 </div>
                             )}
-                             <div className="flex justify-between font-bold text-xl">
+                            <div className="flex justify-between font-bold text-xl">
                                 <span>Total</span>
                                 <span>${formatPrice(order.totalPrice)}</span>
                             </div>
                         </CardContent>
                     </Card>
-                     <Card>
+                    <Card>
                         <CardHeader>
-                           <CardTitle>Actualizar Estado</CardTitle>
-                           <CardDescription>Modifica el estado actual del pedido.</CardDescription>
+                            <CardTitle>Actualizar Estado</CardTitle>
+                            <CardDescription>Modifica el estado actual del pedido.</CardDescription>
                         </CardHeader>
                         <CardContent>
                             <OrderStatusForm order={order} />

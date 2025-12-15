@@ -6,10 +6,11 @@ import type { Product } from '@/lib/types';
 import type { Metadata } from 'next';
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const params = await props.params;
   const product = await getProductBySlug(params.slug);
 
   if (!product) {
@@ -49,7 +50,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 import { auth } from "@/auth";
 
 // This is a Server Component that fetches data.
-export default async function ProductDetailPage({ params }: { params: { slug: string } }) {
+export default async function ProductDetailPage(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const session = await auth();
   const product: Product | null = await getProductBySlug(params.slug);
 
