@@ -392,6 +392,9 @@ export const translations = {
   'Alias': { en: 'Alias', es: 'Alias', pt: 'Alias' },
   'Account_Holder': { en: 'Account Holder', es: 'Titular de la Cuenta', pt: 'Titular da Conta' },
   'After_payment_instruction': { en: 'Once the payment is made, upload the receipt to speed up the confirmation process.', es: 'Una vez realizado el pago, sube el comprobante para agilizar el proceso de confirmación.', pt: 'Após o pagamento ser efetuado, carregue o comprovante para agilizar o processo de confirmação.' },
-  'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' }
+  'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' },
+  'Is_Admin': { en: 'Is Admin', es: 'Es Administrador', pt: 'É Administrador' },
+  'Edit_User': { en: 'Edit User', es: 'Editar Usuario', pt: 'Editar Usuário' },
+  'Delete_User': { en: 'Delete User', es: 'Eliminar Usuario', pt: 'Excluir Usuário' }
 
 };
