@@ -149,10 +149,10 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                     <Textarea id="description" name="description" defaultValue={product?.description || ''} rows={5} />
                   </div>
                   <div>
-                    <Label htmlFor="care">Cuidados del Producto</Label>
+                    <Label htmlFor="care">{t('Product_Care')}</Label>
                     <Textarea id="care" name="care" defaultValue={product?.care || ''} rows={5} />
                     <p className="text-xs text-muted-foreground pt-1 flex items-center gap-4">
-                      <span>Usa los siguientes símbolos para las viñetas:</span>
+                      <span>{t('Use_symbols_for_bullets')}</span>
                       <span className="flex items-center gap-1"><Sprout className="h-3 w-3" /> * (General)</span>
                       <span className="flex items-center gap-1"><Droplets className="h-3 w-3" /> - (Riego)</span>
                       <span className="flex items-center gap-1"><Sun className="h-3 w-3" /> + (Luz)</span>
@@ -160,7 +160,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                   </div>
               </div>
               <div className="space-y-4">
-                  <Label htmlFor="images">Imágenes y Videos</Label>
+                  <Label htmlFor="images">{t('Images_and_Videos')}</Label>
                   <MultiMediaUploader name="images" defaultValues={product?.images || []} />
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                 <Input id="brand" name="brand" defaultValue={product?.brand || ''} />
               </div>
               <div>
-                <Label htmlFor="oldPrice">Precio Anterior (Opcional)</Label>
+                <Label htmlFor="oldPrice">{t('Old_Price_Optional')}</Label>
                 <Input
                   id="formattedOldPrice"
                   value={formatPrice(rawOldPrice)}
@@ -274,21 +274,21 @@ export default function ProductForm({ product, categories }: ProductFormProps) {
                     <AlertDialogDescription>
                        {t('This_action_cannot_be_undone_permanently')}
                        <br />
-                       {t('Type_DELETE_to_confirm', { word: 'ELIMINAR' })}
+                       {t('Type_DELETE_to_confirm', { word: t('DELETE_CONFIRM_WORD') })}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <Input 
                     id="delete-confirm"
                     value={deleteConfirmation}
                     onChange={(e) => setDeleteConfirmation(e.target.value)}
-                    placeholder="ELIMINAR"
+                    placeholder={t('DELETE_CONFIRM_WORD')}
                     autoFocus
                   />
                   <AlertDialogFooter>
                     <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
                     <AlertDialogAction
                       onClick={handleDelete}
-                      disabled={deleteConfirmation !== 'ELIMINAR' || isDeleting}
+                      disabled={deleteConfirmation !== t('DELETE_CONFIRM_WORD') || isDeleting}
                       className="bg-destructive hover:bg-destructive/90"
                     >
                       {isDeleting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

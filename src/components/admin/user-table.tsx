@@ -60,7 +60,7 @@ export default function UserTable({ users }: UserTableProps) {
                   <CollapsibleTrigger asChild className="flex-1 cursor-pointer group">
                     <div className="flex items-center gap-4 text-left">
                       <Avatar>
-                        <AvatarImage src={user.profileImage} alt={user.name} />
+                        <AvatarImage src={user.profileImage || undefined} alt={user.name} />
                         <AvatarFallback>
                           <UserIcon className="h-5 w-5" />
                         </AvatarFallback>

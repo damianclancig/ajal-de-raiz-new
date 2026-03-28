@@ -12,6 +12,7 @@ import OrderStatusForm from './_components/order-status-form';
 import Link from 'next/link';
 import { NO_IMAGE_URL, formatDate, formatPrice } from '@/lib/utils';
 import { getLanguage } from '@/lib/utils-server';
+import { Badge } from '@/components/ui/badge';
 
 export default async function OrderDetailPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -97,7 +98,7 @@ export default async function OrderDetailPage(props: { params: Promise<{ id: str
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Estado</span>
-                                <StatusBadge status={order.status} className="text-sm px-3 py-1" />
+                                <StatusBadge status={order.status} label={t(order.status as any)} className="text-sm px-3 py-1" />
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-muted-foreground">Método de Pago</span>

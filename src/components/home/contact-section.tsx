@@ -33,7 +33,7 @@ export default function ContactSection() {
       toast({
         variant: "destructive",
         title: t("Error_Title"),
-        description: "Por favor, ingresa un correo electrónico.",
+        description: t('Please_enter_email'),
       });
       return;
     }
@@ -42,8 +42,8 @@ export default function ContactSection() {
     if (!recaptchaToken) {
         toast({
             variant: "destructive",
-            title: "Verificación requerida",
-            description: "Por favor, completa el reCAPTCHA.",
+            title: t('Verification_Required'),
+            description: t('Please_complete_recaptcha'),
         });
         return;
     }
@@ -53,8 +53,8 @@ export default function ContactSection() {
       const result = await handleContactForm(formData);
       if (result.success) {
         toast({
-          title: "¡Gracias!",
-          description: "Hemos recibido tu solicitud. Nos pondremos en contacto pronto.",
+          title: t('Thank_You'),
+          description: t('Contact_Success_Desc'),
         });
         formRef.current?.reset();
         recaptchaRef.current?.reset();

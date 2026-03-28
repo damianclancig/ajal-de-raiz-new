@@ -148,7 +148,7 @@ async function OrdersContent({ searchParams }: { searchParams: { status?: string
                                         <p className="text-xs text-muted-foreground">{t('Order_Date')}: {formatDate(order.createdAt, lang)}</p>
                                     </div>
                                     <div className="flex items-center gap-4 w-full justify-between md:w-auto md:justify-end">
-                                        <StatusBadge status={order.status} />
+                                        <StatusBadge status={order.status} label={t(order.status as any)} />
                                         <span className="font-bold text-lg text-right md:w-[120px]">${formatPrice(order.totalPrice, lang)}</span>
                                     </div>
                                 </div>

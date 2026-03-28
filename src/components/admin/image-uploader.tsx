@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { X, UploadCloud, Image as ImageIcon, Loader2, Video } from 'lucide-react';
 import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
+import imageCompression from 'browser-image-compression';
 
 const MAX_MEDIA = 5;
 const UPLOAD_FOLDER = 'ajal-de-raiz/Productos';
@@ -46,8 +47,29 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
 
     const uploadedUrls: string[] = [];
 
-    for (const file of Array.from(files)) {
+    for (const originalFile of Array.from(files)) {
       try {
+        let fileToUpload = originalFile;
+        // Comprimir la imagen antes de subirla
+        if (originalFile.type.startsWith('image/')) {
+          const options = {
+            maxSizeMB: 1,
+            maxWidthOrHeight: 1920,
+            useWebWorker: true,
+            fileType: 'image/webp' as string,
+          };
+          try {
+            const compressedFile = await imageCompression(originalFile, options);
+            const initialName = originalFile.name.replace(/\.[^/.]+$/, "");
+            fileToUpload = new File([compressedFile], `${initialName}.webp`, {
+              type: 'image/webp',
+            });
+          } catch (error) {
+            console.error('Error al comprimir la imagen:', error);
+            // Si falla la compresión, fileToUpload se mantiene como el original
+          }
+        }
+
         const resSign = await fetch('/api/sign-cloudinary-params', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -61,7 +83,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
         const { signature, timestamp } = await resSign.json();
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', fileToUpload);
         formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
         formData.append('signature', signature);
         formData.append('timestamp', timestamp);
@@ -77,7 +99,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
         
         if (!res.ok) {
           const errorData = await res.json();
-          throw new Error(errorData.error.message || `Fallo al subir ${file.name}`);
+          throw new Error(errorData.error.message || `Fallo al subir ${originalFile.name}`);
         }
         
         const data = await res.json();
@@ -87,7 +109,7 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
           console.error("Media upload error:", err);
           let description = t('Upload_Error_Desc');
           if (err?.message?.includes('File size too large')) {
-            description = `${t('Upload_Error_File_Too_Large_Desc')} (${file.name})`;
+            description = `${t('Upload_Error_File_Too_Large_Desc')} (${originalFile.name})`;
           } else {
             description = err.message;
           }

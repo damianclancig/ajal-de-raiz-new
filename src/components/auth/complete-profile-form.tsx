@@ -17,36 +17,8 @@ import PhoneNumberInput from "./phone-number-input";
 import { useTransition } from "react";
 import { updateUserProfile } from "@/lib/actions";
 import { useToast } from "@/hooks/use-toast";
+import { useLanguage } from "@/hooks/use-language";
 
-const formSchema = z.object({
-  name: z.string().min(2, 'El nombre es requerido'),
-  phone: z.string().optional(),
-  countryCode: z.string().optional(),
-  street: z.string().optional(),
-  number: z.string().optional(),
-  city: z.string().optional(),
-  province: z.string().optional(),
-  country: z.string().optional(),
-  zipCode: z.string().optional(),
-  instructions: z.string().optional(),
-}).superRefine((data, ctx) => {
-    const addressFields = [data.street, data.number, data.city, data.province, data.zipCode];
-    const isAnyAddressFieldFilled = addressFields.some(field => field);
-
-    if (isAnyAddressFieldFilled) {
-        if (!data.street) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La calle es requerida.", path: ["street"] });
-        }
-        if (!data.city) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La ciudad es requerida.", path: ["city"] });
-        }
-        if (!data.province) {
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "La provincia es requerida.", path: ["province"] });
-        }
-    }
-});
-
-type ProfileFormValues = z.infer<typeof formSchema>;
 
 interface CompleteProfileFormProps {
     user: User | null;
@@ -56,6 +28,36 @@ interface CompleteProfileFormProps {
 
 export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: CompleteProfileFormProps) {
     
+    const { t } = useLanguage();
+    
+    const formSchema = z.object({
+      name: z.string().min(2, t('Name_Required')),
+      phone: z.string().optional(),
+      countryCode: z.string().optional(),
+      street: z.string().optional(),
+      number: z.string().optional(),
+      city: z.string().optional(),
+      province: z.string().optional(),
+      country: z.string().optional(),
+      zipCode: z.string().optional(),
+      instructions: z.string().optional(),
+    }).superRefine((data, ctx) => {
+        const addressFields = [data.street, data.number, data.city, data.province, data.zipCode];
+        const isAnyAddressFieldFilled = addressFields.some(field => field);
+    
+        if (isAnyAddressFieldFilled) {
+            if (!data.street) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('Street_Required'), path: ["street"] });
+            }
+            if (!data.city) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('City_Required'), path: ["city"] });
+            }
+            if (!data.province) {
+                ctx.addIssue({ code: z.ZodIssueCode.custom, message: t('Province_Required'), path: ["province"] });
+            }
+        }
+    });
+
     // Helper to extract country code and number from a full phone string
     const parsePhoneNumber = (fullNumber?: string) => {
         if (!fullNumber) return { countryCode: '54', number: '' };
@@ -67,7 +69,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
 
     const { countryCode, number: initialNumber } = parsePhoneNumber(user?.phone);
 
-    const form = useForm<ProfileFormValues>({
+    const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: user?.name || "",
@@ -83,13 +85,13 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
         },
     });
 
-    const onSubmit = async (values: ProfileFormValues) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         const formData = new FormData();
         
         const fullPhoneNumber = values.countryCode && values.phone ? `${values.countryCode}${values.phone}` : '';
 
         Object.keys(values).forEach(key => {
-            const formKey = key as keyof ProfileFormValues;
+            const formKey = key as keyof z.infer<typeof formSchema>;
             if (formKey === 'phone' || formKey === 'countryCode') return;
             
             const value = values[formKey];
@@ -115,9 +117,9 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                 name="name"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Nombre Completo</FormLabel>
+                                        <FormLabel>{t('Full_Name')}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Ej: Homero Simpson" {...field} disabled={isSubmitting} />
+                                            <Input placeholder={t('Placeholder_Name')} {...field} disabled={isSubmitting} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -135,14 +137,14 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                         <Separator />
 
                         <div className="space-y-4">
-                            <h3 className="text-base font-medium text-center md:text-left">Dirección de Envío (Opcional)</h3>
+                            <h3 className="text-base font-medium text-center md:text-left">{t('Shipping_Address_Optional')}</h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <FormField
                                     control={form.control}
                                     name="street"
                                     render={({ field }) => (
                                         <FormItem className="md:col-span-2">
-                                            <FormLabel>Calle</FormLabel>
+                                            <FormLabel>{t('Street')}</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Ej: Av. Siempreviva" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
@@ -155,7 +157,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                     name="number"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Número</FormLabel>
+                                            <FormLabel>{t('Number')}</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Ej: 742" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
@@ -170,7 +172,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                     name="city"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Ciudad</FormLabel>
+                                            <FormLabel>{t('City')}</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Ej: Springfield" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
@@ -183,7 +185,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                     name="province"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Provincia</FormLabel>
+                                            <FormLabel>{t('Province')}</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Ej: Buenos Aires" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
@@ -196,7 +198,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                     name="zipCode"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Código Postal</FormLabel>
+                                            <FormLabel>{t('Zip_Code')}</FormLabel>
                                             <FormControl>
                                                 <Input placeholder="Ej: 1605" {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                             </FormControl>
@@ -210,9 +212,9 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                                 name="instructions"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Indicaciones Adicionales</FormLabel>
+                                        <FormLabel>{t('Additional_Instructions')}</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Ej: Tocar timbre, departamento 3B. Cuidado con el perro." {...field} disabled={isSubmitting} value={field.value ?? ''} />
+                                            <Textarea placeholder={t('Placeholder_Instructions')} {...field} disabled={isSubmitting} value={field.value ?? ''} />
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -224,7 +226,7 @@ export default function CompleteProfileForm({ user, isSubmitting, onSuccess }: C
                 <CardFooter className="flex justify-end bg-muted/30 p-4 border-t">
                     <Button type="submit" disabled={isSubmitting}>
                         {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar Cambios
+                        {t('Save_Changes')}
                     </Button>
                 </CardFooter>
             </form>

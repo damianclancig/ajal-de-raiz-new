@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { createService, updateService } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/use-language';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -22,16 +23,14 @@ const availableIcons = [
     'Droplets', 'Leaf', 'Sprout', 'HeartHandshake', 'Cannabis', 'Sparkles', 'Sun', 'Moon'
 ] as const;
 
-const serviceFormSchema = z.object({
+const getServiceFormSchema = (t: any) => z.object({
     icon: z.enum(availableIcons),
-    title: z.string().min(3, 'El título es requerido'),
-    description: z.string().min(10, 'La descripción es requerida'),
-    price: z.string().min(1, 'El precio es requerido'),
+    title: z.string().min(3, t('Title_Required')),
+    description: z.string().min(10, t('Description_Required')),
+    price: z.string().min(1, t('Price_Required')),
     details: z.string().optional(),
     note: z.string().optional(),
 });
-
-type ServiceFormValues = z.infer<typeof serviceFormSchema>;
 
 interface ServiceFormProps {
     service?: Service | null;
@@ -40,7 +39,11 @@ interface ServiceFormProps {
 export default function ServiceForm({ service }: ServiceFormProps) {
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
+    const { t } = useLanguage();
     
+    const serviceFormSchema = getServiceFormSchema(t);
+    type ServiceFormValues = z.infer<typeof serviceFormSchema>;
+
     const form = useForm<ServiceFormValues>({
         resolver: zodResolver(serviceFormSchema),
         defaultValues: {
@@ -68,9 +71,9 @@ export default function ServiceForm({ service }: ServiceFormProps) {
             
             const result = await action(formData);
             if (result.success) {
-                toast({ title: service ? 'Servicio Actualizado' : 'Servicio Creado', description: 'El servicio ha sido guardado exitosamente.' });
+                toast({ title: service ? t('Service_Updated') : t('Service_Created'), description: t('Service_Saved_Success') });
             } else {
-                toast({ title: 'Error', description: result.message, variant: 'destructive' });
+                toast({ title: t('Error_Title'), description: result.message, variant: 'destructive' });
             }
         });
     };
@@ -79,26 +82,26 @@ export default function ServiceForm({ service }: ServiceFormProps) {
         <form onSubmit={form.handleSubmit(onSubmit)}>
             <Card>
                 <CardHeader>
-                    <CardTitle>{service ? 'Editar Servicio' : 'Crear Nuevo Servicio'}</CardTitle>
-                    <CardDescription>Completa los detalles del servicio que ofreces.</CardDescription>
+                    <CardTitle>{service ? t('Edit_Service') : t('Create_New_Service')}</CardTitle>
+                    <CardDescription>{t('Service_Form_Description')}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
-                           <Label htmlFor="title">Título del Servicio</Label>
-                            <Input id="title" {...form.register('title')} placeholder="Ej: Mantenimiento de Kokedamas" disabled={isPending} />
+                           <Label htmlFor="title">{t('Service_Title')}</Label>
+                            <Input id="title" {...form.register('title')} placeholder={t('Ex_Service_Title')} disabled={isPending} />
                             {form.formState.errors.title && <p className="text-xs text-destructive">{form.formState.errors.title.message}</p>}
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="price">Precio</Label>
-                            <Input id="price" {...form.register('price')} placeholder="Ej: $25.000 por hora" disabled={isPending} />
+                            <Label htmlFor="price">{t('Price')}</Label>
+                            <Input id="price" {...form.register('price')} placeholder={t('Ex_Service_Price')} disabled={isPending} />
                             {form.formState.errors.price && <p className="text-xs text-destructive">{form.formState.errors.price.message}</p>}
                         </div>
                         <div className="space-y-2">
-                           <Label>Icono</Label>
+                           <Label>{t('Icon')}</Label>
                             <Select onValueChange={field => form.setValue('icon', field as any)} defaultValue={form.getValues('icon')}>
                                 <SelectTrigger disabled={isPending}>
-                                    <SelectValue placeholder="Selecciona un ícono" />
+                                    <SelectValue placeholder={t('Select_an_icon')} />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {availableIcons.map(iconName => {
@@ -117,27 +120,27 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                         </div>
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="description">Descripción Corta</Label>
-                        <Input id="description" {...form.register('description')} placeholder="Un resumen atractivo del servicio." disabled={isPending}/>
+                        <Label htmlFor="description">{t('Short_Description')}</Label>
+                        <Input id="description" {...form.register('description')} placeholder={t('Short_Description_Placeholder')} disabled={isPending}/>
                         {form.formState.errors.description && <p className="text-xs text-destructive">{form.formState.errors.description.message}</p>}
                     </div>
                      <div className="space-y-2">
-                        <Label htmlFor="details">Detalles (Checklist)</Label>
-                        <Textarea id="details" {...form.register('details')} placeholder="Escribe cada detalle en una nueva línea..." rows={5} disabled={isPending} />
-                        <p className="text-xs text-muted-foreground">Cada línea se convertirá en un ítem de la lista de detalles.</p>
+                        <Label htmlFor="details">{t('Details_Checklist')}</Label>
+                        <Textarea id="details" {...form.register('details')} placeholder={t('Details_Placeholder')} rows={5} disabled={isPending} />
+                        <p className="text-xs text-muted-foreground">{t('Details_Helper_Text')}</p>
                     </div>
                     <div className="space-y-2">
-                        <Label htmlFor="note">Nota Adicional (Opcional)</Label>
-                        <Input id="note" {...form.register('note')} placeholder="Ej: Costo adicional por retiro a domicilio." disabled={isPending}/>
+                        <Label htmlFor="note">{t('Additional_Note_Optional')}</Label>
+                        <Input id="note" {...form.register('note')} placeholder={t('Ex_Additional_Note')} disabled={isPending}/>
                     </div>
                 </CardContent>
                 <CardFooter className="flex justify-end gap-2">
                     <Button variant="secondary" asChild disabled={isPending}>
-                        <Link href="/admin/services">Cancelar</Link>
+                        <Link href="/admin/services">{t('Cancel')}</Link>
                     </Button>
                     <Button type="submit" disabled={isPending}>
                         {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                        Guardar Servicio
+                        {t('Save_Service')}
                     </Button>
                 </CardFooter>
             </Card>
