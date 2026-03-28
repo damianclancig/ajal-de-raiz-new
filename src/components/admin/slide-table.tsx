@@ -33,6 +33,8 @@ import { useToast } from '@/hooks/use-toast';
 import { Badge } from '../ui/badge';
 import Link from 'next/link';
 import { NO_IMAGE_URL } from '@/lib/utils';
+import { TableActions } from './table-actions';
+import { TooltipProvider } from '../ui/tooltip';
 
 // Helper function to parse simple markdown-like formatting
 const parseSubtext = (text: string) => {
@@ -72,7 +74,8 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
   };
   
   return (
-    <Card>
+    <TooltipProvider>
+      <Card>
       <CardContent className="p-0">
         <Table>
           <TableHeader className="hidden md:table-header-group">
@@ -122,29 +125,12 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
                         </Badge>
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-center">
-                      <div className="flex justify-center gap-2">
-                        <Button asChild variant="ghost" size="icon">
-                          <Link href={`/admin/slides/${slide.id}/edit`}>
-                            <Edit className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={isPending}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>{t('Are_you_sure')}</AlertDialogTitle>
-                              <AlertDialogDescription>{t('This_action_cannot_be_undone')}</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(slide.id)} className="bg-destructive hover:bg-destructive/90">{t('Delete')}</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                      <div className="flex justify-center">
+                        <TableActions 
+                          editHref={`/admin/slides/${slide.id}/edit`}
+                          onDelete={() => handleDelete(slide.id)}
+                          isDeleting={isPending}
+                        />
                       </div>
                     </TableCell>
 
@@ -170,29 +156,12 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
                                     </Badge>
                                 </div>
                             </div>
-                             <div className="flex flex-col flex-shrink-0">
-                                <Button asChild variant="ghost" size="icon">
-                                    <Link href={`/admin/slides/${slide.id}/edit`}>
-                                        <Edit className="h-4 w-4" />
-                                    </Link>
-                                </Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={isPending}>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>{t('Are_you_sure')}</AlertDialogTitle>
-                                            <AlertDialogDescription>{t('This_action_cannot_be_undone')}</AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(slide.id)} className="bg-destructive hover:bg-destructive/90">{t('Delete')}</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                             <div className="flex flex-col flex-shrink-0 pt-1 px-1">
+                                <TableActions 
+                                  editHref={`/admin/slides/${slide.id}/edit`}
+                                  onDelete={() => handleDelete(slide.id)}
+                                  isDeleting={isPending}
+                                />
                             </div>
                         </div>
                     </TableCell>
@@ -202,6 +171,7 @@ export default function SlideTable({ initialSlides }: SlideTableProps) {
           </TableBody>
         </Table>
       </CardContent>
-    </Card>
+      </Card>
+    </TooltipProvider>
   );
 }

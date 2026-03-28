@@ -35,6 +35,8 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { NO_IMAGE_URL, formatPrice } from '@/lib/utils';
 import { useInView } from 'react-intersection-observer';
+import { TableActions } from './table-actions';
+import { TooltipProvider } from '../ui/tooltip';
 
 const PRODUCTS_PER_PAGE = 20;
 
@@ -112,7 +114,8 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
   };
   
   return (
-    <Card>
+    <TooltipProvider>
+      <Card>
       <CardContent className="p-0">
         <Table>
           <TableHeader className="hidden md:table-header-group">
@@ -162,29 +165,16 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
                     </TableCell>
                     <TableCell className="hidden md:table-cell text-right">${formatPrice(product.price)}</TableCell>
                     <TableCell className="hidden md:table-cell text-center">
-                      <div className="flex justify-center gap-2">
-                        <Button asChild variant="ghost" size="icon">
-                          <Link href={`/admin/products/${product.id}/edit`}>
-                            <Edit className="h-4 w-4" />
-                          </Link>
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isDeleting}>
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>{t('Are_you_sure')}</AlertDialogTitle>
-                              <AlertDialogDescription>{t('This_action_cannot_be_undone_inactive')}</AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-                              <AlertDialogAction onClick={() => handleDelete(product.id)} className="bg-destructive hover:bg-destructive/90">{t('Deactivate')}</AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
+                      <div className="flex justify-center">
+                        <TableActions 
+                          editHref={`/admin/products/${product.id}/edit`}
+                          onDelete={() => handleDelete(product.id)}
+                          isDeleting={isDeleting}
+                          disabledDelete={product.state === 'inactivo'}
+                          editTooltip={t('Edit')}
+                          deleteTooltip={t('Deactivate')}
+                          deleteDescription={t('This_action_cannot_be_undone_inactive')}
+                        />
                       </div>
                     </TableCell>
                     
@@ -207,29 +197,16 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
                                     <div className="text-xs text-muted-foreground">{product.category}</div>
                                 </div>
                             </div>
-                            <div className="flex flex-shrink-0">
-                                <Button asChild variant="ghost" size="icon">
-                                    <Link href={`/admin/products/${product.id}/edit`}>
-                                        <Edit className="h-4 w-4" />
-                                    </Link>
-                                </Button>
-                                <AlertDialog>
-                                    <AlertDialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={product.state === 'inactivo' || isDeleting}>
-                                            <Trash2 className="h-4 w-4" />
-                                        </Button>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>{t('Are_you_sure')}</AlertDialogTitle>
-                                            <AlertDialogDescription>{t('This_action_cannot_be_undone_inactive')}</AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-                                            <AlertDialogAction onClick={() => handleDelete(product.id)} className="bg-destructive hover:bg-destructive/90">{t('Deactivate')}</AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                            <div className="flex flex-shrink-0 pt-1">
+                                <TableActions 
+                                  editHref={`/admin/products/${product.id}/edit`}
+                                  onDelete={() => handleDelete(product.id)}
+                                  isDeleting={isDeleting}
+                                  disabledDelete={product.state === 'inactivo'}
+                                  editTooltip={t('Edit')}
+                                  deleteTooltip={t('Deactivate')}
+                                  deleteDescription={t('This_action_cannot_be_undone_inactive')}
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-3 gap-2 text-sm mt-4 text-center">
@@ -278,7 +255,8 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
              <p className="text-center text-muted-foreground text-sm p-12">No se encontraron productos.</p>
         )}
 
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </TooltipProvider>
   );
 }

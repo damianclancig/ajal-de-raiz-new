@@ -35,6 +35,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
+import { TableActions } from './table-actions';
 
 interface UserTableProps {
   users: User[];
@@ -93,62 +94,14 @@ export default function UserTable({ users }: UserTableProps) {
                       </div>
                     </CollapsibleTrigger>
 
-                    <div className="flex items-center gap-2 ml-4">
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button 
-                            asChild 
-                            variant="outline" 
-                            size="icon" 
-                            className="h-9 w-9 border-muted-foreground/20 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm transition-all" 
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Link href={`/admin/users/${user.id}/edit`}>
-                              <Edit className="h-4.5 w-4.5" />
-                              <span className="sr-only">{t('Edit_User')}</span>
-                            </Link>
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="top">
-                          <p>{t('Edit_User')}</p>
-                        </TooltipContent>
-                      </Tooltip>
-
-                      <AlertDialog>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <AlertDialogTrigger asChild onClick={(e) => e.stopPropagation()}>
-                              <Button 
-                                variant="outline" 
-                                size="icon" 
-                                className="h-9 w-9 text-destructive border-destructive/20 hover:border-destructive hover:bg-destructive/10 shadow-sm transition-all" 
-                                disabled={isDeleting}
-                              >
-                                <Trash2 className="h-4.5 w-4.5" />
-                                <span className="sr-only">{t('Delete_User')}</span>
-                              </Button>
-                            </AlertDialogTrigger>
-                          </TooltipTrigger>
-                          <TooltipContent side="top">
-                            <p>{t('Delete_User')}</p>
-                          </TooltipContent>
-                        </Tooltip>
-                        <AlertDialogContent onClick={(e) => e.stopPropagation()}>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{t('Are_you_sure')}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {t('This_action_cannot_be_undone_permanently')}
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
-                            <AlertDialogAction onClick={() => handleDelete(user.id)} className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
-                              {t('Delete')}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
+                    <TableActions 
+                      editHref={`/admin/users/${user.id}/edit`}
+                      onDelete={() => handleDelete(user.id)}
+                      isDeleting={isDeleting}
+                      editTooltip={t('Edit_User')}
+                      deleteTooltip={t('Delete_User')}
+                      deleteDescription={t('This_action_cannot_be_undone_permanently')}
+                    />
                   </div>
 
                   <CollapsibleContent className="overflow-hidden transition-all duration-300 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">

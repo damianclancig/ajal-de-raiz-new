@@ -22,6 +22,8 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import * as Icons from 'lucide-react';
 import { deleteService } from '@/lib/actions';
+import { TableActions } from './table-actions';
+import { TooltipProvider } from '../ui/tooltip';
 
 interface ServiceTableProps {
   initialServices: Service[];
@@ -45,7 +47,8 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
   };
 
   return (
-    <Card>
+    <TooltipProvider>
+      <Card>
       <CardContent className="p-0">
         <Table>
           <TableHeader>
@@ -73,33 +76,12 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
                   </TableCell>
                   <TableCell>{service.price}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                        <Button asChild variant="ghost" size="icon">
-                            <Link href={`/admin/services/${service.id}/edit`}>
-                                <Edit className="h-4 w-4" />
-                            </Link>
-                        </Button>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive" disabled={isPending}>
-                                    <Trash2 className="h-4 w-4" />
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        Esta acción no se puede deshacer. Esto eliminará permanentemente el servicio.
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancelar</AlertDialogCancel>
-                                    <AlertDialogAction onClick={() => handleDelete(service.id)} className="bg-destructive hover:bg-destructive/90">
-                                        Eliminar
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                    <div className="flex justify-end pr-2">
+                        <TableActions 
+                          editHref={`/admin/services/${service.id}/edit`}
+                          onDelete={() => handleDelete(service.id)}
+                          isDeleting={isPending}
+                        />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -108,6 +90,7 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
           </TableBody>
         </Table>
       </CardContent>
-    </Card>
+      </Card>
+    </TooltipProvider>
   );
 }
