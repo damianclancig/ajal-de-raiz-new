@@ -3,20 +3,21 @@ import type {NextConfig} from 'next';
 const securityHeaders = [
   {
     key: 'Content-Security-Policy',
-    value: `
-      default-src 'self';
-      script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/;
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' blob: data: https://res.cloudinary.com https://placehold.co;
-      font-src 'self';
-      object-src 'none';
-      base-uri 'self';
-      form-action 'self';
-      frame-ancestors 'none';
-      frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/;
-      connect-src 'self' https://res.cloudinary.com;
-      upgrade-insecure-requests;
-    `.replace(/\s{2,}/g, ' ').trim()
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/ blob:",
+      "style-src 'self' 'unsafe-inline'",
+      "img-src 'self' blob: data: https://res.cloudinary.com https://placehold.co",
+      "font-src 'self'",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "frame-src https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/",
+      "connect-src 'self' https://res.cloudinary.com https://api.cloudinary.com",
+      "worker-src 'self' blob:",
+      "upgrade-insecure-requests"
+    ].join('; ')
   },
   {
     key: 'X-Vercel-IP-Country',
