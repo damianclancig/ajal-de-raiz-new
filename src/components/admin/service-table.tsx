@@ -24,6 +24,7 @@ import * as Icons from 'lucide-react';
 import { deleteService } from '@/lib/actions';
 import { TableActions } from './table-actions';
 import { TooltipProvider } from '../ui/tooltip';
+import { useLanguage } from '@/hooks/use-language';
 
 interface ServiceTableProps {
   initialServices: Service[];
@@ -33,6 +34,7 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
   const [services, setServices] = useState<Service[]>(initialServices);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleDelete = async (serviceId: string) => {
     startTransition(async () => {
@@ -81,6 +83,8 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
                           editHref={`/admin/services/${service.id}/edit`}
                           onDelete={() => handleDelete(service.id)}
                           isDeleting={isPending}
+                          deleteTitle={t('Delete_Service_Title', { title: service.title })}
+                          deleteDescription={t('Delete_Service_Description', { title: service.title })}
                         />
                     </div>
                   </TableCell>

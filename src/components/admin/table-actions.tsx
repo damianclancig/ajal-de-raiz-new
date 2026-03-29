@@ -90,7 +90,7 @@ export function TableActions({
         <AlertDialogContent onClick={(e) => e.stopPropagation()}>
           <AlertDialogHeader>
             <AlertDialogTitle>{deleteTitle || t('Are_you_sure')}</AlertDialogTitle>
-            <AlertDialogDescription>
+            <AlertDialogDescription className="whitespace-pre-line">
               {deleteDescription || t('This_action_cannot_be_undone_permanently')}
             </AlertDialogDescription>
           </AlertDialogHeader>

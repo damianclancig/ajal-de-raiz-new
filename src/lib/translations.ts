@@ -252,9 +252,15 @@ export const translations = {
     pt: 'Esta ação definirá o produto como inativo e ele não será visível na loja pública.'
   },
   'This_action_cannot_be_undone_permanently': {
-    en: 'This action is irreversible and will permanently delete the product from the database.',
-    es: 'Esta acción es irreversible y eliminará permanentemente el producto de la base de datos.',
-    pt: 'Esta ação é irreversível e excluirá permanentemente o produto do banco de dados.'
+    en: 'This action is irreversible and will permanently delete this item from the database.',
+    es: 'Esta acción es irreversible y eliminará permanentemente este elemento de la base de datos.',
+    pt: 'Esta ação é irreversível e excluirá permanentemente este item do banco de dados.'
+  },
+  'Delete_Service_Title': { en: 'Delete service?', es: '¿Eliminar servicio?', pt: 'Excluir serviço?' },
+  'Delete_Service_Description': {
+    en: 'Are you sure you want to delete this service?\n"{title}"\nThis action is irreversible and cannot be undone.',
+    es: '¿Estás seguro de que deseas eliminar este servicio?\n"{title}"\nEsta acción es irreversible y no se puede deshacer.',
+    pt: 'Tem certeza de que deseja excluir este serviço?\n"{title}"\nEsta ação é irreversível e não pode ser desfeita.'
   },
   'Name_EN': { en: 'Name (EN)', es: 'Nombre (EN)', pt: 'Nome (EN)' },
   'Desc_EN': { en: 'Desc (EN)', es: 'Desc (EN)', pt: 'Desc (EN)' },
@@ -349,7 +355,7 @@ export const translations = {
   'Slide_Deleted_Title': { en: 'Slide Deleted', es: 'Novedad Eliminada', pt: 'Novidade Excluída' },
   'Slide_Deleted_Desc': { en: 'The slide has been deleted successfully.', es: 'La novedad ha sido eliminada correctamente.', pt: 'A novidade foi excluída com sucesso.' },
   'Slide_Updated_Title': { en: 'Slide Updated', es: 'Novedad Actualizada', pt: 'Novidade Atualizada' },
-  'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Novidade Criada' },
+  'Slide_Created_Title': { en: 'Slide Created', es: 'Novedad Creada', pt: 'Criar Novidade' },
   'Slide_Saved_Desc': { en: 'The slide has been saved successfully.', es: 'La novedad se ha guardado correctamente.', pt: 'A novidade foi salva com sucesso.' },
 
   // Cart & Payment
@@ -406,13 +412,13 @@ export const translations = {
   'Edit_User': { en: 'Edit User', es: 'Editar Usuario', pt: 'Editar Usuário' },
   'Delete_User': { en: 'Delete User', es: 'Eliminar Usuario', pt: 'Excluir Usuário' },
   'Delete_User_Title': {
-    en: 'Delete user "{name}"?',
-    es: '¿Eliminar al usuario "{name}"?',
-    pt: 'Excluir o usuário "{name}"?'
+    en: 'Delete user?',
+    es: '¿Eliminar usuario?',
+    pt: 'Excluir usuário?'
   },
   'Delete_User_Description': {
-    en: 'Are you sure you want to delete user "{name}" ({email})? This action is irreversible.',
-    es: '¿Estás seguro de que deseas eliminar al usuario "{name}" ({email})? Esta acción es irreversible.',
-    pt: 'Tem certeza de que deseja excluir o usuário "{name}" ({email})? Esta ação é irreversível.'
+    en: 'Are you sure you want to delete this user?\n"{name}" ({email})\nThis action is irreversible and cannot be undone.',
+    es: '¿Estás seguro de que deseas eliminar este usuario?\n"{name}" ({email})\nEsta acción es irreversible y no se puede deshacer.',
+    pt: 'Tem certeza de que deseja excluir este usuário?\n"{name}" ({email})\nEsta ação é irreversível e não pode ser desfeita.'
   }
 };
