@@ -107,15 +107,25 @@ export default function UserTable({ users }: UserTableProps) {
 
                   <CollapsibleContent className="overflow-hidden transition-all duration-300 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <div className="bg-muted/30 p-4 text-sm border-t">
-                      <h4 className="font-semibold mb-2">{t('Shipping_Address')}</h4>
+                      <h4 className="font-semibold mb-2 text-primary/80">{t('Shipping_Address')}</h4>
                       {user.address && (user.address.street || user.address.city) ? (
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 text-muted-foreground">
-                          <div className="col-span-2"><strong>{t('Street')}:</strong> {user.address.street || '-'} {user.address.number || ''}</div>
-                          <div><strong>{t('City')}:</strong> {user.address.city || '-'}</div>
-                          <div><strong>{t('Zip_Code')}:</strong> {user.address.zipCode || '-'}</div>
-                          <div><strong>{t('Province')}:</strong> {user.address.province || '-'}</div>
-                          <div><strong>{t('Country')}:</strong> {user.address.country || '-'}</div>
-                          {user.address.instructions && <div className="col-span-full pt-2"><strong>{t('Additional_Instructions')}:</strong> {user.address.instructions}</div>}
+                        <div className="text-muted-foreground space-y-2">
+                          <div className="flex flex-wrap items-center gap-x-2">
+                            <span><strong>{t('Street')}:</strong> {user.address.street || '-'} {user.address.number || ''}</span>
+                            <span className="hidden md:inline text-muted-foreground/30">•</span>
+                            <span><strong>{t('City')}:</strong> {user.address.city || '-'}</span>
+                            <span className="hidden md:inline text-muted-foreground/30">•</span>
+                            <span><strong>{t('Zip_Code')}:</strong> {user.address.zipCode || '-'}</span>
+                            <span className="hidden md:inline text-muted-foreground/30">•</span>
+                            <span><strong>{t('Province')}:</strong> {user.address.province || '-'}</span>
+                            <span className="hidden md:inline text-muted-foreground/30">•</span>
+                            <span><strong>{t('Country')}:</strong> {user.address.country || '-'}</span>
+                          </div>
+                          {user.address.instructions && (
+                            <div className="pt-1 border-t border-muted/50 mt-1">
+                              <strong>{t('Additional_Instructions')}:</strong> {user.address.instructions}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <p className="text-muted-foreground">{t('No_address_registered')}</p>
