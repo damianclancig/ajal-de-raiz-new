@@ -51,8 +51,8 @@ export default function UserForm({ user }: UserFormProps) {
                 <Input id="name" name="name" defaultValue={user.name} required disabled={isPending}/>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Teléfono / WhatsApp</Label>
-                <Input id="phone" name="phone" defaultValue={user.phone} disabled={isPending} placeholder="Ej: 541122334455"/>
+                <Label htmlFor="phone">{t('Phone_Number')}</Label>
+                <Input id="phone" name="phone" defaultValue={user.phone} disabled={isPending} placeholder={t('Phone_Placeholder')}/>
               </div>
               <div className="flex items-center gap-4 pt-2">
                 <Label htmlFor="isAdmin">{t('Admin')}</Label>
@@ -61,34 +61,34 @@ export default function UserForm({ user }: UserFormProps) {
             </div>
             
             <div className="space-y-4">
-              <h3 className="text-base font-medium">Dirección de Envío</h3>
+              <h3 className="text-base font-medium">{t('Shipping_Address')}</h3>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="md:col-span-2">
-                    <Label htmlFor="street">Calle</Label>
-                    <Input id="street" name="street" placeholder="Ej: Av. Siempreviva" defaultValue={user.address?.street} disabled={isPending} />
+                    <Label htmlFor="street">{t('Street')}</Label>
+                    <Input id="street" name="street" placeholder={t('Street_Placeholder')} defaultValue={user.address?.street} disabled={isPending} />
                   </div>
                    <div>
-                    <Label htmlFor="number">Número</Label>
-                    <Input id="number" name="number" placeholder="Ej: 742" defaultValue={user.address?.number} disabled={isPending} />
+                    <Label htmlFor="number">{t('Number')}</Label>
+                    <Input id="number" name="number" placeholder={t('Number_Placeholder')} defaultValue={user.address?.number} disabled={isPending} />
                   </div>
-              </div>
+               </div>
                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label htmlFor="city">Ciudad</Label>
-                    <Input id="city" name="city" placeholder="Ej: Springfield" defaultValue={user.address?.city} disabled={isPending} />
+                    <Label htmlFor="city">{t('City')}</Label>
+                    <Input id="city" name="city" placeholder={t('City_Placeholder')} defaultValue={user.address?.city} disabled={isPending} />
                   </div>
                   <div>
-                    <Label htmlFor="province">Provincia</Label>
-                    <Input id="province" name="province" placeholder="Ej: Buenos Aires" defaultValue={user.address?.province} disabled={isPending} />
+                    <Label htmlFor="province">{t('Province')}</Label>
+                    <Input id="province" name="province" placeholder={t('Province_Placeholder')} defaultValue={user.address?.province} disabled={isPending} />
                   </div>
                   <div>
-                    <Label htmlFor="zipCode">Código Postal</Label>
-                    <Input id="zipCode" name="zipCode" placeholder="Ej: 1605" defaultValue={user.address?.zipCode} disabled={isPending} />
+                    <Label htmlFor="zipCode">{t('Zip_Code')}</Label>
+                    <Input id="zipCode" name="zipCode" placeholder={t('Zip_Code_Placeholder')} defaultValue={user.address?.zipCode} disabled={isPending} />
                   </div>
-              </div>
+               </div>
               <div>
-                <Label htmlFor="instructions">Indicaciones Adicionales</Label>
-                <Textarea id="instructions" name="instructions" placeholder="Ej: Tocar timbre, departamento 3B." defaultValue={user.address?.instructions} disabled={isPending} />
+                <Label htmlFor="instructions">{t('Additional_Instructions')}</Label>
+                <Textarea id="instructions" name="instructions" placeholder={t('Placeholder_Instructions')} defaultValue={user.address?.instructions} disabled={isPending} />
               </div>
             </div>
           </div>

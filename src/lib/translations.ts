@@ -171,13 +171,22 @@ export const translations = {
   'Profile_Save_Success': { en: 'Your information has been saved successfully.', es: 'Tu información ha sido guardada correctamente.', pt: 'Suas informações foram salvas com sucesso.' },
   'Complete_your_profile': { en: 'Complete your profile', es: 'Completa tu perfil', pt: 'Complete seu perfil' },
   'Shipping_Address_Optional': { en: 'Shipping Address (Optional)', es: 'Dirección de Envío (Opcional)', pt: 'Endereço de Envio (Opcional)' },
+  'Shipping_Address': { en: 'Shipping Address', es: 'Dirección de Envío', pt: 'Endereço de Envio' },
   'Street': { en: 'Street', es: 'Calle', pt: 'Rua' },
+  'Street_Placeholder': { en: 'e.g. Evergreen Terrace', es: 'Ej: Av. Siempreviva', pt: 'Ex: Av. Paulista' },
   'Number': { en: 'Number', es: 'Número', pt: 'Número' },
+  'Number_Placeholder': { en: 'e.g. 742', es: 'Ej: 742', pt: 'Ex: 100' },
   'City': { en: 'City', es: 'Ciudad', pt: 'Cidade' },
+  'City_Placeholder': { en: 'e.g. Springfield', es: 'Ej: Springfield', pt: 'Ex: São Paulo' },
   'Province': { en: 'Province', es: 'Provincia', pt: 'Província' },
+  'Province_Placeholder': { en: 'e.g. Buenos Aires', es: 'Ej: Buenos Aires', pt: 'Ex: São Paulo' },
   'Zip_Code': { en: 'Zip Code', es: 'Código Postal', pt: 'CEP' },
+  'Zip_Code_Placeholder': { en: 'e.g. 1605', es: 'Ej: 1605', pt: 'Ex: 01310-100' },
+  'Country': { en: 'Country', es: 'País', pt: 'País' },
+  'No_address_registered': { en: 'No address registered.', es: 'No hay dirección registrada.', pt: 'Nenhum endereço registrado.' },
   'Additional_Instructions': { en: 'Additional Instructions', es: 'Indicaciones Adicionales', pt: 'Instruções Adicionais' },
   'Placeholder_Instructions': { en: 'e.g. Ring the bell, apartment 3B. Watch out for the dog.', es: 'Ej: Tocar timbre, departamento 3B. Cuidado con el perro.', pt: 'Ex: Toque a campainha, apartamento 3B. Cuidado com o cachorro.' },
+  'Phone_Placeholder': { en: 'e.g. 541122334455', es: 'Ej: 541122334455', pt: 'Ex: 5511999999999' },
   'Placeholder_Name': { en: 'e.g. John Doe', es: 'Ej: Juan Pérez', pt: 'Ex: João Silva' },
   'Save_Changes': { en: 'Save Changes', es: 'Guardar Cambios', pt: 'Salvar Alterações' },
   'Please_wait': { en: 'Please wait...', es: 'Por favor, espera...', pt: 'Por favor, aguarde...' },
@@ -395,6 +404,15 @@ export const translations = {
   'Upload_Receipt': { en: 'Upload Receipt', es: 'Subir Comprobante', pt: 'Carregar Comprovante' },
   'Is_Admin': { en: 'Is Admin', es: 'Es Administrador', pt: 'É Administrador' },
   'Edit_User': { en: 'Edit User', es: 'Editar Usuario', pt: 'Editar Usuário' },
-  'Delete_User': { en: 'Delete User', es: 'Eliminar Usuario', pt: 'Excluir Usuário' }
-
+  'Delete_User': { en: 'Delete User', es: 'Eliminar Usuario', pt: 'Excluir Usuário' },
+  'Delete_User_Title': {
+    en: 'Delete user "{name}"?',
+    es: '¿Eliminar al usuario "{name}"?',
+    pt: 'Excluir o usuário "{name}"?'
+  },
+  'Delete_User_Description': {
+    en: 'Are you sure you want to delete user "{name}" ({email})? This action is irreversible.',
+    es: '¿Estás seguro de que deseas eliminar al usuario "{name}" ({email})? Esta acción es irreversible.',
+    pt: 'Tem certeza de que deseja excluir o usuário "{name}" ({email})? Esta ação é irreversível.'
+  }
 };

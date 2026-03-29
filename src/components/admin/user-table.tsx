@@ -100,24 +100,25 @@ export default function UserTable({ users }: UserTableProps) {
                       isDeleting={isDeleting}
                       editTooltip={t('Edit_User')}
                       deleteTooltip={t('Delete_User')}
-                      deleteDescription={t('This_action_cannot_be_undone_permanently')}
+                      deleteTitle={t('Delete_User_Title', { name: user.name })}
+                      deleteDescription={t('Delete_User_Description', { name: user.name, email: user.email })}
                     />
                   </div>
 
                   <CollapsibleContent className="overflow-hidden transition-all duration-300 data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down">
                     <div className="bg-muted/30 p-4 text-sm border-t">
-                      <h4 className="font-semibold mb-2">Dirección de Envío</h4>
+                      <h4 className="font-semibold mb-2">{t('Shipping_Address')}</h4>
                       {user.address && (user.address.street || user.address.city) ? (
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-2 text-muted-foreground">
-                          <div className="col-span-2"><strong>Calle:</strong> {user.address.street || '-'} {user.address.number || ''}</div>
-                          <div><strong>Ciudad:</strong> {user.address.city || '-'}</div>
-                          <div><strong>CP:</strong> {user.address.zipCode || '-'}</div>
-                          <div><strong>Provincia:</strong> {user.address.province || '-'}</div>
-                          <div><strong>País:</strong> {user.address.country || '-'}</div>
-                          {user.address.instructions && <div className="col-span-full pt-2"><strong>Instrucciones:</strong> {user.address.instructions}</div>}
+                          <div className="col-span-2"><strong>{t('Street')}:</strong> {user.address.street || '-'} {user.address.number || ''}</div>
+                          <div><strong>{t('City')}:</strong> {user.address.city || '-'}</div>
+                          <div><strong>{t('Zip_Code')}:</strong> {user.address.zipCode || '-'}</div>
+                          <div><strong>{t('Province')}:</strong> {user.address.province || '-'}</div>
+                          <div><strong>{t('Country')}:</strong> {user.address.country || '-'}</div>
+                          {user.address.instructions && <div className="col-span-full pt-2"><strong>{t('Additional_Instructions')}:</strong> {user.address.instructions}</div>}
                         </div>
                       ) : (
-                        <p className="text-muted-foreground">No hay dirección registrada.</p>
+                        <p className="text-muted-foreground">{t('No_address_registered')}</p>
                       )}
                     </div>
                   </CollapsibleContent>
