@@ -15,13 +15,31 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+import { 
+    Loader2,
+    Droplets, 
+    Leaf, 
+    Sprout, 
+    HeartHandshake, 
+    Cannabis, 
+    Sparkles, 
+    Sun, 
+    Moon 
+} from 'lucide-react';
 import Link from 'next/link';
-import * as Icons from 'lucide-react';
 
-const availableIcons = [
-    'Droplets', 'Leaf', 'Sprout', 'HeartHandshake', 'Cannabis', 'Sparkles', 'Sun', 'Moon'
-] as const;
+const ICON_MAP: Record<string, React.ElementType> = {
+    Droplets,
+    Leaf,
+    Sprout,
+    HeartHandshake,
+    Cannabis,
+    Sparkles,
+    Sun,
+    Moon
+};
+
+const availableIcons = ['Droplets', 'Leaf', 'Sprout', 'HeartHandshake', 'Cannabis', 'Sparkles', 'Sun', 'Moon'] as const;
 
 const getServiceFormSchema = (t: any) => z.object({
     icon: z.enum(availableIcons),
@@ -105,7 +123,7 @@ export default function ServiceForm({ service }: ServiceFormProps) {
                                 </SelectTrigger>
                                 <SelectContent>
                                     {availableIcons.map(iconName => {
-                                        const IconComponent = (Icons as any)[iconName];
+                                        const IconComponent = ICON_MAP[iconName];
                                         return (
                                             <SelectItem key={iconName} value={iconName}>
                                                 <div className="flex items-center gap-2">

@@ -16,15 +16,36 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { Edit, Trash2 } from 'lucide-react';
+import { 
+  Edit, 
+  Trash2, 
+  Droplets, 
+  Leaf, 
+  Sprout, 
+  HeartHandshake, 
+  Cannabis, 
+  Sparkles, 
+  Sun, 
+  Moon 
+} from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import * as Icons from 'lucide-react';
 import { deleteService } from '@/lib/actions';
 import { TableActions } from './table-actions';
 import { TooltipProvider } from '../ui/tooltip';
 import { useLanguage } from '@/hooks/use-language';
+
+const ICON_MAP: Record<string, React.ElementType> = {
+  Droplets,
+  Leaf,
+  Sprout,
+  HeartHandshake,
+  Cannabis,
+  Sparkles,
+  Sun,
+  Moon
+};
 
 interface ServiceTableProps {
   initialServices: Service[];
@@ -64,7 +85,7 @@ export default function ServiceTable({ initialServices }: ServiceTableProps) {
           </TableHeader>
           <TableBody>
             {services.map(service => {
-              const Icon = (Icons as any)[service.icon] || Icons.Sprout;
+              const Icon = ICON_MAP[service.icon] || Sprout;
               return (
                 <TableRow key={service.id}>
                   <TableCell>
