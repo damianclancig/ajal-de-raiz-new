@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/hooks/use-language";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
@@ -44,6 +44,7 @@ function LoginForm() {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isVerified, setIsVerified] = useState(false);
   const [failCount, setFailCount] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -115,12 +116,32 @@ function LoginForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">{t('Password')}</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          required
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            className="pr-10"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+            onClick={() => setShowPassword(!showPassword)}
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            )}
+            <span className="sr-only">
+              {showPassword ? t('Hide_Password') : t('Show_Password')}
+            </span>
+          </Button>
+        </div>
       </div>
       {error === 'CredentialsSignin' && (
         <div className="flex items-center gap-2 text-sm text-destructive">
