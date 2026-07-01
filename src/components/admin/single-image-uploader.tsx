@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { X, UploadCloud, Image as ImageIcon, Loader2 } from 'lucide-react';
 import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
+import imageCompression from 'browser-image-compression';
 
 interface SingleImageUploaderProps {
   name: string;
@@ -22,8 +23,8 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
   const { t } = useLanguage();
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const originalFile = e.target.files?.[0];
+    if (!originalFile) return;
 
     setLoading(true);
     toast({
@@ -32,6 +33,25 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
     });
 
     try {
+      let fileToUpload = originalFile;
+      if (originalFile.type.startsWith('image/')) {
+        const options = {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+          fileType: 'image/webp' as string,
+        };
+        try {
+          const compressedFile = await imageCompression(originalFile, options);
+          const initialName = originalFile.name.replace(/\.[^/.]+$/, "");
+          fileToUpload = new File([compressedFile], `${initialName}.webp`, {
+            type: 'image/webp',
+          });
+        } catch (error) {
+          console.error('Error al comprimir la imagen:', error);
+        }
+      }
+
       const resSign = await fetch('/api/sign-cloudinary-params', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -42,7 +62,7 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
       
       const { signature, timestamp } = await resSign.json();
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
       formData.append('api_key', process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!);
       formData.append('signature', signature);
       formData.append('timestamp', timestamp);
@@ -84,7 +104,7 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
           <>
             <NextImage
               src={imageUrl.replace(/\.heic$/i, '.png')}
-              alt="Vista previa de la imagen"
+              alt={t('Image_Preview')}
               fill
               style={{ objectFit: 'contain' }}
               className="p-2"
@@ -99,7 +119,7 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
                 disabled={loading}
               >
                 <X className="h-4 w-4" />
-                <span className="sr-only">Eliminar imagen</span>
+                <span className="sr-only">{t('Delete_Image')}</span>
               </Button>
             </div>
           </>
@@ -107,7 +127,7 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
           loading ? (
             <div className="flex flex-col items-center gap-2 text-center">
                 <Loader2 className="h-8 w-8 animate-spin" />
-                <p className="text-sm">Subiendo...</p>
+                <p className="text-sm">{t('Uploading_Dots')}</p>
             </div>
           ) : (
             <div className="text-center p-4">

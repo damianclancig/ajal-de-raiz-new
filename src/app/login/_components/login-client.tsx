@@ -6,12 +6,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLanguage } from "@/hooks/use-language";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTheme } from "next-themes";
 import { verifyRecaptchaAction } from "@/lib/actions";
@@ -43,38 +43,53 @@ function LoginForm() {
 
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [isVerified, setIsVerified] = useState(false);
+  const [failCount, setFailCount] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
   const { theme } = useTheme();
+
+  useEffect(() => {
+    const error = searchParams.get('error');
+    const savedCount = parseInt(sessionStorage.getItem('login_fail_count') || '0', 10);
+    
+    if (error === 'CredentialsSignin') {
+      const newCount = savedCount + 1;
+      sessionStorage.setItem('login_fail_count', newCount.toString());
+      setFailCount(newCount);
+    } else {
+      setFailCount(savedCount);
+    }
+  }, [searchParams]);
 
   const handleRecaptchaChange = (token: string | null) => {
     setIsVerified(!!token);
   };
 
   const handleSignIn = async (formData: FormData) => {
-    const token = recaptchaRef.current?.getValue();
+    if (failCount >= 3) {
+      const token = recaptchaRef.current?.getValue();
 
-    if (!token) {
-      toast({
-        variant: "destructive",
-        title: "Verificación requerida",
-        description: "Por favor, completa el reCAPTCHA.",
-      });
-      return;
-    }
+      if (!token) {
+        toast({
+          variant: "destructive",
+          title: t('Verification_Required'),
+          description: t('Please_complete_recaptcha'),
+        });
+        return;
+      }
 
-    // Verify captcha server-side before attempting login
-    // Note: We are using a separate server action here because signIn is client-side.
-    // Ideally, signIn should handle this but wrapping it is safer for now.
-    const verification = await verifyRecaptchaAction(token);
+      // Verify captcha server-side before attempting login
+      const verification = await verifyRecaptchaAction(token);
 
-    if (!verification.success) {
-      toast({
-        variant: "destructive",
-        title: "Error de verificación",
-        description: verification.message || "Captcha inválido",
-      });
-      recaptchaRef.current?.reset();
-      setIsVerified(false);
-      return;
+      if (!verification.success) {
+        toast({
+          variant: "destructive",
+          title: t('Error_Title'),
+          description: verification.message || t('Login_Error_Description'),
+        });
+        recaptchaRef.current?.reset();
+        setIsVerified(false);
+        return;
+      }
     }
 
     const email = formData.get('email') as string;
@@ -101,12 +116,32 @@ function LoginForm() {
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">{t('Password')}</Label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          required
-        />
+        <div className="relative">
+          <Input
+            id="password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            required
+            className="pr-10"
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+            onClick={() => setShowPassword(!showPassword)}
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="h-4 w-4 text-muted-foreground" />
+            ) : (
+              <Eye className="h-4 w-4 text-muted-foreground" />
+            )}
+            <span className="sr-only">
+              {showPassword ? t('Hide_Password') : t('Show_Password')}
+            </span>
+          </Button>
+        </div>
       </div>
       {error === 'CredentialsSignin' && (
         <div className="flex items-center gap-2 text-sm text-destructive">
@@ -115,19 +150,21 @@ function LoginForm() {
         </div>
       )}
 
-      <div className="flex justify-center w-full">
-        <div className="rounded-md overflow-hidden">
-          <ReCAPTCHA
-            ref={recaptchaRef}
-            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
-            onChange={handleRecaptchaChange}
-            theme={theme === 'dark' ? 'dark' : 'light'}
-            key={theme}
-          />
+      {failCount >= 3 && (
+        <div className="flex justify-center w-full">
+          <div className="rounded-md overflow-hidden">
+            <ReCAPTCHA
+              ref={recaptchaRef}
+              sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
+              onChange={handleRecaptchaChange}
+              theme={theme === 'dark' ? 'dark' : 'light'}
+              key={theme}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
-      <LoginButton disabled={!isVerified} />
+      <LoginButton disabled={failCount >= 3 && !isVerified} />
     </form>
   )
 }

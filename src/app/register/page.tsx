@@ -6,8 +6,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useLanguage } from "@/hooks/use-language";
 import Link from "next/link";
 import RegisterForm from "@/components/auth/register-form";
-import type { Metadata } from "next";
-
 export default function RegisterPage() {
     const { t } = useLanguage();
 

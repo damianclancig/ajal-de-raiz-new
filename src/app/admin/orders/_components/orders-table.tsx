@@ -71,7 +71,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                                     <div className="flex justify-between items-center">
                                         <div>
                                             <div className="md:hidden text-xs text-muted-foreground mb-1">Estado</div>
-                                            <StatusBadge status={order.status} />
+                                            <StatusBadge status={order.status} label={t(order.status as any)} />
                                         </div>
                                         <div className="text-right font-bold md:hidden">
                                             <div className="text-xs text-muted-foreground font-normal mb-1">Total</div>

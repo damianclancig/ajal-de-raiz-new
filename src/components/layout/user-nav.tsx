@@ -46,7 +46,7 @@ export function UserNav({ session, pendingPaymentCount }: { session: Session; pe
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src={user.image ?? ""} alt={user.name ?? "User"} />
+            <AvatarImage src={user.image || undefined} alt={user.name ?? "User"} />
             <AvatarFallback>
                 <UserIcon className="h-5 w-5" />
             </AvatarFallback>

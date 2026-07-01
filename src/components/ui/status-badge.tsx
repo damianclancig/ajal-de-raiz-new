@@ -3,8 +3,6 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import type { OrderStatus } from "@/lib/types"
-import { useLanguage } from "@/hooks/use-language"
-import { translations } from "@/lib/translations"
 
 const statusBadgeVariants = cva(
     "",
@@ -29,11 +27,11 @@ const statusBadgeVariants = cva(
 export interface StatusBadgeProps
     extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof statusBadgeVariants> {
-    status: OrderStatus
+    status: OrderStatus;
+    label?: string;
 }
 
-export function StatusBadge({ className, status, ...props }: StatusBadgeProps) {
-    const { t } = useLanguage();
+export function StatusBadge({ className, status, label, ...props }: StatusBadgeProps) {
     // We map the status to the badge variant style
     // Note: We use the existing Badge component but override its variant classes with our CVA status map
     // However, Badge has its own variants. A cleaner way is to use Badge with 'outline' (base) and add our classes.
@@ -46,7 +44,7 @@ export function StatusBadge({ className, status, ...props }: StatusBadgeProps) {
             className={cn(statusBadgeVariants({ status }), className)}
             {...props}
         >
-            {t(status as keyof typeof translations)}
+            {label || status}
         </Badge>
     )
 }

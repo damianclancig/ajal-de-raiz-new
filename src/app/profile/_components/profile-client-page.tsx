@@ -11,31 +11,32 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { updateUserProfile } from '@/lib/actions';
 import Image from 'next/image';
-import { Loader2, UploadCloud, User as UserIcon } from 'lucide-react';
+import { Loader2, UploadCloud, User as UserIcon, Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/hooks/use-language';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UPLOAD_FOLDER = 'ajal-de-raiz/Profiles';
 
-interface ProfileClientPageProps {
-    user: User;
-}
-
-function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSubmitting }: { 
+interface ProfileImageUploaderProps { 
     currentImage?: string; 
     onImageUpload: (url: string) => void;
     onImageRemove: () => void;
     isSubmitting: boolean; 
-}) {
+}
+
+function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSubmitting }: ProfileImageUploaderProps) {
     const [loading, setLoading] = useState(false);
     const { toast } = useToast();
+    const { t } = useLanguage();
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
         setLoading(true);
-        toast({ title: 'Subiendo imagen...', description: 'Por favor, espera.' });
+        toast({ title: t('Uploading_Profile_Image'), description: t('Please_wait') });
 
         try {
             const transformation = 'w_128,h_128,c_fill,g_face,r_max';
@@ -63,10 +64,10 @@ function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSu
             
             const data = await res.json();
             onImageUpload(data.secure_url);
-            toast({ title: 'Imagen subida', description: 'La imagen de perfil se ha actualizado.' });
+            toast({ title: t('Success'), description: t('Profile_Image_Updated') });
         } catch (err: any) {
             console.error("Profile image upload error:", err);
-            toast({ variant: 'destructive', title: 'Error de subida', description: err.message });
+            toast({ variant: 'destructive', title: t('Error_Title'), description: err.message });
         } finally {
             setLoading(false);
             e.target.value = '';
@@ -75,30 +76,30 @@ function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSu
 
     return (
         <div className="flex flex-col items-center gap-4">
-            <div className="relative h-32 w-32 rounded-full overflow-hidden bg-muted border-4 border-background shadow-lg">
-                {currentImage ? (
-                    <Image src={currentImage} alt="Foto de perfil" fill className="object-cover" />
-                ) : (
-                    <div className="flex items-center justify-center h-full w-full">
-                       <UserIcon className="h-16 w-16 text-muted-foreground" />
-                    </div>
-                )}
-                 {currentImage && (
+            <div className="relative">
+                <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
+                    <AvatarImage src={currentImage || undefined} alt={t('Profile_Picture')} className="object-cover" />
+                    <AvatarFallback>
+                        <UserIcon className="h-16 w-16 text-muted-foreground" />
+                    </AvatarFallback>
+                </Avatar>
+                {currentImage && (
                     <Button 
                         variant="destructive" 
                         size="sm"
-                        className="absolute bottom-1 right-1 h-7 w-7 rounded-full p-0"
+                        className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full p-0 border-2 border-background shadow-md z-20"
                         onClick={onImageRemove}
                         disabled={loading || isSubmitting}
+                        title={t('Remove_Photo')}
                     >
-                        <UserIcon className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                     </Button>
                 )}
             </div>
             <Button asChild variant="outline" size="sm" className="bg-background/80" disabled={loading || isSubmitting}>
                 <label htmlFor="profile-image-upload" className="cursor-pointer">
                     {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UploadCloud className="mr-2 h-4 w-4" />}
-                    Cambiar Foto
+                    {t('Change_Photo')}
                     <Input id="profile-image-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/*" disabled={loading || isSubmitting} />
                 </label>
             </Button>
@@ -106,10 +107,11 @@ function ProfileImageUploader({ currentImage, onImageUpload, onImageRemove, isSu
     );
 }
 
-export default function ProfileClientPage({ user }: ProfileClientPageProps) {
+export default function ProfileClientPage({ user }: { user: User }) {
     const { update } = useSession();
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
+    const { t } = useLanguage();
     const router = useRouter();
     const [profileImage, setProfileImage] = useState(user.profileImage);
 
@@ -124,13 +126,13 @@ export default function ProfileClientPage({ user }: ProfileClientPageProps) {
         startTransition(async () => {
             const result = await updateUserProfile(formData);
             if (result.success) {
-                toast({ title: "Perfil Actualizado", description: "Tu información ha sido guardada." });
+                toast({ title: t('Profile_Updated'), description: t('Profile_Save_Success') });
                 await handleProfileUpdateSuccess({ 
                     name: formData.get('name') as string,
                     image: profileImage
                 });
             } else {
-                toast({ title: "Error", description: result.message, variant: 'destructive' });
+                toast({ title: t('Error_Title'), description: result.message, variant: 'destructive' });
             }
         });
     }
