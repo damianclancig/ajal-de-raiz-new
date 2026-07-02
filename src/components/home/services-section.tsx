@@ -6,11 +6,34 @@ import ServiceCard from "./service-card";
 import { Service } from "@/lib/types";
 
 interface ServicesSectionProps {
-  services: Service[];
+  services: Service[] | null;
 }
 
 export default function ServicesSection({ services }: ServicesSectionProps) {
   const { t } = useLanguage();
+
+  if (!services) {
+    return (
+      <section id="services" className="container py-12 md:py-20">
+        <div className="text-center mb-12">
+          <h2 className="font-headline text-3xl md:text-4xl font-bold">
+            {t('Ajal_de_Raiz_Services')}
+          </h2>
+          <p className="text-muted-foreground mt-2 text-lg max-w-2xl mx-auto">
+            {t('Ajal_de_Raiz_Services_Desc')}
+          </p>
+        </div>
+        <div className="flex flex-col items-center justify-center p-8 bg-amber-50 dark:bg-amber-950/10 border border-amber-200 dark:border-amber-900/30 rounded-xl text-center max-w-2xl mx-auto shadow-sm">
+          <p className="text-amber-800 dark:text-amber-200 font-medium text-lg">
+            {t('Services_Unavailable_Title')}
+          </p>
+          <p className="text-amber-700/80 dark:text-amber-300/80 text-sm mt-2 max-w-md">
+            {t('Services_Unavailable_Desc')}
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section id="services" className="container py-12 md:py-20">

@@ -6,6 +6,8 @@ import type { Metadata } from 'next';
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Catálogo de Productos',
   description: 'Explora nuestro catálogo completo de plantas, macetas, herramientas y suministros de jardinería. Encuentra todo lo que necesitas para tu espacio verde.',

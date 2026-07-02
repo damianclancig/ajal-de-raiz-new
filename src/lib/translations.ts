@@ -427,5 +427,65 @@ export const translations = {
     en: 'Are you sure you want to delete this user?\n"{name}" ({email})\nThis action is irreversible and cannot be undone.',
     es: '¿Estás seguro de que deseas eliminar este usuario?\n"{name}" ({email})\nEsta acción es irreversible y no se puede deshacer.',
     pt: 'Tem certeza de que deseja excluir este usuário?\n"{name}" ({email})\nEsta ação é irreversível e não pode ser desfeita.'
+  },
+  'Featured_Products_Unavailable_Title': {
+    en: 'Featured products are currently unavailable',
+    es: 'Productos destacados no disponibles temporalmente',
+    pt: 'Produtos em destaque indisponíveis temporariamente'
+  },
+  'Featured_Products_Unavailable_Desc': {
+    en: 'We are experiencing database connectivity issues. Please try again later to browse our selection.',
+    es: 'Estamos experimentando problemas de conexión con la base de datos. Por favor, intenta de nuevo más tarde para ver nuestra selección.',
+    pt: 'Estamos com problemas de conexão com o banco de dados. Por favor, tente novamente mais tarde para ver nossa seleção.'
+  },
+  'Services_Unavailable_Title': {
+    en: 'Services are currently unavailable',
+    es: 'Servicios no disponibles temporalmente',
+    pt: 'Serviços indisponíveis temporariamente'
+  },
+  'Services_Unavailable_Desc': {
+    en: 'Our catalog of services is offline. Please reach out to us directly through the contact form below.',
+    es: 'Nuestro catálogo de servicios no está disponible. Por favor, contáctanos directamente a través del formulario de contacto de abajo.',
+    pt: 'Nosso catálogo de serviços está offline. Por favor, entre em contato diretamente conosco através do formulário abaixo.'
+  },
+  'Database_Connection_Error': {
+    en: 'Database Connection Error',
+    es: 'Error de Conexión a la Base de Datos',
+    pt: 'Erro de Conexão com o Banco de Dados'
+  },
+  'Database_Connection_Error_Desc': {
+    en: 'The database is currently unreachable. If you are developing locally, your MongoDB Atlas cluster might be paused due to inactivity. Please make sure to resume/wake it up, or check your configuration settings.',
+    es: 'La base de datos no está accesible actualmente. Si estás en desarrollo local, es posible que el clúster de MongoDB Atlas se haya pausado por inactividad. Asegúrate de reanudarlo/activarlo, o revisa tu archivo de configuración.',
+    pt: 'O banco de dados está inacessível no momento. Se você estiver desenvolvendo localmente, seu cluster MongoDB Atlas pode estar pausado devido a inatividade. Certifique-se de retomá-lo/ativá-lo, ou verifique suas configurações.'
+  },
+  'Database_Connection_Error_Prod': {
+    en: 'Service Temporarily Unavailable',
+    es: 'Servicio no Disponible Temporalmente',
+    pt: 'Serviço Temporariamente Indisponível'
+  },
+  'Database_Connection_Error_Desc_Prod': {
+    en: 'We are experiencing technical difficulties connecting to our servers. Please try again in a few minutes.',
+    es: 'Estamos experimentando dificultades técnicas para conectar con nuestros servidores. Por favor, intenta de nuevo en unos minutos.',
+    pt: 'Estamos enfrentando dificuldades técnicas para conectar com nossos servidores. Por favor, tente novamente em alguns minutos.'
+  },
+  'Generic_Error_Title': {
+    en: 'An Unexpected Error Occurred',
+    es: 'Ocurrió un Error Inesperado',
+    pt: 'Ocorreu un Error Inesperado'
+  },
+  'Generic_Error_Desc': {
+    en: 'Something went wrong on our end. Please try again or contact us if the problem persists.',
+    es: 'Algo salió mal de nuestro lado. Por favor, intenta de nuevo o contáctanos si el problema persiste.',
+    pt: 'Algo deu errado do nosso lado. Por favor, tente novamente ou entre em contato se o problema persistir.'
+  },
+  'Try_Again': {
+    en: 'Try Again',
+    es: 'Intentar de Nuevo',
+    pt: 'Tentar Novamente'
+  },
+  'Go_Back_Home': {
+    en: 'Go Back Home',
+    es: 'Volver al Inicio',
+    pt: 'Voltar ao Início'
   }
 };

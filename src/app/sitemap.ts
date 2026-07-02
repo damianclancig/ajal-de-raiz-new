@@ -1,11 +1,17 @@
 import { getAvailableProducts } from '@/lib/product-service';
 import { MetadataRoute } from 'next';
+import type { Product } from '@/lib/types';
 
 const BASE_URL = 'https://www.ajalderaiz.com.ar';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Get all products
-  const products = await getAvailableProducts();
+  // Get all products safely
+  let products: Product[] = [];
+  try {
+    products = await getAvailableProducts();
+  } catch (error) {
+    console.error("Error al obtener productos para el sitemap:", error);
+  }
 
   const productEntries: MetadataRoute.Sitemap = products.map(({ slug, updatedAt }) => ({
     url: `${BASE_URL}/products/${slug}`,

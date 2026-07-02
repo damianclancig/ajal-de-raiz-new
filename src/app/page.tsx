@@ -15,11 +15,26 @@ export const metadata: Metadata = {
 import { auth } from "@/auth";
 
 export default async function Home() {
-  const session = await auth();
+  let session = null;
+  try {
+    session = await auth();
+  } catch (error) {
+    console.error("Error al obtener sesión de auth:", error);
+  }
+
   const [featuredProducts, slides, services] = await Promise.all([
-    getFeaturedProducts(),
-    getActiveSlides(),
-    getAllServices()
+    getFeaturedProducts().catch((err) => {
+      console.error("Error al cargar productos destacados en Home:", err);
+      return null;
+    }),
+    getActiveSlides().catch((err) => {
+      console.error("Error al cargar novedades en Home:", err);
+      return null;
+    }),
+    getAllServices().catch((err) => {
+      console.error("Error al cargar servicios en Home:", err);
+      return null;
+    })
   ]);
 
   return (
