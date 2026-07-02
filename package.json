@@ -78,5 +78,6 @@
   "overrides": {
     "react": "$react",
     "react-dom": "$react-dom"
-  }
+  },
+  "packageManager": "pnpm@11.9.0"
 }
