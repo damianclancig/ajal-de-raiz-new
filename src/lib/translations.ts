@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Clancig FullstackWeb
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 export const translations = {
   // Header
@@ -89,6 +105,7 @@ export const translations = {
   'Saturdays': { en: 'Saturdays from 09:00hs to 13:00hs', es: 'Sábados de 09:00hs a 13:00hs', pt: 'Sábados das 09:00h às 13:00h' },
   'Legal': { en: 'Legal', es: 'Legal', pt: 'Legal' },
   'Terms_and_Conditions': { en: 'Terms and Conditions', es: 'Términos y Condiciones', pt: 'Termos e Condições' },
+  'Privacy_Policy': { en: 'Privacy Policy', es: 'Política de Privacidad', pt: 'Política de Privacidade' },
   'Location': { en: 'Location', es: 'Lugar', pt: 'Localização' },
 
   // Products Page

@@ -139,4 +139,4 @@ En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto está licenciado bajo la **Apache License 2.0** de Clancig FullstackWeb (2026). Consulta el archivo `LICENSE` para más detalles.
