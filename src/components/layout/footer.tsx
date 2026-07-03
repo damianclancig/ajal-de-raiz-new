@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Clancig FullstackWeb
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 "use client";
 
@@ -19,7 +35,6 @@ import { Button } from "@/components/ui/button";
 
 export default function Footer() {
   const { t } = useLanguage();
-  const currentYear = new Date().getFullYear();
   const instagramUsername = process.env.NEXT_PUBLIC_INSTAGRAM_USERNAME || 'viveroajalderaiz';
   const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '5491168793296';
   const contactEmail = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'viveroajalderaiz@gmail.com'
@@ -104,10 +119,13 @@ export default function Footer() {
                 <p className="text-sm text-muted-foreground">{t('Monday_to_Friday')}</p>
                 <p className="text-sm text-muted-foreground">{t('Saturdays')}</p>
             </div>
-            <div className="flex-1 md:text-center">
+            <div className="flex-1 md:text-center flex flex-col items-center gap-1">
                 <h4 className="font-semibold mb-1">{t('Legal')}</h4>
                 <Button variant="link" asChild className="p-0 h-auto text-sm text-muted-foreground">
                     <Link href="/terms">{t('Terms_and_Conditions')}</Link>
+                </Button>
+                <Button variant="link" asChild className="p-0 h-auto text-sm text-muted-foreground">
+                    <Link href="/privacy">{t('Privacy_Policy')}</Link>
                 </Button>
             </div>
              <div className="flex-1 md:text-right">
@@ -117,7 +135,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {currentYear} Ajal de Raiz. {t('All_rights_reserved')}</p>
+          <p>&copy; 2026 Clancig FullstackWeb. Distribuido bajo Licencia Apache 2.0.</p>
           <p className="text-xs mt-2">
             {t('Web_design_and_development_by')}{' '}
             <a

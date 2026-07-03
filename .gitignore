@@ -22,7 +22,19 @@
 
 # misc
 .DS_Store
+.directory
 *.pem
+
+# IDEs and editors
+.vscode/
+.idea/
+.idx/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
 
 # debug
 npm-debug.log*

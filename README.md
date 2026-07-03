@@ -69,7 +69,7 @@ Sigue estos pasos para levantar el entorno de desarrollo en tu máquina local.
 ### 1. Prerrequisitos
 
 - [Node.js](https://nodejs.org/en/) (versión 18 o superior).
-- [npm](https://www.npmjs.com/) o [yarn](https://yarnpkg.com/).
+- [pnpm](https://pnpm.io/) (recomendado, versión 9 o superior) o [npm](https://www.npmjs.com/).
 - Una base de datos MongoDB (local o en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)).
 - Cuentas en [Cloudinary](https://cloudinary.com/), [MercadoPago](https://mercadopago.com.ar) y [Maileroo](https://maileroo.com/).
 
@@ -83,6 +83,10 @@ cd ajal-de-raiz
 ### 3. Instalar Dependencias
 
 ```bash
+# Recomendado
+pnpm install
+
+# Alternativa
 npm install
 ```
 
@@ -105,12 +109,20 @@ openssl rand -base64 32
 Para poblar tu base de datos con productos de ejemplo, ejecuta:
 
 ```bash
+# Recomendado
+pnpm run seed
+
+# Alternativa
 npm run seed
 ```
 
 ### 6. Iniciar el Servidor de Desarrollo
 
 ```bash
+# Recomendado
+pnpm run dev
+
+# Alternativa
 npm run dev
 ```
 
@@ -127,4 +139,4 @@ En desarrollo, puedes usar una herramienta como [ngrok](https://ngrok.com/) para
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+Este proyecto está licenciado bajo la **Apache License 2.0** de Clancig FullstackWeb (2026). Consulta el archivo `LICENSE` para más detalles.

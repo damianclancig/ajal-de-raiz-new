@@ -1,3 +1,19 @@
+/*
+ * Copyright 2026 Clancig FullstackWeb
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -26,6 +42,7 @@ export default function TermsAndConditionsPage() {
             <Card>
                 <CardHeader>
                     <CardTitle className="font-headline text-4xl text-center">Términos y Condiciones</CardTitle>
+                    <p className="text-center text-xs text-muted-foreground mt-2">Última actualización: 1/7/2026</p>
                 </CardHeader>
                 <CardContent className="prose prose-stone dark:prose-invert max-w-none space-y-8">
                     <p className="text-center text-muted-foreground">
@@ -66,8 +83,9 @@ export default function TermsAndConditionsPage() {
 
                     <Section title="5. Propiedad Intelectual">
                         <ul className="list-disc pl-5 space-y-1">
-                            <li>Todo el contenido publicado en este sitio web (imágenes, descripciones, logotipos, textos y diseños) es <strong>propiedad exclusiva de Ajal de Raíz</strong>.</li>
-                            <li>Queda prohibida su reproducción, distribución o uso sin autorización previa y por escrito.</li>
+                            <li>Todo el contenido visual, comercial y editorial publicado en este sitio web (imágenes de plantas, descripciones de productos, logotipos, textos y diseños de interfaz) es <strong>propiedad exclusiva de Ajal de Raíz</strong>.</li>
+                            <li>El software y código fuente que opera esta plataforma se distribuye públicamente bajo los términos de la <strong>Licencia Apache 2.0</strong>. Esta licencia aplica exclusivamente al código del software y no otorga derechos sobre las marcas comerciales de Ajal de Raíz ni sobre los datos de los usuarios.</li>
+                            <li>Queda prohibida la reproducción, distribución o uso comercial del contenido editorial o visual del sitio sin autorización previa y por escrito.</li>
                         </ul>
                     </Section>
 
