@@ -28,6 +28,8 @@ export const metadata: Metadata = {
   description: 'Un toque verde para la vida moderna. Descubre nuestra colección curada de plantas de interior, exterior, y todos los suministros de jardinería que necesitas para tu hogar.',
 };
 
+export const dynamic = 'force-dynamic';
+
 import { auth } from "@/auth";
 
 export default async function Home() {
