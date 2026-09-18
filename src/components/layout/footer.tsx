@@ -135,7 +135,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 border-t pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; 2026 Clancig FullstackWeb. Distribuido bajo Licencia Apache 2.0.</p>
+          <p>
+            <span className="block md:inline">&copy; 2026 Clancig FullstackWeb.</span>{" "}
+            <span className="block md:inline">Distribuido bajo Licencia Apache 2.0.</span>
+          </p>
           <p className="text-xs mt-2">
             {t('Web_design_and_development_by')}{' '}
             <a
