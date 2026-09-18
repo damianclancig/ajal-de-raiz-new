@@ -25,6 +25,7 @@ import { X, UploadCloud, Image as ImageIcon, Loader2 } from 'lucide-react';
 import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
 import imageCompression from 'browser-image-compression';
+import { logError } from '@/lib/log-service';
 
 interface SingleImageUploaderProps {
   name: string;
@@ -100,7 +101,26 @@ export default function SingleImageUploader({ name, defaultValue = '', folder }:
         description: t('Image_upload_success_desc'),
       });
     } catch (err: any) {
-      toast({ variant: 'destructive', title: t('Upload_Error_Title'), description: err.message });
+      console.error("Single image upload error:", err);
+      
+      await logError({
+        path: window.location.pathname,
+        functionName: 'SingleImageUploader.handleFileChange',
+        errorMessage: err.message || 'Single image upload error',
+        stackTrace: err.stack,
+        metadata: { folder, fileName: originalFile.name, fileType: originalFile.type }
+      }).catch(console.error);
+
+      let description = t('Upload_Error_Desc');
+      if (err?.message?.includes('File size too large')) {
+        description = `${t('Upload_Error_File_Too_Large_Desc')} (${originalFile.name})`;
+      }
+
+      toast({ 
+        variant: 'destructive', 
+        title: t('Upload_Error_Title'), 
+        description: description 
+      });
     } finally {
       setLoading(false);
       e.target.value = '';

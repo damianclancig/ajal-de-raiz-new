@@ -25,6 +25,7 @@ import { X, UploadCloud, Image as ImageIcon, Loader2, Video } from 'lucide-react
 import NextImage from 'next/image';
 import { useLanguage } from '@/hooks/use-language';
 import imageCompression from 'browser-image-compression';
+import { logError } from '@/lib/log-service';
 
 const MAX_MEDIA = 5;
 const UPLOAD_FOLDER = 'ajal-de-raiz/Productos';
@@ -123,11 +124,18 @@ export default function MultiMediaUploader({ name, defaultValues = [] }: MultiMe
 
       } catch (err: any) {
           console.error("Media upload error:", err);
+          
+          await logError({
+            path: window.location.pathname,
+            functionName: 'MultiMediaUploader.handleFileChange',
+            errorMessage: err.message || 'Media upload error',
+            stackTrace: err.stack,
+            metadata: { fileName: originalFile.name, fileType: originalFile.type }
+          }).catch(console.error);
+
           let description = t('Upload_Error_Desc');
           if (err?.message?.includes('File size too large')) {
             description = `${t('Upload_Error_File_Too_Large_Desc')} (${originalFile.name})`;
-          } else {
-            description = err.message;
           }
 
           toast({
