@@ -254,6 +254,7 @@ export const translations = {
   'Price': { en: 'Price', es: 'Precio', pt: 'Preço' },
   'Actions': { en: 'Actions', es: 'Acciones', pt: 'Ações' },
   'Edit': { en: 'Edit', es: 'Editar', pt: 'Editar' },
+  'View': { en: 'View', es: 'Ver', pt: 'Ver' },
   'Delete': { en: 'Delete', es: 'Eliminar', pt: 'Excluir' },
   'Delete_Permanently': { en: 'Delete Permanently', es: 'Eliminar Permanentemente', pt: 'Excluir Permanentemente' },
   'Deactivate': { en: 'Deactivate', es: 'Desactivar', pt: 'Desativar' },

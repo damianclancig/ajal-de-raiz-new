@@ -165,7 +165,11 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="hidden md:table-cell font-medium">{product.name}</TableCell>
+                    <TableCell className="hidden md:table-cell font-medium">
+                      <Link href={`/products/${product.slug}`} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-primary transition-colors">
+                        {product.name}
+                      </Link>
+                    </TableCell>
                     <TableCell className="hidden md:table-cell">{product.category}</TableCell>
                     <TableCell className="hidden md:table-cell text-center">{product.countInStock}</TableCell>
                     <TableCell className="hidden md:table-cell text-center">
@@ -209,7 +213,11 @@ export default function ProductTable({ initialProducts, searchTerm, category }: 
                                     />
                                 </div>
                                 <div className="font-medium pt-1">
-                                    <div>{product.name}</div>
+                                    <div>
+                                      <Link href={`/products/${product.slug}`} target="_blank" rel="noopener noreferrer" className="hover:underline hover:text-primary transition-colors">
+                                        {product.name}
+                                      </Link>
+                                    </div>
                                     <div className="text-xs text-muted-foreground">{product.category}</div>
                                 </div>
                             </div>
