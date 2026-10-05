@@ -32,14 +32,28 @@ import { useToast } from '@/hooks/use-toast';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import CareInstructions from '@/components/products/care-instructions';
+import { useEffect } from 'react';
 
 import { Pencil } from 'lucide-react';
 import Link from 'next/link';
 import ProductBreadcrumb from '@/components/products/product-breadcrumb';
 
 export default function ProductDetailClient({ product, isAdmin }: { product: Product, isAdmin?: boolean }) {
-  const [selectedMedia, setSelectedMedia] = useState<string>(product.images[0]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [api, setApi] = useState<CarouselApi>();
+
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
+
+    api.on("select", () => {
+      setSelectedIndex(api.selectedScrollSnap());
+    });
+  }, [api]);
+
   const [quantity, setQuantity] = useState(1);
   const { t, language } = useLanguage();
   const { addToCart } = useCart();
@@ -76,13 +90,13 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
       </div>
       <div className="grid md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto">
         <div className="flex flex-col gap-4">
-          <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg bg-muted/20">
+          <div className="relative aspect-square w-full rounded-lg overflow-hidden shadow-lg bg-muted/20 group">
             {isAdmin && (
               <Button
                 asChild
                 variant="secondary"
                 size="icon"
-                className="absolute top-4 right-4 z-10 h-8 w-8 rounded-full transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
+                className="absolute top-4 right-4 z-50 h-8 w-8 rounded-full opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-300 bg-neutral-950/90 border-2 border-primary text-white shadow-[0_0_10px_hsl(var(--primary)/0.5)] hover:bg-primary hover:text-primary-foreground hover:shadow-[0_0_20px_hsl(var(--primary))] hover:scale-105"
               >
                 <Link href={`/admin/products/${product.id}/edit`}>
                   <Pencil className="h-4 w-4 stroke-2" />
@@ -90,29 +104,66 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
                 </Link>
               </Button>
             )}
-            {isVideo(selectedMedia) ? (
-              <video
-                key={selectedMedia}
-                src={selectedMedia}
-                controls
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-contain"
-              >
-                Tu navegador no soporta el tag de video.
-              </video>
+
+            {product.images && product.images.length > 1 ? (
+              <Carousel className="w-full h-full" opts={{ loop: true }} setApi={setApi}>
+                <CarouselContent>
+                  {product.images.map((media, index) => (
+                    <CarouselItem key={index}>
+                      <div className="relative aspect-square w-full">
+                        {isVideo(media) ? (
+                          <video
+                            src={media}
+                            controls
+                            autoPlay
+                            muted
+                            loop
+                            playsInline
+                            className="w-full h-full object-contain"
+                          />
+                        ) : (
+                          <Image
+                            src={media.replace(/\.heic$/i, '.png')}
+                            alt={`${product.name} - Imagen ${index + 1}`}
+                            fill
+                            className="object-contain"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            priority={index === 0}
+                            data-ai-hint={product.dataAiHint || 'product image'}
+                          />
+                        )}
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-primary border-white/20 hover:border-primary transition-colors z-40" />
+                <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-primary border-white/20 hover:border-primary transition-colors z-40" />
+              </Carousel>
             ) : (
-              <Image
-                src={selectedMedia.replace(/\.heic$/i, '.png')}
-                alt={product.name}
-                fill
-                className="object-contain"
-                sizes="(max-width: 768px) 100vw, 50vw"
-                priority
-                data-ai-hint={product.dataAiHint || 'product image'}
-              />
+              // Una sola imagen o video
+              isVideo(product.images[0]) ? (
+                <video
+                  src={product.images[0]}
+                  controls
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-contain"
+                >
+                  Tu navegador no soporta el tag de video.
+                </video>
+              ) : (
+                <Image
+                  src={product.images[0].replace(/\.heic$/i, '.png')}
+                  alt={product.name}
+                  fill
+                  className="object-contain"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                  data-ai-hint={product.dataAiHint || 'product image'}
+                />
+              )
             )}
           </div>
           {product.images && product.images.length > 1 && (
@@ -120,10 +171,13 @@ export default function ProductDetailClient({ product, isAdmin }: { product: Pro
               {product.images.map((media, index) => (
                 <button
                   key={index}
-                  onClick={() => setSelectedMedia(media)}
+                  onClick={() => {
+                    setSelectedIndex(index);
+                    api?.scrollTo(index);
+                  }}
                   className={cn(
-                    "relative aspect-square w-full rounded-md overflow-hidden ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring",
-                    selectedMedia === media && 'ring-2 ring-primary'
+                    "relative aspect-square w-full rounded-md overflow-hidden ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring transition-all",
+                    selectedIndex === index && 'ring-2 ring-primary scale-95'
                   )}
                 >
                   <Image
