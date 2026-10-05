@@ -39,7 +39,7 @@ const parseSubtext = (text: string) => {
     .replace(/-(.*?)-/g, '<s>$1</s>');          // Strikethrough for -text-
 
   return React.createElement('p', {
-    className: 'mt-4 max-w-2xl text-lg md:text-xl text-gray-200 whitespace-pre-line',
+    className: 'mt-4 max-w-3xl mx-auto text-lg md:text-xl text-gray-200 whitespace-pre-line',
     dangerouslySetInnerHTML: { __html: html }
   });
 };
@@ -65,7 +65,7 @@ export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
           {slides.map((slide, index) => (
             <CarouselItem key={slide.id}>
               <div className={cn(
-                "relative h-[40vh] md:h-[70vh] w-full overflow-hidden group",
+                "relative w-full overflow-hidden group flex flex-col",
                 slide.image ? "bg-black/50" : "bg-transparent"
               )}>
                 {/* Admin Edit Shortcut */}
@@ -107,19 +107,20 @@ export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
                     data-ai-hint={slide.dataAiHint || 'promotional banner'}
                   />
                 )}
-                {slide.image && <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-20 pointer-events-none" />}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 z-30">
+                {slide.image && <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/80 z-20 pointer-events-none" />}
+                
+                <div className="relative z-30 flex-1 flex flex-col items-center justify-center text-center text-white px-4 py-16 md:py-24 min-h-[60vh] md:min-h-[70vh] w-full">
                   <div className={cn(
-                    "p-6 md:p-10 rounded-lg transition-all",
-                    slide.headline && slide.image ? "bg-black/30 backdrop-blur-sm" : ""
+                    "p-6 md:p-10 rounded-xl transition-all w-full max-w-4xl mx-auto flex flex-col items-center",
+                    slide.headline && slide.image ? "bg-black/40 backdrop-blur-md border border-white/10 shadow-2xl" : ""
                   )}>
                     {slide.headline && (
-                      <h1 className="font-headline text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white shadow-lg">
+                      <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white shadow-sm leading-tight [text-wrap:balance]">
                         {slide.headline}
                       </h1>
                     )}
                     {parseSubtext(slide.subtext)}
-                    <Button asChild size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground">
+                    <Button asChild size="lg" className="mt-8 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-semibold shadow-lg hover:shadow-primary/50 transition-all hover:-translate-y-1">
                       <Link href={slide.buttonLink || '/products'}>{t('Shop_Now')}</Link>
                     </Button>
                   </div>
@@ -128,8 +129,8 @@ export default function HeroBanner({ slides, isAdmin }: HeroBannerProps) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/20 hover:bg-black/50 border-white/50 z-40" />
-        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/20 hover:bg-black/50 border-white/50 z-40" />
+        <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-primary border-white/20 hover:border-primary transition-colors z-40" />
+        <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 text-white bg-black/40 hover:bg-primary border-white/20 hover:border-primary transition-colors z-40" />
       </Carousel>
     </section>
   );
